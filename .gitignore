@@ -6,3 +6,10 @@ server/.env
 .DS_Store
 npm-debug.log*
 coverage/
+
+# MySQL local setup
+mysql-server/
+mysql-data/
+mysql-config.ini
+mysql.sock
+mysql-error.log

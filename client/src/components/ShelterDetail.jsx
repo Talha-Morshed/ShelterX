@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { getShelter } from '../services/shelterService';
 import './ShelterDetail.css';
 
-const ShelterDetail = ({ shelterId, onClose, isLoading }) => {
+const ShelterDetail = ({ shelterId, onClose, _isLoading }) => {
   const [shelter, setShelter] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);

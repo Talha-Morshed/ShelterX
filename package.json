@@ -1,9 +1,13 @@
 {
   "name": "shelterx",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Animal shelter management application",
+  "private": true,
   "scripts": {
+    "server": "cd server && npm start",
+    "server:dev": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "start": "echo \"Run 'npm run server' and 'npm run client' in separate terminals\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -13,15 +17,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/Talha-Morshed/ShelterX/issues"
   },
-  "homepage": "https://github.com/Talha-Morshed/ShelterX#readme",
-  "dependencies": {
-    "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "mysql2": "^3.23.3"
-  }
+  "homepage": "https://github.com/Talha-Morshed/ShelterX#readme"
 }

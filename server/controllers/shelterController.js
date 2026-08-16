@@ -92,9 +92,14 @@ const createShelter = async (req, res) => {
     }
 
     const shelter = {
-      ...req.body,
+      shelter_name: req.body.shelter_name,
+      shelter_type: req.body.shelter_type,
+      address: req.body.address,
+      city: req.body.city,
+      phone: req.body.phone || null,
       capacity: Number(req.body.capacity),
       available_spaces: Number(req.body.available_spaces),
+      description: req.body.description || null,
       latitude: req.body.latitude === '' || req.body.latitude === undefined || req.body.latitude === null ? null : Number(req.body.latitude),
       longitude: req.body.longitude === '' || req.body.longitude === undefined || req.body.longitude === null ? null : Number(req.body.longitude),
     };
@@ -126,10 +131,14 @@ const updateShelter = async (req, res) => {
     }
 
     const shelter = {
-      ...existingShelter,
-      ...req.body,
+      shelter_name: req.body.shelter_name,
+      shelter_type: req.body.shelter_type,
+      address: req.body.address,
+      city: req.body.city,
+      phone: req.body.phone || null,
       capacity: Number(req.body.capacity),
       available_spaces: Number(req.body.available_spaces),
+      description: req.body.description || null,
       latitude: req.body.latitude === '' || req.body.latitude === undefined || req.body.latitude === null ? null : Number(req.body.latitude),
       longitude: req.body.longitude === '' || req.body.longitude === undefined || req.body.longitude === null ? null : Number(req.body.longitude),
     };

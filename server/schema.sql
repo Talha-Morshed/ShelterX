@@ -1,0 +1,18 @@
+CREATE DATABASE IF NOT EXISTS shelterx;
+USE shelterx;
+
+CREATE TABLE IF NOT EXISTS shelters (
+  shelter_id INT AUTO_INCREMENT PRIMARY KEY,
+  shelter_name VARCHAR(255) NOT NULL,
+  shelter_type VARCHAR(50) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  city VARCHAR(255) NOT NULL,
+  phone VARCHAR(50),
+  capacity INT NOT NULL,
+  available_spaces INT NOT NULL,
+  description TEXT,
+  latitude DECIMAL(9,6),
+  longitude DECIMAL(9,6),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
