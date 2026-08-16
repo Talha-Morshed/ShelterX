@@ -1,0 +1,132 @@
+.shelter-list h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
+  color: var(--text-h);
+}
+
+.shelter-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.shelter-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.shelter-card:hover {
+  box-shadow: var(--shadow);
+  border-color: var(--accent-border);
+}
+
+.shelter-header {
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--accent-bg), transparent);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 1rem;
+}
+
+.shelter-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--text-h);
+  flex: 1;
+}
+
+.shelter-type {
+  background: var(--accent);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.shelter-info {
+  padding: 1rem;
+  flex: 1;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+  font-size: 0.95rem;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-row .label {
+  font-weight: 600;
+  color: var(--text-h);
+  min-width: 120px;
+}
+
+.info-row .value {
+  color: var(--text);
+  flex: 1;
+  text-align: right;
+}
+
+.shelter-actions {
+  display: flex;
+  gap: 0.6rem;
+  padding: 1rem;
+  border-top: 1px solid var(--border);
+  background: var(--accent-bg);
+}
+
+.shelter-actions .btn {
+  flex: 1;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .shelter-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .shelter-header {
+    flex-direction: column;
+  }
+
+  .shelter-type {
+    align-self: flex-start;
+  }
+
+  .info-row {
+    flex-direction: column;
+    margin-bottom: 0.6rem;
+  }
+
+  .info-row .label {
+    min-width: auto;
+  }
+
+  .info-row .value {
+    text-align: left;
+  }
+
+  .shelter-actions {
+    flex-direction: column;
+  }
+
+  .shelter-actions .btn {
+    width: 100%;
+  }
+}

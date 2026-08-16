@@ -12,6 +12,10 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'ShelterX API is running' });
+});
+
 app.use('/api/shelters', shelterRoutes);
 
 app.get('/api/health', (req, res) => {
