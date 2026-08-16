@@ -27,7 +27,7 @@ function App() {
       const data = await getShelters();
       setShelters(data || []);
     } catch (err) {
-      setError('Failed to load shelters. Please check if the backend is running on http://localhost:5000');
+      setError('Failed to load human shelters. Please check if the backend is running on http://localhost:5000');
       console.error(err);
     } finally {
       setLoading(false);
@@ -43,12 +43,12 @@ function App() {
       if (editingId) {
         // Update existing shelter
         await updateShelter(editingId, formData);
-        setSuccessMessage('Shelter updated successfully!');
+        setSuccessMessage('Human shelter updated successfully!');
         setEditingId(null);
       } else {
         // Create new shelter
         await createShelter(formData);
-        setSuccessMessage('Shelter created successfully!');
+        setSuccessMessage('Human shelter created successfully!');
       }
 
       // Refresh the shelter list
@@ -57,7 +57,7 @@ function App() {
       // Clear success message after 3 seconds
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
-      setFormError(err.message || 'Failed to save shelter');
+      setFormError(err.message || 'Failed to save human shelter');
       console.error(err);
     } finally {
       setFormLoading(false);
@@ -76,11 +76,11 @@ function App() {
 
     try {
       await deleteShelter(id);
-      setSuccessMessage('Shelter deleted successfully!');
+      setSuccessMessage('Human shelter deleted successfully!');
       await fetchShelters();
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
-      setError(err.message || 'Failed to delete shelter');
+      setError(err.message || 'Failed to delete human shelter');
       console.error(err);
     } finally {
       setLoading(false);
@@ -103,8 +103,8 @@ function App() {
       <header className="app-header">
         <div className="container">
           <div className="header-content">
-            <h1>🏠 ShelterX Finder</h1>
-            <p>Manage animal shelters across your region</p>
+            <h1>🏠 Human Shelter Finder</h1>
+            <p>Manage human shelters across your region</p>
           </div>
           {editingId && (
             <button className="btn btn-secondary-header" onClick={handleCancelEdit}>
