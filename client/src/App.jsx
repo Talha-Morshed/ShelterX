@@ -40,7 +40,7 @@ function App() {
     setSuccessMessage(null);
 
     try {
-            if (editingId) {
+      if (editingId) {
         // Update existing facility
         await updateShelter(editingId, formData);
         setSuccessMessage('Facility updated successfully!');
