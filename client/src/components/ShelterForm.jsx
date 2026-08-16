@@ -38,12 +38,12 @@ const ShelterForm = ({ onSubmit, initialData, isLoading, error }) => {
   const validateForm = () => {
     const errors = [];
 
-    if (!formData.shelter_name || !formData.shelter_name.trim()) {
-      errors.push('Shelter name is required');
+      if (!formData.shelter_name || !formData.shelter_name.trim()) {
+        errors.push('Facility name is required');
     }
 
     if (!formData.shelter_type || !formData.shelter_type.trim()) {
-      errors.push('Shelter type is required');
+      errors.push('Facility type is required');
     }
 
     if (!formData.address || !formData.address.trim()) {
@@ -126,7 +126,7 @@ const ShelterForm = ({ onSubmit, initialData, isLoading, error }) => {
 
   return (
     <form className="shelter-form" onSubmit={handleSubmit}>
-      <h2>{initialData ? 'Update Shelter' : 'Add Shelter'}</h2>
+      <h2>{initialData ? 'Update Facility' : 'Add Facility'}</h2>
 
       {error && <div className="error-message">{error}</div>}
 
@@ -163,12 +163,11 @@ const ShelterForm = ({ onSubmit, initialData, isLoading, error }) => {
           disabled={isLoading}
         >
           <option value="">Select a type</option>
-          <option value="dog">Dog</option>
-          <option value="cat">Cat</option>
-          <option value="bird">Bird</option>
-          <option value="horse">Horse</option>
-          <option value="wildlife">Wildlife</option>
-          <option value="general">General</option>
+          <option value="shelter">Shelter</option>
+          <option value="food_bank">Food Bank</option>
+          <option value="medical">Medical/Clinic</option>
+          <option value="emergency_center">Emergency Center</option>
+          <option value="other">Other</option>
         </select>
       </div>
 
@@ -284,7 +283,7 @@ const ShelterForm = ({ onSubmit, initialData, isLoading, error }) => {
 
       <div className="form-actions">
         <button type="submit" disabled={isLoading} className="btn btn-primary">
-          {isLoading ? 'Saving...' : initialData ? 'Update Shelter' : 'Add Shelter'}
+          {isLoading ? 'Saving...' : initialData ? 'Update Facility' : 'Add Facility'}
         </button>
         <button type="button" disabled={isLoading} className="btn btn-secondary" onClick={handleReset}>
           Clear

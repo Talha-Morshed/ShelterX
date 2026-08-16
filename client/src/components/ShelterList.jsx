@@ -2,16 +2,16 @@ import './ShelterList.css';
 
 const ShelterList = ({ shelters, onEdit, onDelete, onView, isLoading }) => {
   if (isLoading) {
-    return <div className="loading">Loading shelters...</div>;
+    return <div className="loading">Loading facilities...</div>;
   }
 
   if (!shelters || shelters.length === 0) {
-    return <div className="no-shelters">No shelters found. Add one to get started!</div>;
+    return <div className="no-shelters">No facilities found. Add one to get started!</div>;
   }
 
   return (
     <div className="shelter-list">
-      <h2>Shelters</h2>
+      <h2>Facilities</h2>
       <div className="shelter-cards">
         {shelters.map((shelter) => (
           <div key={shelter.shelter_id} className="shelter-card">

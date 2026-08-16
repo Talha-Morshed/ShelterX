@@ -1,13 +1,13 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 /**
- * Get all shelters
+ * Get all facilities
  */
 export const getShelters = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/shelters`);
     if (!response.ok) {
-      throw new Error('Failed to fetch shelters');
+      throw new Error('Failed to fetch facilities');
     }
     return await response.json();
   } catch (error) {
@@ -17,16 +17,16 @@ export const getShelters = async () => {
 };
 
 /**
- * Get a single shelter by ID
+ * Get a single facility by ID
  */
 export const getShelter = async (id) => {
   try {
     const response = await fetch(`${API_BASE_URL}/shelters/${id}`);
     if (!response.ok) {
       if (response.status === 404) {
-        throw new Error('Shelter not found');
+        throw new Error('Facility not found');
       }
-      throw new Error('Failed to fetch shelter');
+      throw new Error('Failed to fetch facility');
     }
     return await response.json();
   } catch (error) {
@@ -36,7 +36,7 @@ export const getShelter = async (id) => {
 };
 
 /**
- * Create a new shelter
+ * Create a new facility
  */
 export const createShelter = async (data) => {
   try {
@@ -56,13 +56,13 @@ export const createShelter = async (data) => {
 
     return await response.json();
   } catch (error) {
-    console.error('Error creating shelter:', error);
+    console.error('Error creating facility:', error);
     throw error;
   }
 };
 
 /**
- * Update an existing shelter
+ * Update an existing facility
  */
 export const updateShelter = async (id, data) => {
   try {
@@ -82,13 +82,13 @@ export const updateShelter = async (id, data) => {
 
     return await response.json();
   } catch (error) {
-    console.error(`Error updating shelter ${id}:`, error);
+    console.error(`Error updating facility ${id}:`, error);
     throw error;
   }
 };
 
 /**
- * Delete a shelter
+ * Delete a facility
  */
 export const deleteShelter = async (id) => {
   try {
@@ -101,12 +101,12 @@ export const deleteShelter = async (id) => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to delete shelter');
+      throw new Error(errorData.message || 'Failed to delete facility');
     }
 
     return await response.json();
   } catch (error) {
-    console.error(`Error deleting shelter ${id}:`, error);
+    console.error(`Error deleting facility ${id}:`, error);
     throw error;
   }
 };

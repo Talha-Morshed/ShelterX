@@ -17,7 +17,7 @@ const ShelterDetail = ({ shelterId, onClose, _isLoading }) => {
         const data = await getShelter(shelterId);
         setShelter(data);
       } catch (err) {
-        setError(err.message || 'Failed to load shelter details');
+        setError(err.message || 'Failed to load facility details');
       } finally {
         setLoading(false);
       }
@@ -32,12 +32,12 @@ const ShelterDetail = ({ shelterId, onClose, _isLoading }) => {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Shelter Details</h2>
+           <h2>Facility Details</h2>
           <button className="modal-close" onClick={onClose}>×</button>
         </div>
 
         <div className="modal-body">
-          {loading && <div className="loading">Loading shelter details...</div>}
+           {loading && <div className="loading">Loading facility details...</div>}
 
           {error && <div className="error-message">{error}</div>}
 

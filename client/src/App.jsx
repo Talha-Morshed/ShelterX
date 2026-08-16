@@ -27,7 +27,7 @@ function App() {
       const data = await getShelters();
       setShelters(data || []);
     } catch (err) {
-      setError('Failed to load shelters. Please check if the backend is running on http://localhost:5000');
+      setError('Failed to load facilities. Please check if the backend is running on http://localhost:5000');
       console.error(err);
     } finally {
       setLoading(false);
@@ -40,15 +40,15 @@ function App() {
     setSuccessMessage(null);
 
     try {
-      if (editingId) {
-        // Update existing shelter
+            if (editingId) {
+        // Update existing facility
         await updateShelter(editingId, formData);
-        setSuccessMessage('Emergency shelter updated successfully!');
+        setSuccessMessage('Facility updated successfully!');
         setEditingId(null);
       } else {
-        // Create new shelter
+        // Create new facility
         await createShelter(formData);
-        setSuccessMessage('Emergency shelter created successfully!');
+        setSuccessMessage('Facility created successfully!');
       }
 
       // Refresh the shelter list
@@ -57,7 +57,7 @@ function App() {
       // Clear success message after 3 seconds
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
-      setFormError(err.message || 'Failed to save shelter');
+      setFormError(err.message || 'Failed to save facility');
       console.error(err);
     } finally {
       setFormLoading(false);
@@ -76,11 +76,11 @@ function App() {
 
     try {
       await deleteShelter(id);
-      setSuccessMessage('Emergency shelter deleted successfully!');
+      setSuccessMessage('Facility deleted successfully!');
       await fetchShelters();
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
-      setError(err.message || 'Failed to delete shelter');
+      setError(err.message || 'Failed to delete facility');
       console.error(err);
     } finally {
       setLoading(false);
@@ -103,8 +103,8 @@ function App() {
       <header className="app-header">
         <div className="container">
           <div className="header-content">
-            <h1>ShelterX</h1>
-            <p>Emergency shelter for disaster victims & homeless</p>
+            <h1>🏠 ShelterX Finder</h1>
+            <p>Manage shelters, food banks, and emergency support centers across your region</p>
           </div>
           {editingId && (
             <button className="btn btn-secondary-header" onClick={handleCancelEdit}>

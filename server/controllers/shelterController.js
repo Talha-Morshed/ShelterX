@@ -65,7 +65,7 @@ const getAllShelters = async (req, res) => {
     const shelters = await shelterModel.getAllShelters();
     res.status(200).json(shelters);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch shelters', error: error.message });
+    res.status(500).json({ message: 'Failed to fetch facilities', error: error.message });
   }
 };
 
@@ -75,12 +75,12 @@ const getShelterById = async (req, res) => {
     const shelter = await shelterModel.getShelterById(id);
 
     if (!shelter) {
-      return res.status(404).json({ message: 'Shelter not found' });
+      return res.status(404).json({ message: 'Facility not found' });
     }
 
     return res.status(200).json(shelter);
   } catch (error) {
-    return res.status(500).json({ message: 'Failed to fetch shelter', error: error.message });
+    return res.status(500).json({ message: 'Failed to fetch facility', error: error.message });
   }
 };
 
@@ -108,11 +108,11 @@ const createShelter = async (req, res) => {
     const createdShelter = await shelterModel.getShelterById(shelterId);
 
     return res.status(201).json({
-      message: 'Shelter created successfully',
+      message: 'Facility created successfully',
       shelter: createdShelter,
     });
   } catch (error) {
-    return res.status(500).json({ message: 'Failed to create shelter', error: error.message });
+    return res.status(500).json({ message: 'Failed to create facility', error: error.message });
   }
 };
 
@@ -122,7 +122,7 @@ const updateShelter = async (req, res) => {
     const existingShelter = await shelterModel.getShelterById(id);
 
     if (!existingShelter) {
-      return res.status(404).json({ message: 'Shelter not found' });
+      return res.status(404).json({ message: 'Facility not found' });
     }
 
     const errors = validateShelterInput(req.body);
@@ -147,11 +147,11 @@ const updateShelter = async (req, res) => {
     const updatedShelter = await shelterModel.getShelterById(id);
 
     return res.status(200).json({
-      message: 'Shelter updated successfully',
+      message: 'Facility updated successfully',
       shelter: updatedShelter,
     });
   } catch (error) {
-    return res.status(500).json({ message: 'Failed to update shelter', error: error.message });
+    return res.status(500).json({ message: 'Failed to update facility', error: error.message });
   }
 };
 
@@ -161,13 +161,13 @@ const deleteShelter = async (req, res) => {
     const shelter = await shelterModel.getShelterById(id);
 
     if (!shelter) {
-      return res.status(404).json({ message: 'Shelter not found' });
+      return res.status(404).json({ message: 'Facility not found' });
     }
 
     await shelterModel.deleteShelter(id);
-    return res.status(200).json({ message: 'Shelter deleted successfully' });
+    return res.status(200).json({ message: 'Facility deleted successfully' });
   } catch (error) {
-    return res.status(500).json({ message: 'Failed to delete shelter', error: error.message });
+    return res.status(500).json({ message: 'Failed to delete facility', error: error.message });
   }
 };
 

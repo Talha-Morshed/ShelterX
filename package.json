@@ -1,7 +1,7 @@
 {
   "name": "shelterx",
   "version": "1.0.0",
-  "description": "Animal shelter management application",
+  "description": "Shelter Finder — locate shelters, food banks, and emergency centers",
   "private": true,
   "scripts": {
     "server": "cd server && npm start",
