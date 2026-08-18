@@ -3,6 +3,13 @@ const path = require('path');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const shelterRoutes = require('./routes/shelterRoutes');
+const userRoutes = require('./routes/userRoutes');
+const serviceRoutes = require('./routes/serviceRoutes');
+const shelterServiceRoutes = require('./routes/shelterServiceRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const donationRoutes = require('./routes/donationRoutes');
+const volunteerRoutes = require('./routes/volunteerRoutes');
+const emergencyContactRoutes = require('./routes/emergencyContactRoutes');
 
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
@@ -17,6 +24,13 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/shelters', shelterRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/services', serviceRoutes);
+app.use('/api/shelter-services', shelterServiceRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/donations', donationRoutes);
+app.use('/api/volunteers', volunteerRoutes);
+app.use('/api/emergency-contacts', emergencyContactRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
