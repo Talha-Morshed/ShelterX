@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import './ShelterForm.css';
+import './FacilityForm.css';
 
-const ShelterForm = ({ onSubmit, initialData, isLoading, error }) => {
+const FacilityForm = ({ onSubmit, initialData, isLoading, error }) => {
   const [formData, setFormData] = useState({
-    shelter_name: '',
-    shelter_type: '',
+    facility_name: '',
+    facility_type: '',
     address: '',
     city: '',
     phone: '',
@@ -21,8 +21,8 @@ const ShelterForm = ({ onSubmit, initialData, isLoading, error }) => {
   useEffect(() => {
     if (initialData) {
       setFormData({
-        shelter_name: initialData.shelter_name || '',
-        shelter_type: initialData.shelter_type || '',
+        facility_name: initialData.facility_name || '',
+        facility_type: initialData.facility_type || '',
         address: initialData.address || '',
         city: initialData.city || '',
         phone: initialData.phone || '',
@@ -38,11 +38,11 @@ const ShelterForm = ({ onSubmit, initialData, isLoading, error }) => {
   const validateForm = () => {
     const errors = [];
 
-      if (!formData.shelter_name || !formData.shelter_name.trim()) {
+      if (!formData.facility_name || !formData.facility_name.trim()) {
         errors.push('Facility name is required');
     }
 
-    if (!formData.shelter_type || !formData.shelter_type.trim()) {
+    if (!formData.facility_type || !formData.facility_type.trim()) {
       errors.push('Facility type is required');
     }
 
@@ -110,8 +110,8 @@ const ShelterForm = ({ onSubmit, initialData, isLoading, error }) => {
 
   const handleReset = () => {
     setFormData({
-      shelter_name: '',
-      shelter_type: '',
+      facility_name: '',
+      facility_type: '',
       address: '',
       city: '',
       phone: '',
@@ -125,7 +125,7 @@ const ShelterForm = ({ onSubmit, initialData, isLoading, error }) => {
   };
 
   return (
-    <form className="shelter-form" onSubmit={handleSubmit}>
+    <form className="facility-form" onSubmit={handleSubmit}>
       <h2>{initialData ? 'Update Facility' : 'Add Facility'}</h2>
 
       {error && <div className="error-message">{error}</div>}
@@ -141,24 +141,24 @@ const ShelterForm = ({ onSubmit, initialData, isLoading, error }) => {
       )}
 
       <div className="form-group">
-        <label htmlFor="shelter_name">Name *</label>
+        <label htmlFor="facility_name">Name *</label>
         <input
           type="text"
-          id="shelter_name"
-          name="shelter_name"
-          value={formData.shelter_name}
+          id="facility_name"
+          name="facility_name"
+          value={formData.facility_name}
           onChange={handleChange}
           disabled={isLoading}
-          placeholder="Enter shelter name"
+          placeholder="Enter facility name"
         />
       </div>
 
       <div className="form-group">
-        <label htmlFor="shelter_type">Type *</label>
+        <label htmlFor="facility_type">Type *</label>
         <select
-          id="shelter_type"
-          name="shelter_type"
-          value={formData.shelter_type}
+          id="facility_type"
+          name="facility_type"
+          value={formData.facility_type}
           onChange={handleChange}
           disabled={isLoading}
         >
@@ -293,4 +293,4 @@ const ShelterForm = ({ onSubmit, initialData, isLoading, error }) => {
   );
 };
 
-export default ShelterForm;
+export default FacilityForm;

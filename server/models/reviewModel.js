@@ -2,22 +2,22 @@ const db = require('../config/db');
 
 const getAllReviews = async () => {
   const [rows] = await db.execute(
-    `SELECT r.*, u.full_name, s.shelter_name
+    `SELECT r.*, u.full_name, f.facility_name
      FROM reviews r
      JOIN users u ON r.user_id = u.user_id
-     JOIN shelters s ON r.shelter_id = s.shelter_id
+     JOIN facilities f ON r.facility_id = f.facility_id
      ORDER BY r.review_id DESC`
   );
   return rows;
 };
 
-const getReviewsByShelter = async (shelterId) => {
+const getReviewsByFacility = async (facilityId) => {
   const [rows] = await db.execute(
     `SELECT r.*, u.full_name
      FROM reviews r
      JOIN users u ON r.user_id = u.user_id
-     WHERE r.shelter_id = ?`,
-    [shelterId]
+     WHERE r.facility_id = ?`,
+    [facilityId]
   );
   return rows;
 };
@@ -31,25 +31,25 @@ const getReviewById = async (reviewId) => {
 };
 
 const createReview = async (reviewData) => {
-  const { shelter_id, user_id, rating, comment } = reviewData;
+  const { facility_id, user_id, rating, comment } = reviewData;
   const [result] = await db.execute(
-    `INSERT INTO reviews (shelter_id, user_id, rating, comment)
+    `INSERT INTO reviews (facility_id, user_id, rating, comment)
      VALUES (?, ?, ?, ?)`,
-    [shelter_id, user_id, rating, comment || null]
+    [facility_id, user_id, rating, comment || null]
   );
   return result.insertId;
 };
 
 const updateReview = async (reviewId, reviewData) => {
-  const { shelter_id, user_id, rating, comment } = reviewData;
+  const { facility_id, user_id, rating, comment } = reviewData;
   const [result] = await db.execute(
     `UPDATE reviews SET
-      shelter_id = ?,
+      facility_id = ?,
       user_id = ?,
       rating = ?,
       comment = ?
     WHERE review_id = ?`,
-    [shelter_id, user_id, rating, comment || null, reviewId]
+    [facility_id, user_id, rating, comment || null, reviewId]
   );
   return result.affectedRows;
 };
@@ -64,7 +64,7 @@ const deleteReview = async (reviewId) => {
 
 module.exports = {
   getAllReviews,
-  getReviewsByShelter,
+  getReviewsByFacility,
   getReviewById,
   createReview,
   updateReview,

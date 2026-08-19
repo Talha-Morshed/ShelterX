@@ -1,24 +1,24 @@
 const db = require('../config/db');
 
-const getAllShelters = async () => {
+const getAllFacilities = async () => {
   const [rows] = await db.execute(
-    'SELECT * FROM shelters ORDER BY shelter_id DESC'
+    'SELECT * FROM facilities ORDER BY facility_id DESC'
   );
   return rows;
 };
 
-const getShelterById = async (shelterId) => {
+const getFacilityById = async (facilityId) => {
   const [rows] = await db.execute(
-    'SELECT * FROM shelters WHERE shelter_id = ?',
-    [shelterId]
+    'SELECT * FROM facilities WHERE facility_id = ?',
+    [facilityId]
   );
   return rows[0] || null;
 };
 
-const createShelter = async (shelterData) => {
+const createFacility = async (facilityData) => {
   const {
-    shelter_name,
-    shelter_type,
+    facility_name,
+    facility_type,
     address,
     city,
     phone,
@@ -27,12 +27,12 @@ const createShelter = async (shelterData) => {
     description,
     latitude,
     longitude,
-  } = shelterData;
+  } = facilityData;
 
   const [result] = await db.execute(
-    `INSERT INTO shelters (
-      shelter_name,
-      shelter_type,
+    `INSERT INTO facilities (
+      facility_name,
+      facility_type,
       address,
       city,
       phone,
@@ -43,8 +43,8 @@ const createShelter = async (shelterData) => {
       longitude
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
-      shelter_name,
-      shelter_type,
+      facility_name,
+      facility_type,
       address,
       city,
       phone,
@@ -59,10 +59,10 @@ const createShelter = async (shelterData) => {
   return result.insertId;
 };
 
-const updateShelter = async (shelterId, shelterData) => {
+const updateFacility = async (facilityId, facilityData) => {
   const {
-    shelter_name,
-    shelter_type,
+    facility_name,
+    facility_type,
     address,
     city,
     phone,
@@ -71,12 +71,12 @@ const updateShelter = async (shelterId, shelterData) => {
     description,
     latitude,
     longitude,
-  } = shelterData;
+  } = facilityData;
 
   const [result] = await db.execute(
-    `UPDATE shelters SET
-      shelter_name = ?,
-      shelter_type = ?,
+    `UPDATE facilities SET
+      facility_name = ?,
+      facility_type = ?,
       address = ?,
       city = ?,
       phone = ?,
@@ -85,10 +85,10 @@ const updateShelter = async (shelterId, shelterData) => {
       description = ?,
       latitude = ?,
       longitude = ?
-    WHERE shelter_id = ?`,
+    WHERE facility_id = ?`,
     [
-      shelter_name,
-      shelter_type,
+      facility_name,
+      facility_type,
       address,
       city,
       phone,
@@ -97,25 +97,25 @@ const updateShelter = async (shelterId, shelterData) => {
       description,
       latitude,
       longitude,
-      shelterId,
+      facilityId,
     ]
   );
 
   return result.affectedRows;
 };
 
-const deleteShelter = async (shelterId) => {
+const deleteFacility = async (facilityId) => {
   const [result] = await db.execute(
-    'DELETE FROM shelters WHERE shelter_id = ?',
-    [shelterId]
+    'DELETE FROM facilities WHERE facility_id = ?',
+    [facilityId]
   );
   return result.affectedRows;
 };
 
 module.exports = {
-  getAllShelters,
-  getShelterById,
-  createShelter,
-  updateShelter,
-  deleteShelter,
+  getAllFacilities,
+  getFacilityById,
+  createFacility,
+  updateFacility,
+  deleteFacility,
 };

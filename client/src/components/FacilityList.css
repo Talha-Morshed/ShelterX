@@ -1,16 +1,16 @@
-.shelter-list h2 {
+.facility-list h2 {
   margin: 0 0 1.5rem 0;
   font-size: 1.5rem;
   color: var(--text-h);
 }
 
-.shelter-cards {
+.facility-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
 }
 
-.shelter-card {
+.facility-card {
   background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
@@ -20,12 +20,12 @@
   flex-direction: column;
 }
 
-.shelter-card:hover {
+.facility-card:hover {
   box-shadow: var(--shadow);
   border-color: var(--accent-border);
 }
 
-.shelter-header {
+.facility-header {
   padding: 1rem;
   background: linear-gradient(135deg, var(--accent-bg), transparent);
   border-bottom: 1px solid var(--border);
@@ -35,14 +35,14 @@
   gap: 1rem;
 }
 
-.shelter-header h3 {
+.facility-header h3 {
   margin: 0;
   font-size: 1.2rem;
   color: var(--text-h);
   flex: 1;
 }
 
-.shelter-type {
+.facility-type {
   background: var(--accent);
   color: white;
   padding: 0.3rem 0.6rem;
@@ -52,7 +52,7 @@
   white-space: nowrap;
 }
 
-.shelter-info {
+.facility-info {
   padding: 1rem;
   flex: 1;
 }
@@ -81,7 +81,7 @@
   text-align: right;
 }
 
-.shelter-actions {
+.facility-actions {
   display: flex;
   gap: 0.6rem;
   padding: 1rem;
@@ -89,7 +89,7 @@
   background: var(--accent-bg);
 }
 
-.shelter-actions .btn {
+.facility-actions .btn {
   flex: 1;
   padding: 0.5rem 0.8rem;
   font-size: 0.9rem;
@@ -97,15 +97,15 @@
 }
 
 @media (max-width: 768px) {
-  .shelter-cards {
+  .facility-cards {
     grid-template-columns: 1fr;
   }
 
-  .shelter-header {
+  .facility-header {
     flex-direction: column;
   }
 
-  .shelter-type {
+  .facility-type {
     align-self: flex-start;
   }
 
@@ -122,11 +122,11 @@
     text-align: left;
   }
 
-  .shelter-actions {
+  .facility-actions {
     flex-direction: column;
   }
 
-  .shelter-actions .btn {
+  .facility-actions .btn {
     width: 100%;
   }
 }

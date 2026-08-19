@@ -2,10 +2,10 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const shelterRoutes = require('./routes/shelterRoutes');
+const facilityRoutes = require('./routes/facilityRoutes');
 const userRoutes = require('./routes/userRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
-const shelterServiceRoutes = require('./routes/shelterServiceRoutes');
+const facilityServiceRoutes = require('./routes/facilityServiceRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const donationRoutes = require('./routes/donationRoutes');
 const volunteerRoutes = require('./routes/volunteerRoutes');
@@ -23,10 +23,10 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'ShelterX API is running' });
 });
 
-app.use('/api/shelters', shelterRoutes);
+app.use('/api/facilities', facilityRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/services', serviceRoutes);
-app.use('/api/shelter-services', shelterServiceRoutes);
+app.use('/api/facility-services', facilityServiceRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/volunteers', volunteerRoutes);

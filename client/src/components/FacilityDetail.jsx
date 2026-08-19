@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react';
-import { getShelter } from '../services/shelterService';
-import './ShelterDetail.css';
+import { getFacility } from '../services/facilityService';
+import './FacilityDetail.css';
 
-const ShelterDetail = ({ shelterId, onClose, _isLoading }) => {
-  const [shelter, setShelter] = useState(null);
+const FacilityDetail = ({ facilityId, onClose, _isLoading }) => {
+  const [facility, setFacility] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!shelterId) return;
+    if (!facilityId) return;
 
-    const fetchShelter = async () => {
+    const fetchFacility = async () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await getShelter(shelterId);
-        setShelter(data);
+        const data = await getFacility(facilityId);
+        setFacility(data);
       } catch (err) {
         setError(err.message || 'Failed to load facility details');
       } finally {
@@ -23,10 +23,10 @@ const ShelterDetail = ({ shelterId, onClose, _isLoading }) => {
       }
     };
 
-    fetchShelter();
-  }, [shelterId]);
+    fetchFacility();
+  }, [facilityId]);
 
-  if (!shelterId) return null;
+  if (!facilityId) return null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -41,89 +41,89 @@ const ShelterDetail = ({ shelterId, onClose, _isLoading }) => {
 
           {error && <div className="error-message">{error}</div>}
 
-          {shelter && (
-            <div className="shelter-detail">
+          {facility && (
+            <div className="facility-detail">
               <div className="detail-section">
-                <h3>{shelter.shelter_name}</h3>
-                <p className="detail-type">{shelter.shelter_type}</p>
+                <h3>{facility.facility_name}</h3>
+                <p className="detail-type">{facility.facility_type}</p>
               </div>
 
               <div className="detail-grid">
                 <div className="detail-row">
                   <span className="detail-label">City:</span>
-                  <span className="detail-value">{shelter.city}</span>
+                  <span className="detail-value">{facility.city}</span>
                 </div>
                 <div className="detail-row">
                   <span className="detail-label">Address:</span>
-                  <span className="detail-value">{shelter.address}</span>
+                  <span className="detail-value">{facility.address}</span>
                 </div>
-                {shelter.phone && (
+                {facility.phone && (
                   <div className="detail-row">
                     <span className="detail-label">Phone:</span>
                     <span className="detail-value">
-                      <a href={`tel:${shelter.phone}`}>{shelter.phone}</a>
+                      <a href={`tel:${facility.phone}`}>{facility.phone}</a>
                     </span>
                   </div>
                 )}
-                {shelter.email && (
+                {facility.email && (
                   <div className="detail-row">
                     <span className="detail-label">Email:</span>
                     <span className="detail-value">
-                      <a href={`mailto:${shelter.email}`}>{shelter.email}</a>
+                      <a href={`mailto:${facility.email}`}>{facility.email}</a>
                     </span>
                   </div>
                 )}
                 <div className="detail-row">
                   <span className="detail-label">Total Capacity:</span>
-                  <span className="detail-value">{shelter.capacity}</span>
+                  <span className="detail-value">{facility.capacity}</span>
                 </div>
                 <div className="detail-row">
                   <span className="detail-label">Available Spaces:</span>
-                  <span className="detail-value">{shelter.available_spaces}</span>
+                  <span className="detail-value">{facility.available_spaces}</span>
                 </div>
                 <div className="detail-row">
                   <span className="detail-label">Occupied:</span>
-                  <span className="detail-value">{shelter.capacity - shelter.available_spaces}</span>
+                  <span className="detail-value">{facility.capacity - facility.available_spaces}</span>
                 </div>
               </div>
 
-              {shelter.description && (
+              {facility.description && (
                 <div className="detail-description">
                   <h4>Description</h4>
-                  <p>{shelter.description}</p>
+                  <p>{facility.description}</p>
                 </div>
               )}
 
-              {(shelter.latitude || shelter.longitude) && (
+              {(facility.latitude || facility.longitude) && (
                 <div className="detail-location">
                   <h4>Location</h4>
                   <div className="detail-grid">
-                    {shelter.latitude && (
+                    {facility.latitude && (
                       <div className="detail-row">
                         <span className="detail-label">Latitude:</span>
-                        <span className="detail-value">{shelter.latitude}</span>
+                        <span className="detail-value">{facility.latitude}</span>
                       </div>
                     )}
-                    {shelter.longitude && (
+                    {facility.longitude && (
                       <div className="detail-row">
                         <span className="detail-label">Longitude:</span>
-                        <span className="detail-value">{shelter.longitude}</span>
+                        <span className="detail-value">{facility.longitude}</span>
                       </div>
                     )}
                   </div>
                 </div>
               )}
 
-              {(shelter.created_at || shelter.updated_at) && (
+              {(facility.created_at || facility.updated_at) && (
                 <div className="detail-meta">
-                  {shelter.created_at && (
+                  {facility.created_at && (
                     <p className="meta-text">
-                      Created: {new Date(shelter.created_at).toLocaleString()}
+                      Created: {new Date(facility.created_at).toLocaleString()}
                     </p>
                   )}
-                  {shelter.updated_at && (
+                  {facility.updated_at && (
                     <p className="meta-text">
-                      Updated: {new Date(shelter.updated_at).toLocaleString()}
+                      Updated: {new Date(facility.updated_at).toLocaleString()}
                     </p>
                   )}
                 </div>
@@ -142,4 +142,4 @@ const ShelterDetail = ({ shelterId, onClose, _isLoading }) => {
   );
 };
 
-export default ShelterDetail;
+export default FacilityDetail;

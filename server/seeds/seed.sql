@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS shelterx;
 USE shelterx;
 
-INSERT INTO shelters (shelter_name, shelter_type, address, city, phone, capacity, available_spaces, description, latitude, longitude)
+INSERT INTO facilities (facility_name, facility_type, address, city, phone, capacity, available_spaces, description, latitude, longitude)
 VALUES
 ('Downtown Relief Center', 'Shelter', '123 Main St', 'Springfield', '+1 (555) 123-4567', 100, 25, 'Open-admission relief center serving the downtown area.', 37.7749, -122.4194),
 ('Riverside Food Bank', 'Food Bank', '456 River Rd', 'Rivertown', '+1 (555) 987-6543', 50, 10, 'Community food bank providing emergency supplies.', 34.0522, -118.2437),
@@ -31,7 +31,7 @@ VALUES
 ('Veterans Support', 'Specialized services for military veterans including housing and benefits assistance.', 'Specialized'),
 ('Pet Adoption', 'Animal rescue, fostering, and adoption services.', 'Animals');
 
-INSERT INTO shelter_services (shelter_id, service_id, is_available, notes)
+INSERT INTO facility_services (facility_id, service_id, is_available, notes)
 VALUES
 (1, 1, TRUE, 'Available 24/7 during winter months.'),
 (1, 2, TRUE, 'Meals served 3 times daily.'),
@@ -46,7 +46,7 @@ VALUES
 (7, 7, TRUE, 'Dedicated veterans benefits coordinator on staff.'),
 (8, 8, TRUE, 'Adoption hours: 10AM-4PM daily.');
 
-INSERT INTO reviews (shelter_id, user_id, rating, comment)
+INSERT INTO reviews (facility_id, user_id, rating, comment)
 VALUES
 (1, 1, 5, 'Very clean and the staff were incredibly helpful.'),
 (1, 3, 4, 'Good facilities but can get crowded on weekends.'),
@@ -57,7 +57,7 @@ VALUES
 (7, 3, 5, 'Finally a shelter that understands veterans needs.'),
 (8, 2, 4, 'Adopted my cat here. Very professional staff.');
 
-INSERT INTO donations (shelter_id, user_id, amount, donation_type, notes)
+INSERT INTO donations (facility_id, user_id, amount, donation_type, notes)
 VALUES
 (1, 1, 50.00, 'money', 'Monthly donation.'),
 (2, 2, 100.00, 'money', 'Holiday season contribution.'),
@@ -68,7 +68,7 @@ VALUES
 (7, 3, 200.00, 'money', 'Veterans day special donation.'),
 (4, 2, 0.00, 'supplies', 'School supplies for youth program.');
 
-INSERT INTO volunteers (shelter_id, user_id, role, availability, status)
+INSERT INTO volunteers (facility_id, user_id, role, availability, status)
 VALUES
 (1, 1, 'Front Desk', 'Weekends 9AM-5PM', 'approved'),
 (2, 3, 'Food Server', 'Saturdays 10AM-2PM', 'approved'),
@@ -79,7 +79,7 @@ VALUES
 (5, 3, 'Receptionist', 'Tuesdays 9AM-1PM', 'approved'),
 (4, 5, 'Tutor', 'Wednesdays 3PM-6PM', 'pending');
 
-INSERT INTO emergency_contacts (shelter_id, contact_name, contact_phone, contact_role, is_primary)
+INSERT INTO emergency_contacts (facility_id, contact_name, contact_phone, contact_role, is_primary)
 VALUES
 (1, 'James Carter', '+1 (555) 100-0001', 'Shelter Director', TRUE),
 (1, 'Linda Harris', '+1 (555) 100-0002', 'Night Shift Manager', FALSE),

@@ -1,17 +1,17 @@
 const express = require('express');
 const {
-  getAllShelterServices,
-  getByShelter,
+  getAllFacilityServices,
+  getByFacility,
   getById,
   create,
   update,
   remove,
-} = require('../controllers/shelterServiceController');
+} = require('../controllers/facilityServiceController');
 
 const router = express.Router();
 
-router.get('/', getAllShelterServices);
-router.get('/shelter/:shelterId', getByShelter);
+router.get('/', getAllFacilityServices);
+router.get('/facility/:facilityId', getByFacility);
 router.get('/:id', getById);
 router.post('/', create);
 router.put('/:id', update);

@@ -1,8 +1,8 @@
 [
 	{
-		"shelter_id": 1,
-		"shelter_name": "Downtown Relief Center",
-		"shelter_type": "Shelter",
+		"facility_id": 1,
+		"facility_name": "Downtown Relief Center",
+		"facility_type": "Shelter",
 		"address": "123 Main St",
 		"city": "Springfield",
 		"phone": "+1 (555) 123-4567",
@@ -15,9 +15,9 @@
 		"updated_at": "2026-08-17T00:00:00.000Z"
 	},
 	{
-		"shelter_id": 2,
-		"shelter_name": "Riverside Food Bank",
-		"shelter_type": "Food Bank",
+		"facility_id": 2,
+		"facility_name": "Riverside Food Bank",
+		"facility_type": "Food Bank",
 		"address": "456 River Rd",
 		"city": "Rivertown",
 		"phone": "+1 (555) 987-6543",

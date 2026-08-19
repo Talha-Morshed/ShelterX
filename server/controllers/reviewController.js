@@ -1,9 +1,9 @@
 const reviewModel = require('../models/reviewModel');
 
 const validateReviewInput = (data) => {
-  const { shelter_id, user_id, rating } = data;
+  const { facility_id, user_id, rating } = data;
   const errors = [];
-  if (!shelter_id) errors.push('shelter_id is required');
+  if (!facility_id) errors.push('facility_id is required');
   if (!user_id) errors.push('user_id is required');
   if (!rating || Number(rating) < 1 || Number(rating) > 5) errors.push('rating must be between 1 and 5');
   return errors;
@@ -18,9 +18,9 @@ const getAllReviews = async (req, res) => {
   }
 };
 
-const getByShelter = async (req, res) => {
+const getByFacility = async (req, res) => {
   try {
-    const reviews = await reviewModel.getReviewsByShelter(req.params.shelterId);
+    const reviews = await reviewModel.getReviewsByFacility(req.params.facilityId);
     res.status(200).json(reviews);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch reviews', error: error.message });
@@ -78,4 +78,4 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getAllReviews, getByShelter, getById, create, update, remove };
+module.exports = { getAllReviews, getByFacility, getById, create, update, remove };

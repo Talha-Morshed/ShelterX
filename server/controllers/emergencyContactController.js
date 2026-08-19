@@ -1,9 +1,9 @@
 const contactModel = require('../models/emergencyContactModel');
 
 const validateContactInput = (data) => {
-  const { shelter_id, contact_name, contact_phone } = data;
+  const { facility_id, contact_name, contact_phone } = data;
   const errors = [];
-  if (!shelter_id) errors.push('shelter_id is required');
+  if (!facility_id) errors.push('facility_id is required');
   if (!contact_name || !String(contact_name).trim()) errors.push('contact_name is required');
   if (!contact_phone || !String(contact_phone).trim()) errors.push('contact_phone is required');
   return errors;
@@ -18,9 +18,9 @@ const getAllContacts = async (req, res) => {
   }
 };
 
-const getByShelter = async (req, res) => {
+const getByFacility = async (req, res) => {
   try {
-    const contacts = await contactModel.getContactsByShelter(req.params.shelterId);
+    const contacts = await contactModel.getContactsByFacility(req.params.facilityId);
     res.status(200).json(contacts);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch contacts', error: error.message });
@@ -78,4 +78,4 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getAllContacts, getByShelter, getById, create, update, remove };
+module.exports = { getAllContacts, getByFacility, getById, create, update, remove };

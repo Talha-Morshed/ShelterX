@@ -3,15 +3,15 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 /**
  * Get all facilities
  */
-export const getShelters = async () => {
+export const getFacilities = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/shelters`);
+    const response = await fetch(`${API_BASE_URL}/facilities`);
     if (!response.ok) {
       throw new Error('Failed to fetch facilities');
     }
     return await response.json();
   } catch (error) {
-    console.error('Error fetching shelters:', error);
+    console.error('Error fetching facilities:', error);
     throw error;
   }
 };
@@ -19,9 +19,9 @@ export const getShelters = async () => {
 /**
  * Get a single facility by ID
  */
-export const getShelter = async (id) => {
+export const getFacility = async (id) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/shelters/${id}`);
+    const response = await fetch(`${API_BASE_URL}/facilities/${id}`);
     if (!response.ok) {
       if (response.status === 404) {
         throw new Error('Facility not found');
@@ -30,7 +30,7 @@ export const getShelter = async (id) => {
     }
     return await response.json();
   } catch (error) {
-    console.error(`Error fetching shelter ${id}:`, error);
+    console.error(`Error fetching facility ${id}:`, error);
     throw error;
   }
 };
@@ -38,9 +38,9 @@ export const getShelter = async (id) => {
 /**
  * Create a new facility
  */
-export const createShelter = async (data) => {
+export const createFacility = async (data) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/shelters`, {
+    const response = await fetch(`${API_BASE_URL}/facilities`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -64,9 +64,9 @@ export const createShelter = async (data) => {
 /**
  * Update an existing facility
  */
-export const updateShelter = async (id, data) => {
+export const updateFacility = async (id, data) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/shelters/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/facilities/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -90,9 +90,9 @@ export const updateShelter = async (id, data) => {
 /**
  * Delete a facility
  */
-export const deleteShelter = async (id) => {
+export const deleteFacility = async (id) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/shelters/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/facilities/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

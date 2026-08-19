@@ -1,7 +1,7 @@
 const express = require('express');
 const {
   getAllReviews,
-  getByShelter,
+  getByFacility,
   getById,
   create,
   update,
@@ -11,7 +11,7 @@ const {
 const router = express.Router();
 
 router.get('/', getAllReviews);
-router.get('/shelter/:shelterId', getByShelter);
+router.get('/facility/:facilityId', getByFacility);
 router.get('/:id', getById);
 router.post('/', create);
 router.put('/:id', update);

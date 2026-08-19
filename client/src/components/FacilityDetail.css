@@ -97,13 +97,13 @@
   min-width: 100px;
 }
 
-.shelter-detail h3 {
+.facility-detail h3 {
   margin: 0 0 0.3rem 0;
   font-size: 1.8rem;
   color: var(--text-h);
 }
 
-.shelter-detail h4 {
+.facility-detail h4 {
   margin: 1.5rem 0 1rem 0;
   font-size: 1.1rem;
   color: var(--text-h);

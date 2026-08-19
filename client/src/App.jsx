@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import ShelterForm from './components/ShelterForm';
-import ShelterList from './components/ShelterList';
-import ShelterDetail from './components/ShelterDetail';
-import { getShelters, createShelter, updateShelter, deleteShelter } from './services/shelterService';
+import FacilityForm from './components/FacilityForm';
+import FacilityList from './components/FacilityList';
+import FacilityDetail from './components/FacilityDetail';
+import { getFacilities, createFacility, updateFacility, deleteFacility } from './services/facilityService';
 import './App.css';
 
 function App() {
-  const [shelters, setShelters] = useState([]);
+  const [facilities, setFacilities] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -15,17 +15,17 @@ function App() {
   const [formError, setFormError] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
 
-  // Fetch shelters on component mount
+  // Fetch facilities on component mount
   useEffect(() => {
-    fetchShelters();
+    fetchFacilities();
   }, []);
 
-  const fetchShelters = async () => {
+  const fetchFacilities = async () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getShelters();
-      setShelters(data || []);
+      const data = await getFacilities();
+      setFacilities(data || []);
     } catch (err) {
       setError('Failed to load facilities. Please check if the backend is running on http://localhost:5000');
       console.error(err);
@@ -42,17 +42,17 @@ function App() {
     try {
       if (editingId) {
         // Update existing facility
-        await updateShelter(editingId, formData);
+        await updateFacility(editingId, formData);
         setSuccessMessage('Facility updated successfully!');
         setEditingId(null);
       } else {
         // Create new facility
-        await createShelter(formData);
+        await createFacility(formData);
         setSuccessMessage('Facility created successfully!');
       }
 
-      // Refresh the shelter list
-      await fetchShelters();
+      // Refresh the facility list
+      await fetchFacilities();
 
       // Clear success message after 3 seconds
       setTimeout(() => setSuccessMessage(null), 3000);
@@ -64,8 +64,8 @@ function App() {
     }
   };
 
-  const handleEdit = (shelter) => {
-    setEditingId(shelter.shelter_id);
+  const handleEdit = (facility) => {
+    setEditingId(facility.facility_id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -75,9 +75,9 @@ function App() {
     setSuccessMessage(null);
 
     try {
-      await deleteShelter(id);
+      await deleteFacility(id);
       setSuccessMessage('Facility deleted successfully!');
-      await fetchShelters();
+      await fetchFacilities();
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setError(err.message || 'Failed to delete facility');
@@ -96,7 +96,7 @@ function App() {
     setFormError(null);
   };
 
-  const editingData = editingId ? shelters.find((s) => s.shelter_id === editingId) : null;
+  const editingData = editingId ? facilities.find((s) => s.facility_id === editingId) : null;
 
   return (
     <div className="app">
@@ -129,7 +129,7 @@ function App() {
 
         <div className="app-grid">
           <aside className="sidebar">
-            <ShelterForm
+            <FacilityForm
               onSubmit={handleFormSubmit}
               initialData={editingData}
               isLoading={formLoading}
@@ -138,8 +138,8 @@ function App() {
           </aside>
 
           <section className="main-content">
-            <ShelterList
-              shelters={shelters}
+            <FacilityList
+              facilities={facilities}
               onEdit={handleEdit}
               onDelete={handleDelete}
               onView={handleView}
@@ -150,8 +150,8 @@ function App() {
       </main>
 
       {viewingId && (
-        <ShelterDetail
-          shelterId={viewingId}
+        <FacilityDetail
+          facilityId={viewingId}
           onClose={() => setViewingId(null)}
           isLoading={loading}
         />

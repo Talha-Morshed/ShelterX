@@ -2,22 +2,22 @@ const db = require('../config/db');
 
 const getAllDonations = async () => {
   const [rows] = await db.execute(
-    `SELECT d.*, u.full_name, s.shelter_name
+    `SELECT d.*, u.full_name, f.facility_name
      FROM donations d
      JOIN users u ON d.user_id = u.user_id
-     JOIN shelters s ON d.shelter_id = s.shelter_id
+     JOIN facilities f ON d.facility_id = f.facility_id
      ORDER BY d.donation_id DESC`
   );
   return rows;
 };
 
-const getDonationsByShelter = async (shelterId) => {
+const getDonationsByFacility = async (facilityId) => {
   const [rows] = await db.execute(
     `SELECT d.*, u.full_name
      FROM donations d
      JOIN users u ON d.user_id = u.user_id
-     WHERE d.shelter_id = ?`,
-    [shelterId]
+     WHERE d.facility_id = ?`,
+    [facilityId]
   );
   return rows;
 };
@@ -31,26 +31,26 @@ const getDonationById = async (donationId) => {
 };
 
 const createDonation = async (donationData) => {
-  const { shelter_id, user_id, amount, donation_type, notes } = donationData;
+  const { facility_id, user_id, amount, donation_type, notes } = donationData;
   const [result] = await db.execute(
-    `INSERT INTO donations (shelter_id, user_id, amount, donation_type, notes)
+    `INSERT INTO donations (facility_id, user_id, amount, donation_type, notes)
      VALUES (?, ?, ?, ?, ?)`,
-    [shelter_id, user_id, amount, donation_type || 'money', notes || null]
+    [facility_id, user_id, amount, donation_type || 'money', notes || null]
   );
   return result.insertId;
 };
 
 const updateDonation = async (donationId, donationData) => {
-  const { shelter_id, user_id, amount, donation_type, notes } = donationData;
+  const { facility_id, user_id, amount, donation_type, notes } = donationData;
   const [result] = await db.execute(
     `UPDATE donations SET
-      shelter_id = ?,
+      facility_id = ?,
       user_id = ?,
       amount = ?,
       donation_type = ?,
       notes = ?
     WHERE donation_id = ?`,
-    [shelter_id, user_id, amount, donation_type || 'money', notes || null, donationId]
+    [facility_id, user_id, amount, donation_type || 'money', notes || null, donationId]
   );
   return result.affectedRows;
 };
@@ -65,7 +65,7 @@ const deleteDonation = async (donationId) => {
 
 module.exports = {
   getAllDonations,
-  getDonationsByShelter,
+  getDonationsByFacility,
   getDonationById,
   createDonation,
   updateDonation,

@@ -1,9 +1,9 @@
 const donationModel = require('../models/donationModel');
 
 const validateDonationInput = (data) => {
-  const { shelter_id, user_id, amount } = data;
+  const { facility_id, user_id, amount } = data;
   const errors = [];
-  if (!shelter_id) errors.push('shelter_id is required');
+  if (!facility_id) errors.push('facility_id is required');
   if (!user_id) errors.push('user_id is required');
   if (amount === undefined || amount === null || Number(amount) < 0) errors.push('amount is required and must be non-negative');
   return errors;
@@ -18,9 +18,9 @@ const getAllDonations = async (req, res) => {
   }
 };
 
-const getByShelter = async (req, res) => {
+const getByFacility = async (req, res) => {
   try {
-    const donations = await donationModel.getDonationsByShelter(req.params.shelterId);
+    const donations = await donationModel.getDonationsByFacility(req.params.facilityId);
     res.status(200).json(donations);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch donations', error: error.message });
@@ -78,4 +78,4 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getAllDonations, getByShelter, getById, create, update, remove };
+module.exports = { getAllDonations, getByFacility, getById, create, update, remove };

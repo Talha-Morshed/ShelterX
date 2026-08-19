@@ -1,9 +1,9 @@
-const shelterModel = require('../models/shelterModel');
+const facilityModel = require('../models/facilityModel');
 
-const validateShelterInput = (data) => {
+const validateFacilityInput = (data) => {
   const {
-    shelter_name,
-    shelter_type,
+    facility_name,
+    facility_type,
     address,
     city,
     phone,
@@ -16,11 +16,11 @@ const validateShelterInput = (data) => {
 
   const errors = [];
 
-  if (!shelter_name || !String(shelter_name).trim()) {
-    errors.push('shelter_name is required');
+  if (!facility_name || !String(facility_name).trim()) {
+    errors.push('facility_name is required');
   }
-  if (!shelter_type || !String(shelter_type).trim()) {
-    errors.push('shelter_type is required');
+  if (!facility_type || !String(facility_type).trim()) {
+    errors.push('facility_type is required');
   }
   if (!address || !String(address).trim()) {
     errors.push('address is required');
@@ -60,40 +60,40 @@ const validateShelterInput = (data) => {
   return errors;
 };
 
-const getAllShelters = async (req, res) => {
+const getAllFacilities = async (req, res) => {
   try {
-    const shelters = await shelterModel.getAllShelters();
-    res.status(200).json(shelters);
+    const facilities = await facilityModel.getAllFacilities();
+    res.status(200).json(facilities);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch facilities', error: error.message });
   }
 };
 
-const getShelterById = async (req, res) => {
+const getFacilityById = async (req, res) => {
   try {
     const { id } = req.params;
-    const shelter = await shelterModel.getShelterById(id);
+    const facility = await facilityModel.getFacilityById(id);
 
-    if (!shelter) {
+    if (!facility) {
       return res.status(404).json({ message: 'Facility not found' });
     }
 
-    return res.status(200).json(shelter);
+    return res.status(200).json(facility);
   } catch (error) {
     return res.status(500).json({ message: 'Failed to fetch facility', error: error.message });
   }
 };
 
-const createShelter = async (req, res) => {
+const createFacility = async (req, res) => {
   try {
-    const errors = validateShelterInput(req.body);
+    const errors = validateFacilityInput(req.body);
     if (errors.length > 0) {
       return res.status(400).json({ message: 'Validation failed', errors });
     }
 
-    const shelter = {
-      shelter_name: req.body.shelter_name,
-      shelter_type: req.body.shelter_type,
+    const facility = {
+      facility_name: req.body.facility_name,
+      facility_type: req.body.facility_type,
       address: req.body.address,
       city: req.body.city,
       phone: req.body.phone || null,
@@ -104,35 +104,35 @@ const createShelter = async (req, res) => {
       longitude: req.body.longitude === '' || req.body.longitude === undefined || req.body.longitude === null ? null : Number(req.body.longitude),
     };
 
-    const shelterId = await shelterModel.createShelter(shelter);
-    const createdShelter = await shelterModel.getShelterById(shelterId);
+    const facilityId = await facilityModel.createFacility(facility);
+    const createdFacility = await facilityModel.getFacilityById(facilityId);
 
     return res.status(201).json({
       message: 'Facility created successfully',
-      shelter: createdShelter,
+      facility: createdFacility,
     });
   } catch (error) {
     return res.status(500).json({ message: 'Failed to create facility', error: error.message });
   }
 };
 
-const updateShelter = async (req, res) => {
+const updateFacility = async (req, res) => {
   try {
     const { id } = req.params;
-    const existingShelter = await shelterModel.getShelterById(id);
+    const existingFacility = await facilityModel.getFacilityById(id);
 
-    if (!existingShelter) {
+    if (!existingFacility) {
       return res.status(404).json({ message: 'Facility not found' });
     }
 
-    const errors = validateShelterInput(req.body);
+    const errors = validateFacilityInput(req.body);
     if (errors.length > 0) {
       return res.status(400).json({ message: 'Validation failed', errors });
     }
 
-    const shelter = {
-      shelter_name: req.body.shelter_name,
-      shelter_type: req.body.shelter_type,
+    const facility = {
+      facility_name: req.body.facility_name,
+      facility_type: req.body.facility_type,
       address: req.body.address,
       city: req.body.city,
       phone: req.body.phone || null,
@@ -143,28 +143,28 @@ const updateShelter = async (req, res) => {
       longitude: req.body.longitude === '' || req.body.longitude === undefined || req.body.longitude === null ? null : Number(req.body.longitude),
     };
 
-    await shelterModel.updateShelter(id, shelter);
-    const updatedShelter = await shelterModel.getShelterById(id);
+    await facilityModel.updateFacility(id, facility);
+    const updatedFacility = await facilityModel.getFacilityById(id);
 
     return res.status(200).json({
       message: 'Facility updated successfully',
-      shelter: updatedShelter,
+      facility: updatedFacility,
     });
   } catch (error) {
     return res.status(500).json({ message: 'Failed to update facility', error: error.message });
   }
 };
 
-const deleteShelter = async (req, res) => {
+const deleteFacility = async (req, res) => {
   try {
     const { id } = req.params;
-    const shelter = await shelterModel.getShelterById(id);
+    const facility = await facilityModel.getFacilityById(id);
 
-    if (!shelter) {
+    if (!facility) {
       return res.status(404).json({ message: 'Facility not found' });
     }
 
-    await shelterModel.deleteShelter(id);
+    await facilityModel.deleteFacility(id);
     return res.status(200).json({ message: 'Facility deleted successfully' });
   } catch (error) {
     return res.status(500).json({ message: 'Failed to delete facility', error: error.message });
@@ -172,9 +172,9 @@ const deleteShelter = async (req, res) => {
 };
 
 module.exports = {
-  getAllShelters,
-  getShelterById,
-  createShelter,
-  updateShelter,
-  deleteShelter,
+  getAllFacilities,
+  getFacilityById,
+  createFacility,
+  updateFacility,
+  deleteFacility,
 };

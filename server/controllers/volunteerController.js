@@ -1,9 +1,9 @@
 const volunteerModel = require('../models/volunteerModel');
 
 const validateVolunteerInput = (data) => {
-  const { shelter_id, user_id } = data;
+  const { facility_id, user_id } = data;
   const errors = [];
-  if (!shelter_id) errors.push('shelter_id is required');
+  if (!facility_id) errors.push('facility_id is required');
   if (!user_id) errors.push('user_id is required');
   return errors;
 };
@@ -17,9 +17,9 @@ const getAllVolunteers = async (req, res) => {
   }
 };
 
-const getByShelter = async (req, res) => {
+const getByFacility = async (req, res) => {
   try {
-    const volunteers = await volunteerModel.getVolunteersByShelter(req.params.shelterId);
+    const volunteers = await volunteerModel.getVolunteersByFacility(req.params.facilityId);
     res.status(200).json(volunteers);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch volunteers', error: error.message });
@@ -77,4 +77,4 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getAllVolunteers, getByShelter, getById, create, update, remove };
+module.exports = { getAllVolunteers, getByFacility, getById, create, update, remove };

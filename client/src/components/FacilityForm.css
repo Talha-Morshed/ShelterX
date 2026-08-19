@@ -1,11 +1,11 @@
-.shelter-form {
+.facility-form {
   background: var(--code-bg);
   padding: 1.5rem;
   border-radius: 0.5rem;
   border: 1px solid var(--border);
 }
 
-.shelter-form h2 {
+.facility-form h2 {
   margin: 0 0 1.5rem 0;
   font-size: 1.5rem;
   color: var(--text-h);
