@@ -1,0 +1,95 @@
+.donation-list h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
+  color: var(--text-h);
+}
+
+.donation-list .table-wrapper {
+  overflow-x: auto;
+}
+
+.donation-list table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.donation-list thead {
+  background: var(--accent-bg);
+}
+
+.donation-list th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-h);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+.donation-list td {
+  padding: 0.75rem 1rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.donation-list tbody tr:nth-child(even) {
+  background: var(--code-bg);
+}
+
+.donation-list tbody tr:hover {
+  background: var(--accent-bg);
+}
+
+.donation-list .actions-cell {
+  display: flex;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.donation-list .btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.donation-list .btn:hover {
+  opacity: 0.85;
+}
+
+.donation-list .btn-edit {
+  background: var(--accent);
+  color: white;
+}
+
+.donation-list .btn-delete {
+  background: #e74c3c;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .donation-list table {
+    font-size: 0.85rem;
+  }
+
+  .donation-list th,
+  .donation-list td {
+    padding: 0.5rem 0.6rem;
+  }
+
+  .donation-list .actions-cell {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .donation-list .btn {
+    width: 100%;
+    text-align: center;
+  }
+}

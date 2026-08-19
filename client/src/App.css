@@ -188,6 +188,44 @@ main {
   background: #138496;
 }
 
+/* Tab Navigation */
+.tab-nav {
+  background: var(--code-bg);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.tab {
+  padding: 0.8rem 1.2rem;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  background: var(--border);
+  color: var(--text-h);
+}
+
+.tab-active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  background: var(--bg);
+}
+
 /* Loading and Empty States */
 .loading {
   text-align: center;

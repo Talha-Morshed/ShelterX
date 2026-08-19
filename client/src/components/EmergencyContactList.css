@@ -1,0 +1,95 @@
+.emergency-contact-list h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
+  color: var(--text-h);
+}
+
+.emergency-contact-list .table-wrapper {
+  overflow-x: auto;
+}
+
+.emergency-contact-list table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.emergency-contact-list thead {
+  background: var(--accent-bg);
+}
+
+.emergency-contact-list th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-h);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+.emergency-contact-list td {
+  padding: 0.75rem 1rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.emergency-contact-list tbody tr:nth-child(even) {
+  background: var(--code-bg);
+}
+
+.emergency-contact-list tbody tr:hover {
+  background: var(--accent-bg);
+}
+
+.emergency-contact-list .actions-cell {
+  display: flex;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.emergency-contact-list .btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.emergency-contact-list .btn:hover {
+  opacity: 0.85;
+}
+
+.emergency-contact-list .btn-edit {
+  background: var(--accent);
+  color: white;
+}
+
+.emergency-contact-list .btn-delete {
+  background: #e74c3c;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .emergency-contact-list table {
+    font-size: 0.85rem;
+  }
+
+  .emergency-contact-list th,
+  .emergency-contact-list td {
+    padding: 0.5rem 0.6rem;
+  }
+
+  .emergency-contact-list .actions-cell {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .emergency-contact-list .btn {
+    width: 100%;
+    text-align: center;
+  }
+}

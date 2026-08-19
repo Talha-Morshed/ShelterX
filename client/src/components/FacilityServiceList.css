@@ -1,0 +1,95 @@
+.facility-service-list h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
+  color: var(--text-h);
+}
+
+.facility-service-list .table-wrapper {
+  overflow-x: auto;
+}
+
+.facility-service-list table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.facility-service-list thead {
+  background: var(--accent-bg);
+}
+
+.facility-service-list th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-h);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+.facility-service-list td {
+  padding: 0.75rem 1rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.facility-service-list tbody tr:nth-child(even) {
+  background: var(--code-bg);
+}
+
+.facility-service-list tbody tr:hover {
+  background: var(--accent-bg);
+}
+
+.facility-service-list .actions-cell {
+  display: flex;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.facility-service-list .btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.facility-service-list .btn:hover {
+  opacity: 0.85;
+}
+
+.facility-service-list .btn-edit {
+  background: var(--accent);
+  color: white;
+}
+
+.facility-service-list .btn-delete {
+  background: #e74c3c;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .facility-service-list table {
+    font-size: 0.85rem;
+  }
+
+  .facility-service-list th,
+  .facility-service-list td {
+    padding: 0.5rem 0.6rem;
+  }
+
+  .facility-service-list .actions-cell {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .facility-service-list .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
