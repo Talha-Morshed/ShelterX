@@ -23,6 +23,9 @@ import { getReviews, createReview, updateReview, deleteReview } from './services
 import { getDonations, createDonation, updateDonation, deleteDonation } from './services/donationService';
 import { getVolunteers, createVolunteer, updateVolunteer, deleteVolunteer } from './services/volunteerService';
 import { getEmergencyContacts, createEmergencyContact, updateEmergencyContact, deleteEmergencyContact } from './services/emergencyContactService';
+import { getFacilitiesWithReviews } from './services/facilityReviewService';
+import { getUsersWithReviews } from './services/userReviewService';
+import { getFacilitiesAndDonations } from './services/facilityDonationService';
 import './App.css';
 
 const TABS = [
@@ -67,12 +70,12 @@ function App() {
   const [formLoading, setFormLoading] = useState(false);
 
   const fetchMap = {
-    facilities: async () => { const d = await getFacilities(); setFacilities(d || []); },
-    users: async () => { const d = await getUsers(); setUsers(d || []); },
+    facilities: async () => { const d = await getFacilitiesWithReviews(); setFacilities(d || []); },
+    users: async () => { const d = await getUsersWithReviews(); setUsers(d || []); },
     services: async () => { const d = await getServices(); setServices(d || []); },
     facilityServices: async () => { const d = await getFacilityServices(); setFacilityServices(d || []); },
     reviews: async () => { const d = await getReviews(); setReviews(d || []); },
-    donations: async () => { const d = await getDonations(); setDonations(d || []); },
+    donations: async () => { const d = await getFacilitiesAndDonations(); setDonations(d || []); },
     volunteers: async () => { const d = await getVolunteers(); setVolunteers(d || []); },
     emergencyContacts: async () => { const d = await getEmergencyContacts(); setEmergencyContacts(d || []); },
   };

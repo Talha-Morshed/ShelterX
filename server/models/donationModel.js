@@ -63,6 +63,22 @@ const deleteDonation = async (donationId) => {
   return result.affectedRows;
 };
 
+const getFacilitiesAndDonations = async () => {
+  const [rows] = await db.execute(
+    `SELECT f.facility_id, f.facility_name, f.city,
+            d.donation_id, d.amount, d.donation_type, d.notes
+     FROM facilities f
+     LEFT JOIN donations d ON f.facility_id = d.facility_id
+     UNION
+     SELECT f.facility_id, f.facility_name, f.city,
+            d.donation_id, d.amount, d.donation_type, d.notes
+     FROM facilities f
+     RIGHT JOIN donations d ON f.facility_id = d.facility_id
+     ORDER BY facility_id`
+  );
+  return rows;
+};
+
 module.exports = {
   getAllDonations,
   getDonationsByFacility,
@@ -70,4 +86,5 @@ module.exports = {
   createDonation,
   updateDonation,
   deleteDonation,
+  getFacilitiesAndDonations,
 };

@@ -6,19 +6,21 @@ const DonationList = ({ donations, onEdit, onDelete, isLoading }) => {
   }
 
   if (!donations || donations.length === 0) {
-    return <div className="no-data">No donations found. Add one to get started!</div>;
+    return <div className="no-data">No data found.</div>;
   }
 
   return (
     <div className="donation-list">
-      <h2>Donations</h2>
+      <h2>Donations <span className="join-badge join-badge-full">FULL JOIN</span></h2>
+      <p className="join-hint">Shows all facilities and all donations. Facilities with no donations show NULL donation fields.</p>
       <div className="table-wrapper">
         <table>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Facility ID</th>
-              <th>User ID</th>
+              <th>Facility Name</th>
+              <th>City</th>
+              <th>Donation ID</th>
               <th>Amount</th>
               <th>Type</th>
               <th>Notes</th>
@@ -26,28 +28,35 @@ const DonationList = ({ donations, onEdit, onDelete, isLoading }) => {
             </tr>
           </thead>
           <tbody>
-            {donations.map((donation) => (
-              <tr key={donation.donation_id}>
-                <td>{donation.donation_id}</td>
-                <td>{donation.facility_id}</td>
-                <td>{donation.user_id}</td>
-                <td>{donation.amount}</td>
-                <td>{donation.type || '—'}</td>
-                <td>{donation.notes || '—'}</td>
+            {donations.map((d, idx) => (
+              <tr key={idx} className={!d.donation_id ? 'row-highlight' : ''}>
+                <td>{d.facility_id}</td>
+                <td>{d.facility_name}</td>
+                <td>{d.city}</td>
+                <td>{d.donation_id || '—'}</td>
+                <td>{d.amount || '—'}</td>
+                <td>{d.donation_type || '—'}</td>
+                <td>{d.notes || '—'}</td>
                 <td className="actions-cell">
-                  <button className="btn btn-edit" onClick={() => onEdit(donation)}>
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-delete"
-                    onClick={() => {
-                      if (window.confirm('Are you sure you want to delete this donation?')) {
-                        onDelete(donation.donation_id);
-                      }
-                    }}
-                  >
-                    Delete
-                  </button>
+                  {d.donation_id ? (
+                    <>
+                      <button className="btn btn-edit" onClick={() => onEdit(d)}>
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-delete"
+                        onClick={() => {
+                          if (window.confirm('Are you sure you want to delete this donation?')) {
+                            onDelete(d.donation_id);
+                          }
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  ) : (
+                    <span className="null-value">No donation</span>
+                  )}
                 </td>
               </tr>
             ))}

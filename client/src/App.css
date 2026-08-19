@@ -241,3 +241,55 @@ main {
   border-radius: 0.5rem;
   color: var(--text);
 }
+
+/* JOIN badges */
+.join-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 600;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+.join-badge-right {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.join-badge-full {
+  background: #fae8ff;
+  color: #a21caf;
+}
+
+.join-hint {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: -8px 0 16px 0;
+}
+
+.row-highlight {
+  background-color: #fef9c3 !important;
+}
+
+.row-highlight:hover {
+  background-color: #fef08a !important;
+}
+
+.card-highlight {
+  border-left: 4px solid #f59e0b !important;
+}
+
+.null-value {
+  color: #94a3b8;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+.join-table h2 {
+  margin-bottom: 4px;
+  color: #1e293b;
+}

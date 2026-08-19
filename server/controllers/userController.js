@@ -72,4 +72,13 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, createUser, updateUser, deleteUser };
+const getAllUsersWithReviews = async (req, res) => {
+  try {
+    const users = await userModel.getUsersWithReviews();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch users with reviews', error: error.message });
+  }
+};
+
+module.exports = { getAllUsers, getUserById, createUser, updateUser, deleteUser, getAllUsersWithReviews };

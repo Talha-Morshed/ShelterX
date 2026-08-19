@@ -78,4 +78,13 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getAllDonations, getByFacility, getById, create, update, remove };
+const getFacilitiesAndDonations = async (req, res) => {
+  try {
+    const data = await donationModel.getFacilitiesAndDonations();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch facilities and donations', error: error.message });
+  }
+};
+
+module.exports = { getAllDonations, getByFacility, getById, create, update, remove, getFacilitiesAndDonations };

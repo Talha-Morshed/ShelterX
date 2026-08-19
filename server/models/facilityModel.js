@@ -112,10 +112,24 @@ const deleteFacility = async (facilityId) => {
   return result.affectedRows;
 };
 
+const getFacilitiesWithReviews = async () => {
+  const [rows] = await db.execute(
+    `SELECT f.facility_id, f.facility_name, f.facility_type, f.city,
+            COUNT(r.review_id) AS total_reviews,
+            ROUND(AVG(r.rating), 1) AS avg_rating
+     FROM facilities f
+     LEFT JOIN reviews r ON f.facility_id = r.facility_id
+     GROUP BY f.facility_id, f.facility_name, f.facility_type, f.city
+     ORDER BY f.facility_id`
+  );
+  return rows;
+};
+
 module.exports = {
   getAllFacilities,
   getFacilityById,
   createFacility,
   updateFacility,
   deleteFacility,
+  getFacilitiesWithReviews,
 };

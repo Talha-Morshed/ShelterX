@@ -171,10 +171,20 @@ const deleteFacility = async (req, res) => {
   }
 };
 
+const getAllFacilitiesWithReviews = async (req, res) => {
+  try {
+    const facilities = await facilityModel.getFacilitiesWithReviews();
+    res.status(200).json(facilities);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch facilities with reviews', error: error.message });
+  }
+};
+
 module.exports = {
   getAllFacilities,
   getFacilityById,
   createFacility,
   updateFacility,
   deleteFacility,
+  getAllFacilitiesWithReviews,
 };

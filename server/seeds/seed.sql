@@ -1,16 +1,27 @@
 CREATE DATABASE IF NOT EXISTS shelterx;
 USE shelterx;
 
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE emergency_contacts;
+TRUNCATE TABLE volunteers;
+TRUNCATE TABLE donations;
+TRUNCATE TABLE reviews;
+TRUNCATE TABLE facility_services;
+TRUNCATE TABLE services;
+TRUNCATE TABLE users;
+TRUNCATE TABLE facilities;
+SET FOREIGN_KEY_CHECKS = 1;
+
 INSERT INTO facilities (facility_name, facility_type, address, city, phone, capacity, available_spaces, description, latitude, longitude)
 VALUES
-('Downtown Relief Center', 'Shelter', '123 Main St', 'Springfield', '+1 (555) 123-4567', 100, 25, 'Open-admission relief center serving the downtown area.', 37.7749, -122.4194),
-('Riverside Food Bank', 'Food Bank', '456 River Rd', 'Rivertown', '+1 (555) 987-6543', 50, 10, 'Community food bank providing emergency supplies.', 34.0522, -118.2437),
-('Hillside Women Shelter', 'Shelter', '789 Hill Ave', 'Westview', '+1 (555) 234-5678', 60, 15, 'Safe haven for women and children in crisis.', 40.7128, -74.0060),
-('Eastside Youth Center', 'Youth Center', '321 East Blvd', 'Eastborough', '+1 (555) 345-6789', 40, 20, 'Daytime shelter and programs for at-risk youth.', 41.8781, -87.6298),
-('Northgate Medical Clinic', 'Medical Clinic', '555 North Gate Dr', 'Northcity', '+1 (555) 456-7890', 30, 8, 'Free medical services for underserved communities.', 29.7604, -95.3698),
-('Southside Community Kitchen', 'Food Bank', '888 South Ln', 'Southtown', '+1 (555) 567-8901', 75, 30, 'Hot meals served daily to anyone in need.', 33.4484, -112.0740),
-('Lakeside Veteran Home', 'Shelter', '101 Lake Dr', 'Laketown', '+1 (555) 678-9012', 45, 12, 'Dedicated shelter for military veterans experiencing homelessness.', 47.6062, -122.3321),
-('Central Pet Rescue', 'Animal Shelter', '202 Central Ave', 'Midtown', '+1 (555) 789-0123', 80, 35, 'Animal shelter providing refuge for abandoned pets.', 39.7392, -104.9903);
+('Downtown Relief Center', 'shelter', '123 Main St', 'Springfield', '+1 (555) 123-4567', 100, 25, 'Open-admission relief center serving the downtown area.', 37.7749, -122.4194),
+('Riverside Food Bank', 'food_bank', '456 River Rd', 'Rivertown', '+1 (555) 987-6543', 50, 10, 'Community food bank providing emergency supplies.', 34.0522, -118.2437),
+('Hillside Women Shelter', 'shelter', '789 Hill Ave', 'Westview', '+1 (555) 234-5678', 60, 15, 'Safe haven for women and children in crisis.', 40.7128, -74.0060),
+('Eastside Youth Center', 'community_center', '321 East Blvd', 'Eastborough', '+1 (555) 345-6789', 40, 20, 'Daytime shelter and programs for at-risk youth.', 41.8781, -87.6298),
+('Northgate Medical Clinic', 'clinic', '555 North Gate Dr', 'Northcity', '+1 (555) 456-7890', 30, 8, 'Free medical services for underserved communities.', 29.7604, -95.3698),
+('Southside Community Kitchen', 'food_bank', '888 South Ln', 'Southtown', '+1 (555) 567-8901', 75, 30, 'Hot meals served daily to anyone in need.', 33.4484, -112.0740),
+('Lakeside Veteran Home', 'shelter', '101 Lake Dr', 'Laketown', '+1 (555) 678-9012', 45, 12, 'Dedicated shelter for military veterans experiencing homelessness.', 47.6062, -122.3321),
+('Central Pet Rescue', 'other', '202 Central Ave', 'Midtown', '+1 (555) 789-0123', 80, 35, 'Animal shelter providing refuge for abandoned pets.', 39.7392, -104.9903);
 
 INSERT INTO users (full_name, email, password, phone, role)
 VALUES
@@ -62,11 +73,11 @@ VALUES
 (1, 1, 50.00, 'money', 'Monthly donation.'),
 (2, 2, 100.00, 'money', 'Holiday season contribution.'),
 (3, 3, 25.50, 'money', 'Happy to help.'),
-(1, 4, 0.00, 'clothing', 'Winter coats and blankets.'),
+(1, 4, 15.00, 'clothing', 'Winter coats and blankets.'),
 (6, 5, 75.00, 'money', 'For the kitchen fund.'),
-(2, 1, 0.00, 'food', 'Canned goods and rice.'),
+(2, 1, 30.00, 'food', 'Canned goods and rice.'),
 (7, 3, 200.00, 'money', 'Veterans day special donation.'),
-(4, 2, 0.00, 'supplies', 'School supplies for youth program.');
+(4, 2, 10.00, 'supplies', 'School supplies for youth program.');
 
 INSERT INTO volunteers (facility_id, user_id, role, availability, status)
 VALUES

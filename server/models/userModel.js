@@ -48,10 +48,22 @@ const deleteUser = async (userId) => {
   return result.affectedRows;
 };
 
+const getUsersWithReviews = async () => {
+  const [rows] = await db.execute(
+    `SELECT u.user_id, u.full_name, u.email,
+            r.review_id, r.rating, r.comment
+     FROM reviews r
+     RIGHT JOIN users u ON r.user_id = u.user_id
+     ORDER BY u.user_id`
+  );
+  return rows;
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
   createUser,
   updateUser,
   deleteUser,
+  getUsersWithReviews,
 };

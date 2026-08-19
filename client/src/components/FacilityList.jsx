@@ -11,12 +11,14 @@ const FacilityList = ({ facilities, onEdit, onDelete, onView, isLoading }) => {
 
   return (
     <div className="facility-list">
-      <h2>Facilities</h2>
+      <h2>Facilities <span className="join-badge">LEFT JOIN</span></h2>
+      <p className="join-hint">Shows all facilities with review stats. Facilities with 0 reviews still appear.</p>
       <div className="facility-cards">
         {facilities.map((facility) => (
-          <div key={facility.facility_id} className="facility-card">
+          <div key={facility.facility_id} className={`facility-card ${facility.total_reviews === 0 ? 'card-highlight' : ''}`}>
             <div className="facility-header">
               <h3>{facility.facility_name}</h3>
+              <span className="facility-id">#{facility.facility_id}</span>
               <span className="facility-type">{facility.facility_type}</span>
             </div>
 
@@ -25,36 +27,56 @@ const FacilityList = ({ facilities, onEdit, onDelete, onView, isLoading }) => {
                 <span className="label">City:</span>
                 <span className="value">{facility.city}</span>
               </div>
-              <div className="info-row">
-                <span className="label">Address:</span>
-                <span className="value">{facility.address}</span>
-              </div>
+              {facility.address && (
+                <div className="info-row">
+                  <span className="label">Address:</span>
+                  <span className="value">{facility.address}</span>
+                </div>
+              )}
               {facility.phone && (
                 <div className="info-row">
                   <span className="label">Phone:</span>
                   <span className="value">{facility.phone}</span>
                 </div>
               )}
-              <div className="info-row">
-                <span className="label">Capacity:</span>
-                <span className="value">{facility.capacity}</span>
-              </div>
-              <div className="info-row">
-                <span className="label">Available Spaces:</span>
-                <span className="value">{facility.available_spaces}</span>
-              </div>
-              {facility.email && (
+              {facility.capacity !== undefined && (
                 <div className="info-row">
-                  <span className="label">Email:</span>
-                  <span className="value">{facility.email}</span>
+                  <span className="label">Capacity:</span>
+                  <span className="value">{facility.capacity}</span>
+                </div>
+              )}
+              {facility.available_spaces !== undefined && (
+                <div className="info-row">
+                  <span className="label">Available Spaces:</span>
+                  <span className="value">{facility.available_spaces}</span>
+                </div>
+              )}
+              {facility.total_reviews !== undefined && (
+                <div className="info-row">
+                  <span className="label">Reviews:</span>
+                  <span className="value">{facility.total_reviews}</span>
+                </div>
+              )}
+              {facility.avg_rating !== undefined && facility.avg_rating !== null && (
+                <div className="info-row">
+                  <span className="label">Avg Rating:</span>
+                  <span className="value">{facility.avg_rating} / 5</span>
+                </div>
+              )}
+              {facility.total_reviews === 0 && (
+                <div className="info-row">
+                  <span className="label">Reviews:</span>
+                  <span className="value null-value">No reviews yet (NULL from LEFT JOIN)</span>
                 </div>
               )}
             </div>
 
             <div className="facility-actions">
-              <button className="btn btn-info" onClick={() => onView(facility.facility_id)}>
-                View
-              </button>
+              {onView && (
+                <button className="btn btn-info" onClick={() => onView(facility.facility_id)}>
+                  View
+                </button>
+              )}
               <button className="btn btn-warning" onClick={() => onEdit(facility)}>
                 Edit
               </button>

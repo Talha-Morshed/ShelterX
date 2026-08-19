@@ -17,7 +17,7 @@ const EmergencyContactList = ({ emergencyContacts, onEdit, onDelete, isLoading }
           <thead>
             <tr>
               <th>ID</th>
-              <th>Facility ID</th>
+              <th>Facility</th>
               <th>Name</th>
               <th>Phone</th>
               <th>Role</th>
@@ -27,13 +27,13 @@ const EmergencyContactList = ({ emergencyContacts, onEdit, onDelete, isLoading }
           </thead>
           <tbody>
             {emergencyContacts.map((contact) => (
-              <tr key={contact.emergency_contact_id}>
-                <td>{contact.emergency_contact_id}</td>
-                <td>{contact.facility_id}</td>
-                <td>{contact.name}</td>
-                <td>{contact.phone || '—'}</td>
-                <td>{contact.role || '—'}</td>
-                <td>{contact.primary ? 'Yes' : 'No'}</td>
+              <tr key={contact.contact_id}>
+                <td>{contact.contact_id}</td>
+                <td>{contact.facility_name || contact.facility_id}</td>
+                <td>{contact.contact_name}</td>
+                <td>{contact.contact_phone || '—'}</td>
+                <td>{contact.contact_role || '—'}</td>
+                <td>{contact.is_primary ? 'Yes' : 'No'}</td>
                 <td className="actions-cell">
                   <button className="btn btn-edit" onClick={() => onEdit(contact)}>
                     Edit
@@ -41,8 +41,8 @@ const EmergencyContactList = ({ emergencyContacts, onEdit, onDelete, isLoading }
                   <button
                     className="btn btn-delete"
                     onClick={() => {
-                      if (window.confirm(`Are you sure you want to delete "${contact.name}"?`)) {
-                        onDelete(contact.emergency_contact_id);
+                      if (window.confirm(`Are you sure you want to delete "${contact.contact_name}"?`)) {
+                        onDelete(contact.contact_id);
                       }
                     }}
                   >
