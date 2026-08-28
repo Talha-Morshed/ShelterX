@@ -28,7 +28,7 @@ const ServiceList = ({ services, onEdit, onDelete, isLoading }) => {
               <tr key={service.service_id}>
                 <td>{service.service_id}</td>
                 <td>{service.service_name}</td>
-                <td>{service.description || '—'}</td>
+                <td>{service.service_description || '—'}</td>
                 <td>{service.category || '—'}</td>
                 <td className="actions-cell">
                   <button className="btn btn-edit" onClick={() => onEdit(service)}>

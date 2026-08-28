@@ -27,8 +27,8 @@ const UserList = ({ users, onEdit, onDelete, isLoading }) => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user, idx) => (
-              <tr key={idx} className={!user.review_id ? 'row-highlight' : ''}>
+            {users.map((user) => (
+              <tr key={`${user.user_id}-${user.review_id ?? 'null'}`} className={!user.review_id ? 'row-highlight' : ''}>
                 <td>{user.user_id}</td>
                 <td>{user.full_name}</td>
                 <td>{user.email}</td>

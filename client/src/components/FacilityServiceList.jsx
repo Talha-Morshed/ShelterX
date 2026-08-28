@@ -26,11 +26,11 @@ const FacilityServiceList = ({ facilityServices, onEdit, onDelete, isLoading }) 
           </thead>
           <tbody>
             {facilityServices.map((fs) => (
-              <tr key={fs.facility_service_id}>
-                <td>{fs.facility_service_id}</td>
+              <tr key={fs.id}>
+                <td>{fs.id}</td>
                 <td>{fs.facility_id}</td>
                 <td>{fs.service_id}</td>
-                <td>{fs.available ? 'Yes' : 'No'}</td>
+                <td>{fs.is_available ? 'Yes' : 'No'}</td>
                 <td>{fs.notes || '—'}</td>
                 <td className="actions-cell">
                   <button className="btn btn-edit" onClick={() => onEdit(fs)}>
@@ -40,7 +40,7 @@ const FacilityServiceList = ({ facilityServices, onEdit, onDelete, isLoading }) 
                     className="btn btn-delete"
                     onClick={() => {
                       if (window.confirm('Are you sure you want to delete this facility service?')) {
-                        onDelete(fs.facility_service_id);
+                        onDelete(fs.id);
                       }
                     }}
                   >

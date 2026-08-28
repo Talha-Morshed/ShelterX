@@ -265,12 +265,14 @@ function App() {
         </div>
       </header>
 
-      <nav className="tab-nav">
+      <nav className="tab-nav" aria-label="Primary">
         <div className="container">
-          <div className="tabs">
+          <div className="tabs" role="tablist">
             {TABS.map((tab) => (
               <button
                 key={tab.key}
+                role="tab"
+                aria-selected={activeTab === tab.key}
                 className={`tab ${activeTab === tab.key ? 'tab-active' : ''}`}
                 onClick={() => handleTabChange(tab.key)}
               >

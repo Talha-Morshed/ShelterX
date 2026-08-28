@@ -21,16 +21,29 @@ const FacilityForm = ({ onSubmit, initialData, isLoading, error }) => {
   useEffect(() => {
     if (initialData) {
       setFormData({
-        facility_name: initialData.facility_name || '',
-        facility_type: initialData.facility_type || '',
-        address: initialData.address || '',
-        city: initialData.city || '',
-        phone: initialData.phone || '',
-        capacity: initialData.capacity || '',
-        available_spaces: initialData.available_spaces || '',
-        description: initialData.description || '',
-        latitude: initialData.latitude || '',
-        longitude: initialData.longitude || '',
+        facility_name: initialData.facility_name ?? '',
+        facility_type: initialData.facility_type ?? '',
+        address: initialData.address ?? '',
+        city: initialData.city ?? '',
+        phone: initialData.phone ?? '',
+        capacity: initialData.capacity ?? '',
+        available_spaces: initialData.available_spaces ?? '',
+        description: initialData.description ?? '',
+        latitude: initialData.latitude ?? '',
+        longitude: initialData.longitude ?? '',
+      });
+    } else {
+      setFormData({
+        facility_name: '',
+        facility_type: '',
+        address: '',
+        city: '',
+        phone: '',
+        capacity: '',
+        available_spaces: '',
+        description: '',
+        latitude: '',
+        longitude: '',
       });
     }
   }, [initialData]);

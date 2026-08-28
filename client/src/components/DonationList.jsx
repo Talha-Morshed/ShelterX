@@ -28,8 +28,8 @@ const DonationList = ({ donations, onEdit, onDelete, isLoading }) => {
             </tr>
           </thead>
           <tbody>
-            {donations.map((d, idx) => (
-              <tr key={idx} className={!d.donation_id ? 'row-highlight' : ''}>
+            {donations.map((d) => (
+              <tr key={d.donation_id ? `d-${d.donation_id}` : `f-${d.facility_id}-empty`} className={!d.donation_id ? 'row-highlight' : ''}>
                 <td>{d.facility_id}</td>
                 <td>{d.facility_name}</td>
                 <td>{d.city}</td>

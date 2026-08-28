@@ -63,9 +63,9 @@ const FacilityList = ({ facilities, onEdit, onDelete, onView, isLoading }) => {
                   <span className="value">{facility.avg_rating} / 5</span>
                 </div>
               )}
-              {facility.total_reviews === 0 && (
+              {facility.total_reviews === 0 && facility.avg_rating === null && (
                 <div className="info-row">
-                  <span className="label">Reviews:</span>
+                  <span className="label">Note:</span>
                   <span className="value null-value">No reviews yet (NULL from LEFT JOIN)</span>
                 </div>
               )}

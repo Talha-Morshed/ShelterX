@@ -15,12 +15,14 @@ const DonationForm = ({ onSubmit, initialData, isLoading, error }) => {
   useEffect(() => {
     if (initialData) {
       setFormData({
-        facility_id: initialData.facility_id || '',
-        user_id: initialData.user_id || '',
-        amount: initialData.amount || '',
-        donation_type: initialData.donation_type || '',
-        notes: initialData.notes || '',
+        facility_id: initialData.facility_id ?? '',
+        user_id: initialData.user_id ?? '',
+        amount: initialData.amount ?? '',
+        donation_type: initialData.donation_type ?? '',
+        notes: initialData.notes ?? '',
       });
+    } else {
+      setFormData({ facility_id: '', user_id: '', amount: '', donation_type: '', notes: '' });
     }
   }, [initialData]);
 

@@ -1,95 +1,82 @@
-.facility-service-list h2 {
-  margin: 0 0 1.5rem 0;
-  font-size: 1.5rem;
+f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t h2 {
+  margin: 0 0 0.35rem 0;
+  font-size: 1.25rem;
   color: var(--text-h);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
-
-.facility-service-list .table-wrapper {
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t .table-wrapper {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
 }
-
-.facility-service-list table {
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t table {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid var(--border);
-  border-radius: 0.5rem;
-  overflow: hidden;
+  min-width: 580px;
 }
-
-.facility-service-list thead {
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t thead {
   background: var(--accent-bg);
 }
-
-.facility-service-list th {
-  padding: 0.75rem 1rem;
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t th {
+  padding: 0.7rem 0.85rem;
   text-align: left;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   color: var(--text-h);
   border-bottom: 2px solid var(--border);
   white-space: nowrap;
 }
-
-.facility-service-list td {
-  padding: 0.75rem 1rem;
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t td {
+  padding: 0.7rem 0.85rem;
   color: var(--text);
   border-bottom: 1px solid var(--border);
+  font-size: 0.89rem;
+  vertical-align: middle;
 }
-
-.facility-service-list tbody tr:nth-child(even) {
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t tbody tr:nth-child(even) {
   background: var(--code-bg);
 }
-
-.facility-service-list tbody tr:hover {
-  background: var(--accent-bg);
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t tbody tr:hover {
+  background: var(--accent-light);
 }
-
-.facility-service-list .actions-cell {
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t .actions-cell {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
   white-space: nowrap;
 }
-
-.facility-service-list .btn {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.85rem;
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t .btn {
+  padding: 0.38rem 0.7rem;
+  font-size: 0.82rem;
   border: none;
-  border-radius: 0.3rem;
+  border-radius: 0.4rem;
   cursor: pointer;
-  font-weight: 500;
-  transition: opacity 0.2s ease;
+  font-weight: 600;
+  transition: all 0.18s ease;
 }
-
-.facility-service-list .btn:hover {
-  opacity: 0.85;
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t .btn:hover {
+  transform: translateY(-1px);
 }
-
-.facility-service-list .btn-edit {
-  background: var(--accent);
-  color: white;
-}
-
-.facility-service-list .btn-delete {
-  background: #e74c3c;
-  color: white;
-}
-
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t .btn:active { transform: translateY(0); }
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t .btn:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t .btn-edit { background: var(--accent); color: white; }
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t .btn-edit:hover { background: var(--accent-hover); }
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t .btn-delete { background: #ef4444; color: white; }
+.f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t .btn-delete:hover { background: #dc2626; }
 @media (max-width: 768px) {
-  .facility-service-list table {
-    font-size: 0.85rem;
-  }
-
-  .facility-service-list th,
-  .facility-service-list td {
-    padding: 0.5rem 0.6rem;
-  }
-
-  .facility-service-list .actions-cell {
-    flex-direction: column;
-    gap: 0.3rem;
-  }
-
-  .facility-service-list .btn {
-    width: 100%;
-    text-align: center;
-  }
+  .f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t table { font-size: 0.84rem; min-width: 520px; }
+  .f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t th, .f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t td { padding: 0.5rem 0.6rem; }
+  .f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t .actions-cell { flex-direction: column; gap: 0.3rem; }
+  .f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t .btn { width: 100%; text-align: center; }
+}
+@media (max-width: 480px) {
+  .f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t h2 { font-size: 1.1rem; }
+  .f-a-c-i-l-i-t-y-s-e-r-v-i-c-e-l-i-s-t table { min-width: 480px; }
 }
