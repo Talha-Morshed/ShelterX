@@ -81,4 +81,35 @@ const getAllUsersWithReviews = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, createUser, updateUser, deleteUser, getAllUsersWithReviews };
+// A- Controller for GROUP BY + HAVING: active users with total activities
+const getActiveUsersHaving = async (req, res) => {
+  try {
+    const min = Number(req.query.min) || 2;
+    const data = await userModel.getActiveUsersHaving(min);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch active users HAVING', error: error.message });
+  }
+};
+
+// A- Controller for Subquery NOT IN: users never donated
+const getUsersNeverDonatedSubquery = async (req, res) => {
+  try {
+    const data = await userModel.getUsersNeverDonatedSubquery();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch users subquery NOT IN', error: error.message });
+  }
+};
+
+// A- Controller for Subquery: users above average donation
+const getUsersAboveAvgDonationSubquery = async (req, res) => {
+  try {
+    const data = await userModel.getUsersAboveAvgDonationSubquery();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch users subquery avg', error: error.message });
+  }
+};
+
+module.exports = { getAllUsers, getUserById, createUser, updateUser, deleteUser, getAllUsersWithReviews, getActiveUsersHaving, getUsersNeverDonatedSubquery, getUsersAboveAvgDonationSubquery };

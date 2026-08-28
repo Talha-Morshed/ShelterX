@@ -180,6 +180,69 @@ const getAllFacilitiesWithReviews = async (req, res) => {
   }
 };
 
+// A- Controller for GROUP BY + HAVING: facilities having minimum reviews
+const getFacilitiesHavingMinReviews = async (req, res) => {
+  try {
+    const min = Number(req.query.min) || 1;
+    const data = await facilityModel.getFacilitiesHavingMinReviews(min);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch facilities HAVING min reviews', error: error.message });
+  }
+};
+
+// A- Controller for GROUP BY + HAVING: facility type stats with HAVING total_capacity filter
+const getFacilityTypeStatsHaving = async (req, res) => {
+  try {
+    const minCapacity = Number(req.query.minCapacity) || 0;
+    const data = await facilityModel.getFacilityTypeStatsHaving(minCapacity);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch facility type stats', error: error.message });
+  }
+};
+
+// A- Controller for GROUP BY + HAVING: cities having many facilities
+const getCitiesHavingManyFacilities = async (req, res) => {
+  try {
+    const min = Number(req.query.min) || 2;
+    const data = await facilityModel.getCitiesHavingManyFacilities(min);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch cities HAVING', error: error.message });
+  }
+};
+
+// A- Controller for Subquery: facilities above average capacity
+const getFacilitiesAboveAvgCapacity = async (req, res) => {
+  try {
+    const data = await facilityModel.getFacilitiesAboveAvgCapacity();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch facilities subquery', error: error.message });
+  }
+};
+
+// A- Controller for Subquery IN: facilities with donations
+const getFacilitiesWithDonationsSubquery = async (req, res) => {
+  try {
+    const data = await facilityModel.getFacilitiesWithDonationsSubquery();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch facilities subquery IN', error: error.message });
+  }
+};
+
+// A- Controller for Subquery EXISTS: facilities with 5-star reviews
+const getFacilitiesWithFiveStarReviews = async (req, res) => {
+  try {
+    const data = await facilityModel.getFacilitiesWithFiveStarReviews();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch 5-star facilities', error: error.message });
+  }
+};
+
 module.exports = {
   getAllFacilities,
   getFacilityById,
@@ -187,4 +250,10 @@ module.exports = {
   updateFacility,
   deleteFacility,
   getAllFacilitiesWithReviews,
+  getFacilitiesHavingMinReviews,
+  getFacilityTypeStatsHaving,
+  getCitiesHavingManyFacilities,
+  getFacilitiesAboveAvgCapacity,
+  getFacilitiesWithDonationsSubquery,
+  getFacilitiesWithFiveStarReviews,
 };

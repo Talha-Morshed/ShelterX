@@ -6,9 +6,20 @@ const {
   create,
   update,
   remove,
+  getFacilitiesWithMinVolunteersHaving,
+  getVolunteerStatusStatsHaving,
+  getVolunteersWhoAreDonorsSubquery,
+  getFacilitiesAboveAvgVolunteersSubquery,
 } = require('../controllers/volunteerController');
 
 const router = express.Router();
+
+// A- GROUP BY + HAVING routes for volunteers
+router.get('/stats/facilities-min-volunteers-having', getFacilitiesWithMinVolunteersHaving);
+router.get('/stats/status-having', getVolunteerStatusStatsHaving);
+// A- Subquery routes for volunteers
+router.get('/stats/volunteer-donors-subquery', getVolunteersWhoAreDonorsSubquery);
+router.get('/stats/above-avg-volunteers-subquery', getFacilitiesAboveAvgVolunteersSubquery);
 
 router.get('/', getAllVolunteers);
 router.get('/facility/:facilityId', getByFacility);

@@ -78,4 +78,47 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getAllReviews, getByFacility, getById, create, update, remove };
+// A- Controller for GROUP BY + HAVING: high-rated facilities with minimum reviews and rating
+const getHighRatedFacilitiesHaving = async (req, res) => {
+  try {
+    const minRating = Number(req.query.minRating) || 4;
+    const minReviews = Number(req.query.minReviews) || 1;
+    const data = await reviewModel.getHighRatedFacilitiesHaving(minRating, minReviews);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch high-rated facilities HAVING', error: error.message });
+  }
+};
+
+// A- Controller for GROUP BY + HAVING: active reviewers having many reviews
+const getActiveReviewersHaving = async (req, res) => {
+  try {
+    const min = Number(req.query.min) || 2;
+    const data = await reviewModel.getActiveReviewersHaving(min);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch active reviewers HAVING', error: error.message });
+  }
+};
+
+// A- Controller for Subquery: reviews above average rating
+const getReviewsAboveAvgRating = async (req, res) => {
+  try {
+    const data = await reviewModel.getReviewsAboveAvgRating();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch reviews subquery', error: error.message });
+  }
+};
+
+// A- Controller for Subquery NOT IN: unreviewed facilities
+const getUnreviewedFacilitiesSubquery = async (req, res) => {
+  try {
+    const data = await reviewModel.getUnreviewedFacilitiesSubquery();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch unreviewed facilities subquery', error: error.message });
+  }
+};
+
+module.exports = { getAllReviews, getByFacility, getById, create, update, remove, getHighRatedFacilitiesHaving, getActiveReviewersHaving, getReviewsAboveAvgRating, getUnreviewedFacilitiesSubquery };

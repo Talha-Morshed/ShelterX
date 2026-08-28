@@ -6,9 +6,24 @@ const {
   updateFacility,
   deleteFacility,
   getAllFacilitiesWithReviews,
+  getFacilitiesHavingMinReviews,
+  getFacilityTypeStatsHaving,
+  getCitiesHavingManyFacilities,
+  getFacilitiesAboveAvgCapacity,
+  getFacilitiesWithDonationsSubquery,
+  getFacilitiesWithFiveStarReviews,
 } = require('../controllers/facilityController');
 
 const router = express.Router();
+
+// A- GROUP BY + HAVING routes: aggregation filters
+router.get('/stats/having-reviews', getFacilitiesHavingMinReviews);
+router.get('/stats/type-having', getFacilityTypeStatsHaving);
+router.get('/stats/cities-having', getCitiesHavingManyFacilities);
+// A- Subquery routes: scalar / IN / EXISTS examples
+router.get('/stats/above-avg-capacity', getFacilitiesAboveAvgCapacity);
+router.get('/stats/with-donations-subquery', getFacilitiesWithDonationsSubquery);
+router.get('/stats/five-star-subquery', getFacilitiesWithFiveStarReviews);
 
 router.get('/', getAllFacilities);
 router.get('/with-reviews', getAllFacilitiesWithReviews);

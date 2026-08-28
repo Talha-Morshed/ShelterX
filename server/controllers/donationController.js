@@ -87,4 +87,46 @@ const getFacilitiesAndDonations = async (req, res) => {
   }
 };
 
-module.exports = { getAllDonations, getByFacility, getById, create, update, remove, getFacilitiesAndDonations };
+// A- Controller for GROUP BY + HAVING: donation stats per facility with HAVING total_amount filter
+const getDonationStatsHaving = async (req, res) => {
+  try {
+    const minTotal = Number(req.query.minTotal) || 100;
+    const data = await donationModel.getDonationStatsHaving(minTotal);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch donation stats HAVING', error: error.message });
+  }
+};
+
+// A- Controller for GROUP BY + HAVING: top donors HAVING total donated
+const getTopDonorsHaving = async (req, res) => {
+  try {
+    const minTotal = Number(req.query.minTotal) || 100;
+    const data = await donationModel.getTopDonorsHaving(minTotal);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch top donors HAVING', error: error.message });
+  }
+};
+
+// A- Controller for Subquery: donations above average amount
+const getDonationsAboveAverage = async (req, res) => {
+  try {
+    const data = await donationModel.getDonationsAboveAverage();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch donations subquery', error: error.message });
+  }
+};
+
+// A- Controller for Subquery IN: donors to food_bank facilities
+const getDonorsToFoodBankSubquery = async (req, res) => {
+  try {
+    const data = await donationModel.getDonorsToFoodBankSubquery();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch donors subquery IN', error: error.message });
+  }
+};
+
+module.exports = { getAllDonations, getByFacility, getById, create, update, remove, getFacilitiesAndDonations, getDonationStatsHaving, getTopDonorsHaving, getDonationsAboveAverage, getDonorsToFoodBankSubquery };

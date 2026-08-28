@@ -77,4 +77,46 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getAllVolunteers, getByFacility, getById, create, update, remove };
+// A- Controller for GROUP BY + HAVING: facilities with min volunteers
+const getFacilitiesWithMinVolunteersHaving = async (req, res) => {
+  try {
+    const min = Number(req.query.min) || 1;
+    const data = await volunteerModel.getFacilitiesWithMinVolunteersHaving(min);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch volunteer HAVING', error: error.message });
+  }
+};
+
+// A- Controller for GROUP BY + HAVING: volunteer status stats
+const getVolunteerStatusStatsHaving = async (req, res) => {
+  try {
+    const min = Number(req.query.min) || 1;
+    const data = await volunteerModel.getVolunteerStatusStatsHaving(min);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch volunteer status HAVING', error: error.message });
+  }
+};
+
+// A- Controller for Subquery: volunteers who are also donors
+const getVolunteersWhoAreDonorsSubquery = async (req, res) => {
+  try {
+    const data = await volunteerModel.getVolunteersWhoAreDonorsSubquery();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch volunteers subquery', error: error.message });
+  }
+};
+
+// A- Controller for Subquery: facilities above average volunteer count
+const getFacilitiesAboveAvgVolunteersSubquery = async (req, res) => {
+  try {
+    const data = await volunteerModel.getFacilitiesAboveAvgVolunteersSubquery();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch avg volunteers subquery', error: error.message });
+  }
+};
+
+module.exports = { getAllVolunteers, getByFacility, getById, create, update, remove, getFacilitiesWithMinVolunteersHaving, getVolunteerStatusStatsHaving, getVolunteersWhoAreDonorsSubquery, getFacilitiesAboveAvgVolunteersSubquery };

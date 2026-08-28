@@ -63,6 +63,61 @@ const deleteVolunteer = async (volunteerId) => {
   return result.affectedRows;
 };
 
+// A- GROUP BY with HAVING: Get facilities having at least N volunteers (volunteer demand report)
+const getFacilitiesWithMinVolunteersHaving = async (minCount) => {
+  const [rows] = await db.execute(
+    `SELECT f.facility_id, f.facility_name, f.city,
+            COUNT(v.volunteer_id) AS volunteer_count
+     FROM facilities f
+     JOIN volunteers v ON f.facility_id = v.facility_id
+     GROUP BY f.facility_id, f.facility_name, f.city
+     HAVING volunteer_count >= ?
+     ORDER BY volunteer_count DESC`,
+    [minCount]
+  );
+  return rows;
+};
+
+// A- GROUP BY with HAVING: Get volunteer status counts having > threshold (pending/approved distribution)
+const getVolunteerStatusStatsHaving = async (minCount) => {
+  const [rows] = await db.execute(
+    `SELECT status,
+            COUNT(*) AS total,
+            COUNT(DISTINCT facility_id) AS facilities_covered
+     FROM volunteers
+     GROUP BY status
+     HAVING total >= ?
+     ORDER BY total DESC`,
+    [minCount]
+  );
+  return rows;
+};
+
+// A- Subquery: Find volunteers who are also donors (IN subquery across two tables)
+const getVolunteersWhoAreDonorsSubquery = async () => {
+  const [rows] = await db.execute(
+    `SELECT DISTINCT u.user_id, u.full_name, u.email
+     FROM users u
+     WHERE u.user_id IN (SELECT user_id FROM volunteers)
+       AND u.user_id IN (SELECT user_id FROM donations)
+     ORDER BY u.full_name`
+  );
+  return rows;
+};
+
+// A- Subquery: Find facilities with volunteer count greater than average volunteer count per facility (scalar subquery with derived table)
+const getFacilitiesAboveAvgVolunteersSubquery = async () => {
+  const [rows] = await db.execute(
+    `SELECT f.facility_id, f.facility_name, f.city,
+            (SELECT COUNT(*) FROM volunteers v WHERE v.facility_id = f.facility_id) AS volunteer_count
+     FROM facilities f
+     WHERE (SELECT COUNT(*) FROM volunteers v WHERE v.facility_id = f.facility_id) >
+           (SELECT AVG(cnt) FROM (SELECT COUNT(*) AS cnt FROM volunteers GROUP BY facility_id) AS t)
+     ORDER BY volunteer_count DESC`
+  );
+  return rows;
+};
+
 module.exports = {
   getAllVolunteers,
   getVolunteersByFacility,
@@ -70,4 +125,8 @@ module.exports = {
   createVolunteer,
   updateVolunteer,
   deleteVolunteer,
+  getFacilitiesWithMinVolunteersHaving,
+  getVolunteerStatusStatsHaving,
+  getVolunteersWhoAreDonorsSubquery,
+  getFacilitiesAboveAvgVolunteersSubquery,
 };

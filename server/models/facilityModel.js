@@ -125,6 +125,89 @@ const getFacilitiesWithReviews = async () => {
   return rows;
 };
 
+// A- GROUP BY with HAVING: Find facilities having more than given number of reviews (aggregation + HAVING filter)
+const getFacilitiesHavingMinReviews = async (minReviews) => {
+  const [rows] = await db.execute(
+    `SELECT f.facility_id, f.facility_name, f.city,
+            COUNT(r.review_id) AS total_reviews,
+            ROUND(AVG(r.rating), 1) AS avg_rating
+     FROM facilities f
+     LEFT JOIN reviews r ON f.facility_id = r.facility_id
+     GROUP BY f.facility_id, f.facility_name, f.city
+     HAVING total_reviews >= ?
+     ORDER BY total_reviews DESC`,
+    [minReviews]
+  );
+  return rows;
+};
+
+// A- GROUP BY with HAVING: Group facilities by type and show only types with total capacity > threshold
+const getFacilityTypeStatsHaving = async (minTotalCapacity) => {
+  const [rows] = await db.execute(
+    `SELECT facility_type,
+            COUNT(*) AS facility_count,
+            SUM(capacity) AS total_capacity,
+            AVG(capacity) AS avg_capacity
+     FROM facilities
+     GROUP BY facility_type
+     HAVING total_capacity >= ?
+     ORDER BY total_capacity DESC`,
+    [minTotalCapacity]
+  );
+  return rows;
+};
+
+// A- GROUP BY with HAVING: Find cities having more than N facilities (city-wise aggregation)
+const getCitiesHavingManyFacilities = async (minCount) => {
+  const [rows] = await db.execute(
+    `SELECT city,
+            COUNT(*) AS facility_count,
+            SUM(available_spaces) AS total_available
+     FROM facilities
+     GROUP BY city
+     HAVING facility_count >= ?
+     ORDER BY facility_count DESC`,
+    [minCount]
+  );
+  return rows;
+};
+
+// A- Subquery: Find facilities with capacity greater than average capacity (single-row subquery)
+const getFacilitiesAboveAvgCapacity = async () => {
+  const [rows] = await db.execute(
+    `SELECT facility_id, facility_name, city, capacity
+     FROM facilities
+     WHERE capacity > (SELECT AVG(capacity) FROM facilities)
+     ORDER BY capacity DESC`
+  );
+  return rows;
+};
+
+// A- Subquery with IN: Find facilities that have received at least one donation (IN subquery)
+const getFacilitiesWithDonationsSubquery = async () => {
+  const [rows] = await db.execute(
+    `SELECT facility_id, facility_name, city, capacity
+     FROM facilities
+     WHERE facility_id IN (SELECT DISTINCT facility_id FROM donations)
+     ORDER BY facility_name`
+  );
+  return rows;
+};
+
+// A- Subquery with EXISTS: Find facilities that have at least one 5-star review (EXISTS correlated subquery)
+const getFacilitiesWithFiveStarReviews = async () => {
+  const [rows] = await db.execute(
+    `SELECT f.facility_id, f.facility_name, f.city
+     FROM facilities f
+     WHERE EXISTS (
+       SELECT 1 FROM reviews r
+       WHERE r.facility_id = f.facility_id AND r.rating = 5
+     )
+     ORDER BY f.facility_name`
+  );
+  return rows;
+};
+
 module.exports = {
   getAllFacilities,
   getFacilityById,
@@ -132,4 +215,10 @@ module.exports = {
   updateFacility,
   deleteFacility,
   getFacilitiesWithReviews,
+  getFacilitiesHavingMinReviews,
+  getFacilityTypeStatsHaving,
+  getCitiesHavingManyFacilities,
+  getFacilitiesAboveAvgCapacity,
+  getFacilitiesWithDonationsSubquery,
+  getFacilitiesWithFiveStarReviews,
 };

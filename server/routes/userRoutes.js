@@ -6,9 +6,18 @@ const {
   updateUser,
   deleteUser,
   getAllUsersWithReviews,
+  getActiveUsersHaving,
+  getUsersNeverDonatedSubquery,
+  getUsersAboveAvgDonationSubquery,
 } = require('../controllers/userController');
 
 const router = express.Router();
+
+// A- GROUP BY + HAVING route for users
+router.get('/stats/active-having', getActiveUsersHaving);
+// A- Subquery routes for users
+router.get('/stats/never-donated-subquery', getUsersNeverDonatedSubquery);
+router.get('/stats/above-avg-donation-subquery', getUsersAboveAvgDonationSubquery);
 
 router.get('/', getAllUsers);
 router.get('/with-reviews', getAllUsersWithReviews);
