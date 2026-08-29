@@ -233,7 +233,7 @@ function App() {
       case 'users': return <UserForm {...props} />;
       case 'services': return <ServiceForm {...props} />;
       case 'facilityServices': return <FacilityServiceForm {...props} />;
-      case 'reviews': return <ReviewForm {...props} />;
+      case 'reviews': return <ReviewForm {...props} facilities={facilities} users={users} />;
       case 'donations': return <DonationForm {...props} />;
       case 'volunteers': return <VolunteerForm {...props} />;
       case 'emergencyContacts': return <EmergencyContactForm {...props} />;

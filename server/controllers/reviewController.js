@@ -46,6 +46,9 @@ const create = async (req, res) => {
     const review = await reviewModel.getReviewById(reviewId);
     res.status(201).json({ message: 'Review created successfully', review });
   } catch (error) {
+    if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+      return res.status(400).json({ message: 'A facility_id or user_id does not exist. Choose a valid option from the dropdown.', error: error.message });
+    }
     res.status(500).json({ message: 'Failed to create review', error: error.message });
   }
 };

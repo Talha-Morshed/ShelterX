@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './ReviewForm.css';
 
-const ReviewForm = ({ onSubmit, initialData, isLoading, error }) => {
+const ReviewForm = ({ onSubmit, initialData, isLoading, error, facilities = [], users = [] }) => {
   const [formData, setFormData] = useState({
     facility_id: '',
     user_id: '',
@@ -100,31 +100,39 @@ const ReviewForm = ({ onSubmit, initialData, isLoading, error }) => {
       )}
 
       <div className="form-group">
-        <label htmlFor="facility_id">Facility ID *</label>
-        <input
-          type="number"
+        <label htmlFor="facility_id">Facility *</label>
+        <select
           id="facility_id"
           name="facility_id"
           value={formData.facility_id}
           onChange={handleChange}
           disabled={isLoading}
-          min="1"
-          placeholder="Enter facility ID"
-        />
+        >
+          <option value="">Select a facility</option>
+          {facilities.map((facility) => (
+            <option key={facility.facility_id} value={facility.facility_id}>
+              #{facility.facility_id} - {facility.facility_name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="form-group">
-        <label htmlFor="user_id">User ID *</label>
-        <input
-          type="number"
+        <label htmlFor="user_id">User *</label>
+        <select
           id="user_id"
           name="user_id"
           value={formData.user_id}
           onChange={handleChange}
           disabled={isLoading}
-          min="1"
-          placeholder="Enter user ID"
-        />
+        >
+          <option value="">Select a user</option>
+          {users.map((user) => (
+            <option key={user.user_id} value={user.user_id}>
+              #{user.user_id} - {user.full_name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="form-group">
