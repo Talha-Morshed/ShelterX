@@ -108,6 +108,16 @@ const getDonationStatsHaving = async (req, res) => {
   }
 };
 
+// ratri - Top donors by total donated
+const getTopDonorsByTotalDonated = async (req, res) => {
+  try {
+    const data = await donationModel.getTopDonorsByTotalDonated();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch top donors by total donated', error: error.message });
+  }
+};
+
 // A- Controller for GROUP BY + HAVING: top donors HAVING total donated
 const getTopDonorsHaving = async (req, res) => {
   try {
@@ -139,4 +149,4 @@ const getDonorsToFoodBankSubquery = async (req, res) => {
   }
 };
 
-module.exports = { getAllDonations, getByFacility, getById, create, update, remove, getFacilitiesAndDonations, getFacilityDonationTotals, getDonationStatsHaving, getTopDonorsHaving, getDonationsAboveAverage, getDonorsToFoodBankSubquery };
+module.exports = { getAllDonations, getByFacility, getById, create, update, remove, getFacilitiesAndDonations, getFacilityDonationTotals, getDonationStatsHaving, getTopDonorsByTotalDonated, getTopDonorsHaving, getDonationsAboveAverage, getDonorsToFoodBankSubquery };
