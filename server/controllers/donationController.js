@@ -87,6 +87,16 @@ const getFacilitiesAndDonations = async (req, res) => {
   }
 };
 
+// A- Controller for SUM aggregate: total donations per facility
+const getFacilityDonationTotals = async (req, res) => {
+  try {
+    const data = await donationModel.getFacilityDonationTotals();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch facility donation totals', error: error.message });
+  }
+};
+
 // A- Controller for GROUP BY + HAVING: donation stats per facility with HAVING total_amount filter
 const getDonationStatsHaving = async (req, res) => {
   try {
@@ -129,4 +139,4 @@ const getDonorsToFoodBankSubquery = async (req, res) => {
   }
 };
 
-module.exports = { getAllDonations, getByFacility, getById, create, update, remove, getFacilitiesAndDonations, getDonationStatsHaving, getTopDonorsHaving, getDonationsAboveAverage, getDonorsToFoodBankSubquery };
+module.exports = { getAllDonations, getByFacility, getById, create, update, remove, getFacilitiesAndDonations, getFacilityDonationTotals, getDonationStatsHaving, getTopDonorsHaving, getDonationsAboveAverage, getDonorsToFoodBankSubquery };

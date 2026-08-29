@@ -7,6 +7,7 @@ const {
   update,
   remove,
   getFacilitiesAndDonations,
+  getFacilityDonationTotals,
   getDonationStatsHaving,
   getTopDonorsHaving,
   getDonationsAboveAverage,
@@ -16,6 +17,7 @@ const {
 const router = express.Router();
 
 // A- GROUP BY + HAVING routes for donation analytics
+router.get('/stats/donation-totals', getFacilityDonationTotals);
 router.get('/stats/donation-stats-having', getDonationStatsHaving);
 router.get('/stats/top-donors-having', getTopDonorsHaving);
 // A- Subquery routes for donations

@@ -79,6 +79,19 @@ const getFacilitiesAndDonations = async () => {
   return rows;
 };
 
+// A- SUM aggregate: total donations per facility
+const getFacilityDonationTotals = async () => {
+  const [rows] = await db.execute(
+    `SELECT f.facility_id, f.facility_name, f.city,
+            COALESCE(SUM(d.amount), 0) AS total_donations
+     FROM facilities f
+     LEFT JOIN donations d ON f.facility_id = d.facility_id
+     GROUP BY f.facility_id, f.facility_name, f.city
+     ORDER BY total_donations DESC, f.facility_name ASC`
+  );
+  return rows;
+};
+
 // A- GROUP BY with HAVING: Get total donations per facility and filter facilities with total >= threshold
 const getDonationStatsHaving = async (minTotal) => {
   const [rows] = await db.execute(
@@ -147,6 +160,7 @@ module.exports = {
   updateDonation,
   deleteDonation,
   getFacilitiesAndDonations,
+  getFacilityDonationTotals,
   getDonationStatsHaving,
   getTopDonorsHaving,
   getDonationsAboveAverage,
