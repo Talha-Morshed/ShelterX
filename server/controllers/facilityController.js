@@ -190,6 +190,16 @@ const getFacilityReviewCounts = async (req, res) => {
   }
 };
 
+// A- Controller for AVG aggregate: average rating per facility
+const getFacilityAverageRatings = async (req, res) => {
+  try {
+    const data = await facilityModel.getFacilityAverageRatings();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch facility average ratings', error: error.message });
+  }
+};
+
 // A- Controller for GROUP BY + HAVING: facilities having minimum reviews
 const getFacilitiesHavingMinReviews = async (req, res) => {
   try {
@@ -261,6 +271,7 @@ module.exports = {
   deleteFacility,
   getAllFacilitiesWithReviews,
   getFacilityReviewCounts,
+  getFacilityAverageRatings,
   getFacilitiesHavingMinReviews,
   getFacilityTypeStatsHaving,
   getCitiesHavingManyFacilities,

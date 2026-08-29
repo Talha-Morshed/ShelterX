@@ -138,6 +138,19 @@ const getFacilityReviewCounts = async () => {
   return rows;
 };
 
+// A- AVG aggregate: average rating per facility
+const getFacilityAverageRatings = async () => {
+  const [rows] = await db.execute(
+    `SELECT f.facility_id AS facility_id, f.facility_name, f.city,
+            ROUND(AVG(r.rating), 2) AS avg_rating
+     FROM facilities f
+     JOIN reviews r ON f.facility_id = r.facility_id
+     GROUP BY f.facility_id, f.facility_name, f.city
+     ORDER BY avg_rating DESC, f.facility_name ASC`
+  );
+  return rows;
+};
+
 // A- GROUP BY with HAVING: Find facilities having more than given number of reviews (aggregation + HAVING filter)
 const getFacilitiesHavingMinReviews = async (minReviews) => {
   const [rows] = await db.execute(
@@ -229,6 +242,7 @@ module.exports = {
   deleteFacility,
   getFacilitiesWithReviews,
   getFacilityReviewCounts,
+  getFacilityAverageRatings,
   getFacilitiesHavingMinReviews,
   getFacilityTypeStatsHaving,
   getCitiesHavingManyFacilities,
