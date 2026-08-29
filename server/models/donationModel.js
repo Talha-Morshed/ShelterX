@@ -122,6 +122,19 @@ const getTopDonorsByTotalDonated = async () => {
   return rows;
 };
 
+// ratri - Count distinct donors per facility
+const getDistinctDonorsPerFacility = async () => {
+  const [rows] = await db.execute(
+    `SELECT f.facility_id, f.facility_name, f.city,
+            COUNT(DISTINCT d.user_id) AS distinct_donor_count
+     FROM facilities f
+     LEFT JOIN donations d ON f.facility_id = d.facility_id
+     GROUP BY f.facility_id, f.facility_name, f.city
+     ORDER BY distinct_donor_count DESC, f.facility_name ASC`
+  );
+  return rows;
+};
+
 // A- GROUP BY with HAVING: Get top donors (users) having donated more than min amount total
 const getTopDonorsHaving = async (minTotal) => {
   const [rows] = await db.execute(
@@ -177,6 +190,7 @@ module.exports = {
   getFacilityDonationTotals,
   getDonationStatsHaving,
   getTopDonorsByTotalDonated,
+  getDistinctDonorsPerFacility,
   getTopDonorsHaving,
   getDonationsAboveAverage,
   getDonorsToFoodBankSubquery,

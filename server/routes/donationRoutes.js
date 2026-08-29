@@ -10,6 +10,7 @@ const {
   getFacilityDonationTotals,
   getDonationStatsHaving,
   getTopDonorsByTotalDonated,
+  getDistinctDonorsPerFacility,
   getTopDonorsHaving,
   getDonationsAboveAverage,
   getDonorsToFoodBankSubquery,
@@ -21,6 +22,7 @@ const router = express.Router();
 router.get('/stats/donation-totals', getFacilityDonationTotals);
 router.get('/stats/donation-stats-having', getDonationStatsHaving);
 router.get('/stats/top-donors-total', getTopDonorsByTotalDonated);
+router.get('/stats/distinct-donors-per-facility', getDistinctDonorsPerFacility);
 router.get('/stats/top-donors-having', getTopDonorsHaving);
 // A- Subquery routes for donations
 router.get('/stats/above-avg-subquery', getDonationsAboveAverage);
