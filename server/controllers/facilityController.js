@@ -180,7 +180,7 @@ const getAllFacilitiesWithReviews = async (req, res) => {
   }
 };
 
-// A- Controller for COUNT aggregate: review count per facility
+// Talha - Controller for COUNT aggregate: review count per facility
 const getFacilityReviewCounts = async (req, res) => {
   try {
     const data = await facilityModel.getFacilityReviewCounts();
@@ -190,7 +190,7 @@ const getFacilityReviewCounts = async (req, res) => {
   }
 };
 
-// A- Controller for AVG aggregate: average rating per facility
+// Talha - Controller for AVG aggregate: average rating per facility
 const getFacilityAverageRatings = async (req, res) => {
   try {
     const data = await facilityModel.getFacilityAverageRatings();
@@ -200,7 +200,7 @@ const getFacilityAverageRatings = async (req, res) => {
   }
 };
 
-// A- Controller for GROUP BY + HAVING: facilities having minimum reviews
+// Talha - Controller for GROUP BY + HAVING: facilities having minimum reviews
 const getFacilitiesHavingMinReviews = async (req, res) => {
   try {
     const min = Number(req.query.min) || 1;
@@ -211,7 +211,7 @@ const getFacilitiesHavingMinReviews = async (req, res) => {
   }
 };
 
-// A- Controller for GROUP BY + HAVING: facility type stats with HAVING total_capacity filter
+// Talha - Controller for GROUP BY + HAVING: facility type stats with HAVING total_capacity filter
 const getFacilityTypeStatsHaving = async (req, res) => {
   try {
     const minCapacity = Number(req.query.minCapacity) || 0;

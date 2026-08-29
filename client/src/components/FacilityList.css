@@ -21,25 +21,25 @@
 }
 
 .facility-card {
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(249,250,255,0.96));
+  border: 1px solid rgba(124, 58, 237, 0.08);
   border-radius: var(--radius);
   overflow: hidden;
   transition: all 0.22s ease;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 18px 28px -22px rgba(31, 41, 55, 0.28);
 }
 
 .facility-card:hover {
   box-shadow: var(--shadow-lg);
-  border-color: var(--accent-border);
-  transform: translateY(-2px);
+  border-color: rgba(124, 58, 237, 0.2);
+  transform: translateY(-3px);
 }
 
 .facility-header {
-  padding: 0.95rem 1rem;
-  background: linear-gradient(135deg, var(--accent-bg), transparent);
+  padding: 1rem 1rem 0.9rem;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(59, 130, 246, 0.05), transparent 75%);
   border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;

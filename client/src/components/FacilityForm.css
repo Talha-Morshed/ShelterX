@@ -4,11 +4,11 @@
 .donation-form,
 .review-form,
 .facility-service-form {
-  background: var(--bg);
-  padding: 1.35rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1.4rem;
+  border-radius: calc(var(--radius) + 0.1rem);
+  border: 1px solid rgba(124, 58, 237, 0.08);
+  box-shadow: 0 20px 35px -28px rgba(17, 24, 39, 0.25);
 }
 
 .facility-form h2,
@@ -43,10 +43,10 @@
 .form-group input,
 .form-group select,
 .form-group textarea {
-  padding: 0.62rem 0.75rem;
+  padding: 0.7rem 0.8rem;
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
-  background: var(--bg);
+  border-radius: 0.7rem;
+  background: rgba(249, 250, 255, 0.95);
   color: var(--text-h);
   font-family: inherit;
   font-size: 0.92rem;

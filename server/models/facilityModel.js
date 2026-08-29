@@ -125,7 +125,7 @@ const getFacilitiesWithReviews = async () => {
   return rows;
 };
 
-// A- COUNT aggregate: count reviews per facility
+// Talha - COUNT aggregate: count reviews per facility
 const getFacilityReviewCounts = async () => {
   const [rows] = await db.execute(
     `SELECT f.facility_id AS facility_id, f.facility_name, f.city,
@@ -138,7 +138,7 @@ const getFacilityReviewCounts = async () => {
   return rows;
 };
 
-// A- AVG aggregate: average rating per facility
+// Talha - AVG aggregate: average rating per facility
 const getFacilityAverageRatings = async () => {
   const [rows] = await db.execute(
     `SELECT f.facility_id AS facility_id, f.facility_name, f.city,
@@ -151,7 +151,7 @@ const getFacilityAverageRatings = async () => {
   return rows;
 };
 
-// A- GROUP BY with HAVING: Find facilities having more than given number of reviews (aggregation + HAVING filter)
+// Talha - GROUP BY with HAVING: Find facilities having more than given number of reviews (aggregation + HAVING filter)
 const getFacilitiesHavingMinReviews = async (minReviews) => {
   const [rows] = await db.execute(
     `SELECT f.facility_id, f.facility_name, f.city,
@@ -167,7 +167,7 @@ const getFacilitiesHavingMinReviews = async (minReviews) => {
   return rows;
 };
 
-// A- GROUP BY with HAVING: Group facilities by type and show only types with total capacity > threshold
+// Talha - GROUP BY with HAVING: Group facilities by type and show only types with total capacity > threshold
 const getFacilityTypeStatsHaving = async (minTotalCapacity) => {
   const [rows] = await db.execute(
     `SELECT facility_type,
