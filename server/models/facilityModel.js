@@ -183,7 +183,7 @@ const getFacilityTypeStatsHaving = async (minTotalCapacity) => {
   return rows;
 };
 
-// ratri
+// ratri - SUM total capacity by facility type
 const getFacilityTypeCapacityTotals = async () => {
   const [rows] = await db.execute(
     `SELECT facility_type,
@@ -192,6 +192,19 @@ const getFacilityTypeCapacityTotals = async () => {
      FROM facilities
      GROUP BY facility_type
      ORDER BY total_capacity DESC`
+  );
+  return rows;
+};
+
+// ratri - AVG capacity by facility type
+const getFacilityTypeAverageCapacity = async () => {
+  const [rows] = await db.execute(
+    `SELECT facility_type,
+            COUNT(*) AS facility_count,
+            ROUND(AVG(capacity), 2) AS avg_capacity
+     FROM facilities
+     GROUP BY facility_type
+     ORDER BY avg_capacity DESC`
   );
   return rows;
 };
@@ -259,6 +272,7 @@ module.exports = {
   getFacilitiesHavingMinReviews,
   getFacilityTypeStatsHaving,
   getFacilityTypeCapacityTotals,
+  getFacilityTypeAverageCapacity,
   getCitiesHavingManyFacilities,
   getFacilitiesAboveAvgCapacity,
   getFacilitiesWithDonationsSubquery,

@@ -222,13 +222,23 @@ const getFacilityTypeStatsHaving = async (req, res) => {
   }
 };
 
-// ratri
+// ratri - SUM total capacity by facility type
 const getFacilityTypeCapacityTotals = async (req, res) => {
   try {
     const data = await facilityModel.getFacilityTypeCapacityTotals();
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch total capacity by facility type', error: error.message });
+  }
+};
+
+// ratri - AVG capacity by facility type
+const getFacilityTypeAverageCapacity = async (req, res) => {
+  try {
+    const data = await facilityModel.getFacilityTypeAverageCapacity();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch average capacity by facility type', error: error.message });
   }
 };
 
@@ -285,6 +295,7 @@ module.exports = {
   getFacilitiesHavingMinReviews,
   getFacilityTypeStatsHaving,
   getFacilityTypeCapacityTotals,
+  getFacilityTypeAverageCapacity,
   getCitiesHavingManyFacilities,
   getFacilitiesAboveAvgCapacity,
   getFacilitiesWithDonationsSubquery,
