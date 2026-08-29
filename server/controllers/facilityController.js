@@ -252,6 +252,16 @@ const getFacilitiesCountPerCity = async (req, res) => {
   }
 };
 
+// ratri - Min / Max capacity by facility type
+const getFacilityTypeCapacityRange = async (req, res) => {
+  try {
+    const data = await facilityModel.getFacilityTypeCapacityRange();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch min/max capacity by facility type', error: error.message });
+  }
+};
+
 // A- Controller for GROUP BY + HAVING: cities having many facilities
 const getCitiesHavingManyFacilities = async (req, res) => {
   try {
@@ -307,6 +317,7 @@ module.exports = {
   getFacilityTypeCapacityTotals,
   getFacilityTypeAverageCapacity,
   getFacilitiesCountPerCity,
+  getFacilityTypeCapacityRange,
   getCitiesHavingManyFacilities,
   getFacilitiesAboveAvgCapacity,
   getFacilitiesWithDonationsSubquery,

@@ -221,6 +221,19 @@ const getFacilitiesCountPerCity = async () => {
   return rows;
 };
 
+// ratri - Min / Max capacity by facility type
+const getFacilityTypeCapacityRange = async () => {
+  const [rows] = await db.execute(
+    `SELECT facility_type,
+            MIN(capacity) AS min_capacity,
+            MAX(capacity) AS max_capacity
+     FROM facilities
+     GROUP BY facility_type
+     ORDER BY max_capacity DESC, min_capacity ASC`
+  );
+  return rows;
+};
+
 // A- GROUP BY with HAVING: Find cities having more than N facilities (city-wise aggregation)
 const getCitiesHavingManyFacilities = async (minCount) => {
   const [rows] = await db.execute(
@@ -286,6 +299,7 @@ module.exports = {
   getFacilityTypeCapacityTotals,
   getFacilityTypeAverageCapacity,
   getFacilitiesCountPerCity,
+  getFacilityTypeCapacityRange,
   getCitiesHavingManyFacilities,
   getFacilitiesAboveAvgCapacity,
   getFacilitiesWithDonationsSubquery,
