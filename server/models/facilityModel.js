@@ -125,6 +125,19 @@ const getFacilitiesWithReviews = async () => {
   return rows;
 };
 
+// A- COUNT aggregate: count reviews per facility
+const getFacilityReviewCounts = async () => {
+  const [rows] = await db.execute(
+    `SELECT f.facility_id AS facility_id, f.facility_name, f.city,
+            COUNT(r.review_id) AS review_count
+     FROM facilities f
+     LEFT JOIN reviews r ON f.facility_id = r.facility_id
+     GROUP BY f.facility_id, f.facility_name, f.city
+     ORDER BY review_count DESC, f.facility_name ASC`
+  );
+  return rows;
+};
+
 // A- GROUP BY with HAVING: Find facilities having more than given number of reviews (aggregation + HAVING filter)
 const getFacilitiesHavingMinReviews = async (minReviews) => {
   const [rows] = await db.execute(
@@ -215,6 +228,7 @@ module.exports = {
   updateFacility,
   deleteFacility,
   getFacilitiesWithReviews,
+  getFacilityReviewCounts,
   getFacilitiesHavingMinReviews,
   getFacilityTypeStatsHaving,
   getCitiesHavingManyFacilities,

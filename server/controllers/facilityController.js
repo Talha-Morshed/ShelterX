@@ -180,6 +180,16 @@ const getAllFacilitiesWithReviews = async (req, res) => {
   }
 };
 
+// A- Controller for COUNT aggregate: review count per facility
+const getFacilityReviewCounts = async (req, res) => {
+  try {
+    const data = await facilityModel.getFacilityReviewCounts();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch facility review counts', error: error.message });
+  }
+};
+
 // A- Controller for GROUP BY + HAVING: facilities having minimum reviews
 const getFacilitiesHavingMinReviews = async (req, res) => {
   try {
@@ -250,6 +260,7 @@ module.exports = {
   updateFacility,
   deleteFacility,
   getAllFacilitiesWithReviews,
+  getFacilityReviewCounts,
   getFacilitiesHavingMinReviews,
   getFacilityTypeStatsHaving,
   getCitiesHavingManyFacilities,

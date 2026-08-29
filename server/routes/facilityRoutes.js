@@ -6,6 +6,7 @@ const {
   updateFacility,
   deleteFacility,
   getAllFacilitiesWithReviews,
+  getFacilityReviewCounts,
   getFacilitiesHavingMinReviews,
   getFacilityTypeStatsHaving,
   getCitiesHavingManyFacilities,
@@ -17,6 +18,7 @@ const {
 const router = express.Router();
 
 // A- GROUP BY + HAVING routes: aggregation filters
+router.get('/stats/review-counts', getFacilityReviewCounts);
 router.get('/stats/having-reviews', getFacilitiesHavingMinReviews);
 router.get('/stats/type-having', getFacilityTypeStatsHaving);
 router.get('/stats/cities-having', getCitiesHavingManyFacilities);
