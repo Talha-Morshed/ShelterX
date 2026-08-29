@@ -51,6 +51,7 @@ const ID_KEYS = {
 };
 
 function App() {
+  const [showLanding, setShowLanding] = useState(true);
   const [activeTab, setActiveTab] = useState('facilities');
 
   const [facilities, setFacilities] = useState([]);
@@ -142,11 +143,21 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetchData(activeTab);
-  }, [activeTab, fetchData]);
+    if (!showLanding) {
+      fetchData(activeTab);
+    }
+  }, [activeTab, fetchData, showLanding]);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
+    setEditingId(null);
+    setFormError(null);
+    setError(null);
+  };
+
+  const handleStartDashboard = () => {
+    setShowLanding(false);
+    setActiveTab('facilities');
     setEditingId(null);
     setFormError(null);
     setError(null);
@@ -248,6 +259,208 @@ function App() {
       default: return null;
     }
   };
+
+  if (showLanding) {
+    return (
+      <div className="landing-page">
+        <header className="landing-header">
+          <div className="container landing-nav">
+            <div className="brand-mark">
+              <div className="brand-icon">S</div>
+              <div>
+                <span className="brand-name">ShelterX</span>
+                <span className="brand-tag">Operations Suite</span>
+              </div>
+            </div>
+            <button className="btn btn-primary" onClick={handleStartDashboard}>
+              Get Started
+            </button>
+          </div>
+        </header>
+
+        <main className="landing-main">
+          <section className="hero-section container">
+            <div className="hero-copy">
+              <span className="eyebrow">Trusted shelter operations platform</span>
+              <h1>Manage every shelter touchpoint with clarity and confidence.</h1>
+              <p>
+                From facilities and services to donations, volunteers, and emergency response,
+                ShelterX gives your team one premium control center for real-world support work.
+              </p>
+              <div className="hero-actions">
+                <button className="btn btn-primary btn-hero" onClick={handleStartDashboard}>Get Started</button>
+                <button className="btn btn-secondary landing-secondary" onClick={handleStartDashboard}>Open Dashboard</button>
+              </div>
+              <div className="hero-metrics">
+                <div>
+                  <strong>8</strong>
+                  <span>Core modules</span>
+                </div>
+                <div>
+                  <strong>24/7</strong>
+                  <span>Operations view</span>
+                </div>
+                <div>
+                  <strong>100%</strong>
+                  <span>Staff visibility</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="hero-visual" aria-label="ShelterX dashboard preview">
+              <div className="glass-panel primary-panel">
+                <div className="panel-topbar">
+                  <span className="pulse-dot" />
+                  <span className="pulse-dot" />
+                  <span className="pulse-dot" />
+                </div>
+                <div className="mini-header">
+                  <span>Facility Overview</span>
+                  <span className="mini-badge">Live</span>
+                </div>
+                <div className="mini-stats">
+                  <div>
+                    <small>Active</small>
+                    <strong>128</strong>
+                  </div>
+                  <div>
+                    <small>Donations</small>
+                    <strong>$84k</strong>
+                  </div>
+                  <div>
+                    <small>Volunteers</small>
+                    <strong>346</strong>
+                  </div>
+                </div>
+                <div className="mini-chart">
+                  <span style={{ height: '26%' }} />
+                  <span style={{ height: '38%' }} />
+                  <span style={{ height: '56%' }} />
+                  <span style={{ height: '74%' }} />
+                  <span style={{ height: '92%' }} />
+                  <span style={{ height: '80%' }} />
+                </div>
+              </div>
+
+              <div className="floating-card card-one">
+                <span className="card-label">Capacity</span>
+                <strong>94%</strong>
+                <small>Across active facilities</small>
+              </div>
+
+              <div className="floating-card card-two">
+                <span className="card-label">Urgent tasks</span>
+                <strong>7</strong>
+                <small>Need immediate response</small>
+              </div>
+            </div>
+          </section>
+
+          <section className="features-section container">
+            <div className="section-heading">
+              <span className="eyebrow">What ShelterX manages</span>
+              <h2>Built for the full support ecosystem.</h2>
+            </div>
+
+            <div className="feature-grid">
+              <article className="feature-card">
+                <div className="feature-icon teal">F</div>
+                <h3>Facilities</h3>
+                <p>Track shelter availability, capacity, and community location data with precision.</p>
+              </article>
+              <article className="feature-card">
+                <div className="feature-icon blue">S</div>
+                <h3>Services</h3>
+                <p>Manage service offerings across shelter programs and value streams.</p>
+              </article>
+              <article className="feature-card">
+                <div className="feature-icon gold">D</div>
+                <h3>Donations</h3>
+                <p>Monitor giving patterns and see how support moves across your network.</p>
+              </article>
+              <article className="feature-card">
+                <div className="feature-icon mint">V</div>
+                <h3>Volunteers</h3>
+                <p>Coordinate staffing, schedules, and engagement for critical daily operations.</p>
+              </article>
+            </div>
+          </section>
+
+          <section className="showcase-section container">
+            <div className="showcase-panel">
+              <div className="showcase-copy">
+                <span className="eyebrow">A single operational view</span>
+                <h2>Everything your shelter network needs, in one premium workspace.</h2>
+                <ul className="check-list">
+                  <li>Facility management with review and capacity insights.</li>
+                  <li>Donation tracking with relationship and volume visibility.</li>
+                  <li>Volunteer and emergency coordination aligned to service delivery.</li>
+                  <li>Professional dashboard structure for fast operational decisions.</li>
+                </ul>
+              </div>
+
+              <div className="showcase-stack">
+                <div className="stack-card stack-main">
+                  <div className="stack-row">
+                    <span>Facilities</span>
+                    <strong>128</strong>
+                  </div>
+                  <div className="stack-row">
+                    <span>Volunteers</span>
+                    <strong>346</strong>
+                  </div>
+                  <div className="stack-row">
+                    <span>Emergency contacts</span>
+                    <strong>54</strong>
+                  </div>
+                </div>
+                <div className="stack-card stack-brief">
+                  <small>Response readiness</small>
+                  <strong>96%</strong>
+                  <span>Operations healthy</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="steps-section container">
+            <div className="section-heading center">
+              <span className="eyebrow">How it flows</span>
+              <h2>From intake to action in three thoughtful steps.</h2>
+            </div>
+
+            <div className="steps-grid">
+              <div className="step-card">
+                <span className="step-number">01</span>
+                <h3>Collect</h3>
+                <p>Capture facilities, services, donors, and support contacts into one clear system.</p>
+              </div>
+              <div className="step-card">
+                <span className="step-number">02</span>
+                <h3>Review</h3>
+                <p>Understand capacity, quality insights, and service trends before acting.</p>
+              </div>
+              <div className="step-card">
+                <span className="step-number">03</span>
+                <h3>Respond</h3>
+                <p>Move quickly with volunteer coordination, review intelligence, and support updates.</p>
+              </div>
+            </div>
+          </section>
+
+          <section className="cta-section container">
+            <div className="cta-panel">
+              <div>
+                <span className="eyebrow">Ready to operate smarter?</span>
+                <h2>Enter the dashboard and continue managing your outreach.</h2>
+              </div>
+              <button className="btn btn-primary btn-hero" onClick={handleStartDashboard}>Get Started</button>
+            </div>
+          </section>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="app">
