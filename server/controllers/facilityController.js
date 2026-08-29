@@ -222,6 +222,16 @@ const getFacilityTypeStatsHaving = async (req, res) => {
   }
 };
 
+// ratri
+const getFacilityTypeCapacityTotals = async (req, res) => {
+  try {
+    const data = await facilityModel.getFacilityTypeCapacityTotals();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch total capacity by facility type', error: error.message });
+  }
+};
+
 // A- Controller for GROUP BY + HAVING: cities having many facilities
 const getCitiesHavingManyFacilities = async (req, res) => {
   try {
@@ -274,6 +284,7 @@ module.exports = {
   getFacilityAverageRatings,
   getFacilitiesHavingMinReviews,
   getFacilityTypeStatsHaving,
+  getFacilityTypeCapacityTotals,
   getCitiesHavingManyFacilities,
   getFacilitiesAboveAvgCapacity,
   getFacilitiesWithDonationsSubquery,
