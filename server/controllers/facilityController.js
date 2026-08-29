@@ -303,6 +303,36 @@ const getFacilitiesWithFiveStarReviews = async (req, res) => {
   }
 };
 
+// New controller: facilities without emergency contacts (NOT EXISTS subquery)
+const getFacilitiesWithoutEmergencyContactsSubquery = async (req, res) => {
+  try {
+    const data = await facilityModel.getFacilitiesWithoutEmergencyContactsSubquery();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch facilities without emergency contacts', error: error.message });
+  }
+};
+
+// New controller: facilities above average available spaces (scalar subquery)
+const getFacilitiesAboveAvgAvailableSpaces = async (req, res) => {
+  try {
+    const data = await facilityModel.getFacilitiesAboveAvgAvailableSpaces();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch facilities above average available spaces', error: error.message });
+  }
+};
+
+// New controller: facilities above average service count (derived-table subquery)
+const getFacilitiesAboveAvgServiceCountSubquery = async (req, res) => {
+  try {
+    const data = await facilityModel.getFacilitiesAboveAvgServiceCountSubquery();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch facilities above average service count', error: error.message });
+  }
+};
+
 module.exports = {
   getAllFacilities,
   getFacilityById,
@@ -322,4 +352,7 @@ module.exports = {
   getFacilitiesAboveAvgCapacity,
   getFacilitiesWithDonationsSubquery,
   getFacilitiesWithFiveStarReviews,
+  getFacilitiesWithoutEmergencyContactsSubquery,
+  getFacilitiesAboveAvgAvailableSpaces,
+  getFacilitiesAboveAvgServiceCountSubquery,
 };

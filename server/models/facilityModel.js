@@ -285,6 +285,52 @@ const getFacilitiesWithFiveStarReviews = async () => {
   return rows;
 };
 
+// New subquery: Find facilities with no emergency contact (NOT EXISTS subquery)
+const getFacilitiesWithoutEmergencyContactsSubquery = async () => {
+  const [rows] = await db.execute(
+    `SELECT f.facility_id, f.facility_name, f.city, f.phone
+     FROM facilities f
+     WHERE NOT EXISTS (
+       SELECT 1 FROM emergency_contacts ec
+       WHERE ec.facility_id = f.facility_id
+     )
+     ORDER BY f.facility_name`
+  );
+  return rows;
+};
+
+// New subquery: Find facilities whose available spaces are above average (scalar subquery)
+const getFacilitiesAboveAvgAvailableSpaces = async () => {
+  const [rows] = await db.execute(
+    `SELECT facility_id, facility_name, city, available_spaces
+     FROM facilities
+     WHERE available_spaces > (SELECT AVG(available_spaces) FROM facilities)
+     ORDER BY available_spaces DESC, facility_name ASC`
+  );
+  return rows;
+};
+
+// New subquery: Find facilities with service count above the overall average number of services per facility (derived-table subquery)
+const getFacilitiesAboveAvgServiceCountSubquery = async () => {
+  const [rows] = await db.execute(
+    `SELECT f.facility_id, f.facility_name, f.city,
+            COUNT(fs.service_id) AS service_count
+     FROM facilities f
+     JOIN facility_services fs ON fs.facility_id = f.facility_id
+     GROUP BY f.facility_id, f.facility_name, f.city
+     HAVING COUNT(fs.service_id) > (
+       SELECT AVG(service_total)
+       FROM (
+         SELECT COUNT(*) AS service_total
+         FROM facility_services
+         GROUP BY facility_id
+       ) AS service_stats
+     )
+     ORDER BY service_count DESC, f.facility_name ASC`
+  );
+  return rows;
+};
+
 module.exports = {
   getAllFacilities,
   getFacilityById,
@@ -304,4 +350,7 @@ module.exports = {
   getFacilitiesAboveAvgCapacity,
   getFacilitiesWithDonationsSubquery,
   getFacilitiesWithFiveStarReviews,
+  getFacilitiesWithoutEmergencyContactsSubquery,
+  getFacilitiesAboveAvgAvailableSpaces,
+  getFacilitiesAboveAvgServiceCountSubquery,
 };

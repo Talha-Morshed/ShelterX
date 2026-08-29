@@ -18,6 +18,9 @@ const {
   getFacilitiesAboveAvgCapacity,
   getFacilitiesWithDonationsSubquery,
   getFacilitiesWithFiveStarReviews,
+  getFacilitiesWithoutEmergencyContactsSubquery,
+  getFacilitiesAboveAvgAvailableSpaces,
+  getFacilitiesAboveAvgServiceCountSubquery,
 } = require('../controllers/facilityController');
 
 const router = express.Router();
@@ -36,6 +39,9 @@ router.get('/stats/cities-having', getCitiesHavingManyFacilities);
 router.get('/stats/above-avg-capacity', getFacilitiesAboveAvgCapacity);
 router.get('/stats/with-donations-subquery', getFacilitiesWithDonationsSubquery);
 router.get('/stats/five-star-subquery', getFacilitiesWithFiveStarReviews);
+router.get('/stats/without-emergency-contacts-subquery', getFacilitiesWithoutEmergencyContactsSubquery);
+router.get('/stats/above-avg-available-spaces-subquery', getFacilitiesAboveAvgAvailableSpaces);
+router.get('/stats/above-avg-service-count-subquery', getFacilitiesAboveAvgServiceCountSubquery);
 
 router.get('/', getAllFacilities);
 router.get('/with-reviews', getAllFacilitiesWithReviews);
