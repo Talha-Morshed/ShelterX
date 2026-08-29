@@ -12,6 +12,7 @@ const {
   getFacilityTypeStatsHaving,
   getFacilityTypeCapacityTotals,
   getFacilityTypeAverageCapacity,
+  getFacilitiesCountPerCity,
   getCitiesHavingManyFacilities,
   getFacilitiesAboveAvgCapacity,
   getFacilitiesWithDonationsSubquery,
@@ -27,6 +28,7 @@ router.get('/stats/having-reviews', getFacilitiesHavingMinReviews);
 router.get('/stats/type-having', getFacilityTypeStatsHaving);
 router.get('/stats/type-capacity-sum', getFacilityTypeCapacityTotals);
 router.get('/stats/type-capacity-avg', getFacilityTypeAverageCapacity);
+router.get('/stats/city-facility-count', getFacilitiesCountPerCity);
 router.get('/stats/cities-having', getCitiesHavingManyFacilities);
 // A- Subquery routes: scalar / IN / EXISTS examples
 router.get('/stats/above-avg-capacity', getFacilitiesAboveAvgCapacity);

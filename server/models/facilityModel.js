@@ -209,6 +209,18 @@ const getFacilityTypeAverageCapacity = async () => {
   return rows;
 };
 
+// ratri - Count facilities per city
+const getFacilitiesCountPerCity = async () => {
+  const [rows] = await db.execute(
+    `SELECT city,
+            COUNT(*) AS facility_count
+     FROM facilities
+     GROUP BY city
+     ORDER BY facility_count DESC, city ASC`
+  );
+  return rows;
+};
+
 // A- GROUP BY with HAVING: Find cities having more than N facilities (city-wise aggregation)
 const getCitiesHavingManyFacilities = async (minCount) => {
   const [rows] = await db.execute(
@@ -273,6 +285,7 @@ module.exports = {
   getFacilityTypeStatsHaving,
   getFacilityTypeCapacityTotals,
   getFacilityTypeAverageCapacity,
+  getFacilitiesCountPerCity,
   getCitiesHavingManyFacilities,
   getFacilitiesAboveAvgCapacity,
   getFacilitiesWithDonationsSubquery,
