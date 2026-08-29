@@ -6,6 +6,7 @@ const {
   create,
   update,
   remove,
+  getFacilityVolunteerCounts,
   getFacilitiesWithMinVolunteersHaving,
   getVolunteerStatusStatsHaving,
   getVolunteersWhoAreDonorsSubquery,
@@ -15,6 +16,7 @@ const {
 const router = express.Router();
 
 // A- GROUP BY + HAVING routes for volunteers
+router.get('/stats/volunteer-counts', getFacilityVolunteerCounts);
 router.get('/stats/facilities-min-volunteers-having', getFacilitiesWithMinVolunteersHaving);
 router.get('/stats/status-having', getVolunteerStatusStatsHaving);
 // A- Subquery routes for volunteers

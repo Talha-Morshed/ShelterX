@@ -63,6 +63,19 @@ const deleteVolunteer = async (volunteerId) => {
   return result.affectedRows;
 };
 
+// A- COUNT aggregate: count volunteers per facility
+const getFacilityVolunteerCounts = async () => {
+  const [rows] = await db.execute(
+    `SELECT f.facility_id, f.facility_name, f.city,
+            COUNT(v.volunteer_id) AS volunteer_count
+     FROM facilities f
+     LEFT JOIN volunteers v ON f.facility_id = v.facility_id
+     GROUP BY f.facility_id, f.facility_name, f.city
+     ORDER BY volunteer_count DESC, f.facility_name ASC`
+  );
+  return rows;
+};
+
 // A- GROUP BY with HAVING: Get facilities having at least N volunteers (volunteer demand report)
 const getFacilitiesWithMinVolunteersHaving = async (minCount) => {
   const [rows] = await db.execute(
@@ -125,6 +138,7 @@ module.exports = {
   createVolunteer,
   updateVolunteer,
   deleteVolunteer,
+  getFacilityVolunteerCounts,
   getFacilitiesWithMinVolunteersHaving,
   getVolunteerStatusStatsHaving,
   getVolunteersWhoAreDonorsSubquery,

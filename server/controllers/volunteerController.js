@@ -77,6 +77,16 @@ const remove = async (req, res) => {
   }
 };
 
+// A- Controller for COUNT aggregate: volunteer count per facility
+const getFacilityVolunteerCounts = async (req, res) => {
+  try {
+    const data = await volunteerModel.getFacilityVolunteerCounts();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch facility volunteer counts', error: error.message });
+  }
+};
+
 // A- Controller for GROUP BY + HAVING: facilities with min volunteers
 const getFacilitiesWithMinVolunteersHaving = async (req, res) => {
   try {
@@ -119,4 +129,4 @@ const getFacilitiesAboveAvgVolunteersSubquery = async (req, res) => {
   }
 };
 
-module.exports = { getAllVolunteers, getByFacility, getById, create, update, remove, getFacilitiesWithMinVolunteersHaving, getVolunteerStatusStatsHaving, getVolunteersWhoAreDonorsSubquery, getFacilitiesAboveAvgVolunteersSubquery };
+module.exports = { getAllVolunteers, getByFacility, getById, create, update, remove, getFacilityVolunteerCounts, getFacilitiesWithMinVolunteersHaving, getVolunteerStatusStatsHaving, getVolunteersWhoAreDonorsSubquery, getFacilitiesAboveAvgVolunteersSubquery };
