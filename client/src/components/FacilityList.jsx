@@ -72,11 +72,6 @@ const FacilityList = ({ facilities, onEdit, onDelete, onView, isLoading }) => {
             </div>
 
             <div className="facility-actions">
-              {onView && (
-                <button className="btn btn-info" onClick={() => onView(facility.facility_id)}>
-                  View
-                </button>
-              )}
               <button className="btn btn-warning" onClick={() => onEdit(facility)}>
                 Edit
               </button>

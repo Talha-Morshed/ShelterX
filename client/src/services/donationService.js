@@ -17,25 +17,6 @@ export const getDonations = async () => {
 };
 
 /**
- * Get a single donation by ID
- */
-export const getDonation = async (id) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/donations/${id}`);
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Donation not found');
-      }
-      throw new Error('Failed to fetch donation');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error(`Error fetching donation ${id}:`, error);
-    throw error;
-  }
-};
-
-/**
  * Create a new donation
  */
 export const createDonation = async (data) => {

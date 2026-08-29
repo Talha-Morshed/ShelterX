@@ -17,25 +17,6 @@ export const getVolunteers = async () => {
 };
 
 /**
- * Get a single volunteer by ID
- */
-export const getVolunteer = async (id) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/volunteers/${id}`);
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Volunteer not found');
-      }
-      throw new Error('Failed to fetch volunteer');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error(`Error fetching volunteer ${id}:`, error);
-    throw error;
-  }
-};
-
-/**
  * Create a new volunteer
  */
 export const createVolunteer = async (data) => {

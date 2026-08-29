@@ -17,25 +17,6 @@ export const getReviews = async () => {
 };
 
 /**
- * Get a single review by ID
- */
-export const getReview = async (id) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/reviews/${id}`);
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Review not found');
-      }
-      throw new Error('Failed to fetch review');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error(`Error fetching review ${id}:`, error);
-    throw error;
-  }
-};
-
-/**
  * Create a new review
  */
 export const createReview = async (data) => {

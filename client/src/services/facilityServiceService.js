@@ -17,25 +17,6 @@ export const getFacilityServices = async () => {
 };
 
 /**
- * Get a single facility service by ID
- */
-export const getFacilityService = async (id) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/facility-services/${id}`);
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Facility service not found');
-      }
-      throw new Error('Failed to fetch facility service');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error(`Error fetching facility service ${id}:`, error);
-    throw error;
-  }
-};
-
-/**
  * Create a new facility service
  */
 export const createFacilityService = async (data) => {

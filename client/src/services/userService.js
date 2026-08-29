@@ -17,25 +17,6 @@ export const getUsers = async () => {
 };
 
 /**
- * Get a single user by ID
- */
-export const getUser = async (id) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/${id}`);
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('User not found');
-      }
-      throw new Error('Failed to fetch user');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error(`Error fetching user ${id}:`, error);
-    throw error;
-  }
-};
-
-/**
  * Create a new user
  */
 export const createUser = async (data) => {

@@ -17,25 +17,6 @@ export const getEmergencyContacts = async () => {
 };
 
 /**
- * Get a single emergency contact by ID
- */
-export const getEmergencyContact = async (id) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/emergency-contacts/${id}`);
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Emergency contact not found');
-      }
-      throw new Error('Failed to fetch emergency contact');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error(`Error fetching emergency contact ${id}:`, error);
-    throw error;
-  }
-};
-
-/**
  * Create a new emergency contact
  */
 export const createEmergencyContact = async (data) => {

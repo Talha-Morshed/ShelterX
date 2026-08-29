@@ -17,25 +17,6 @@ export const getServices = async () => {
 };
 
 /**
- * Get a single service by ID
- */
-export const getService = async (id) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/services/${id}`);
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Service not found');
-      }
-      throw new Error('Failed to fetch service');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error(`Error fetching service ${id}:`, error);
-    throw error;
-  }
-};
-
-/**
  * Create a new service
  */
 export const createService = async (data) => {
