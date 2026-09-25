@@ -236,12 +236,25 @@
   padding: 0.7rem 0.9rem;
   border: 1px solid #cad5d5;
   border-radius: 0.55rem;
-  color: #607687;
-  background: #f7f5ef;
-  cursor: not-allowed;
+  color: #fff;
+  background: #e2673f;
+  cursor: pointer;
   font: inherit;
   font-size: 0.86rem;
   font-weight: 800;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.public-details-button:hover,
+.public-details-button:focus-visible {
+  border-color: #c95331;
+  background: #c95331;
+  box-shadow: 0 8px 16px rgba(226, 103, 63, 0.2);
+  transform: translateY(-1px);
+}
+
+.public-details-button:active {
+  transform: translateY(0);
 }
 
 .public-state {

@@ -49,6 +49,99 @@ const PublicHome = ({ onFindHelp, onAdmin }) => (
           Browse verified facility records, check available capacity, and find contact information for support in your area.
         </p>
       </section>
+
+      <section className="public-support-section">
+        <div className="public-section-heading">
+          <div>
+            <p className="public-eyebrow">Find the right kind of support</p>
+            <h2>One place for essential help.</h2>
+          </div>
+          <p>Explore the support network by the kind of help you need most.</p>
+        </div>
+        <div className="public-support-grid">
+          <button type="button" className="public-support-card" onClick={onFindHelp}>
+            <span className="public-support-number">01</span>
+            <span className="public-support-icon">⌂</span>
+            <strong>Safe shelter</strong>
+            <span>Find places offering space and overnight support.</span>
+          </button>
+          <button type="button" className="public-support-card" onClick={onFindHelp}>
+            <span className="public-support-number">02</span>
+            <span className="public-support-icon">+</span>
+            <strong>Food assistance</strong>
+            <span>Locate food banks and community kitchens nearby.</span>
+          </button>
+          <button type="button" className="public-support-card" onClick={onFindHelp}>
+            <span className="public-support-number">03</span>
+            <span className="public-support-icon">✚</span>
+            <strong>Health support</strong>
+            <span>Browse clinics and facilities with care services.</span>
+          </button>
+          <button type="button" className="public-support-card" onClick={onFindHelp}>
+            <span className="public-support-number">04</span>
+            <span className="public-support-icon">◌</span>
+            <strong>Community care</strong>
+            <span>Connect with welcoming local support centers.</span>
+          </button>
+        </div>
+      </section>
+
+      <section className="public-process-section">
+        <div className="public-process-copy">
+          <p className="public-eyebrow">How ShelterX works</p>
+          <h2>Clear information when the next step matters.</h2>
+          <p>
+            We keep the journey simple so you can spend less time searching and more time connecting with support.
+          </p>
+          <button type="button" className="public-outline-button" onClick={onFindHelp}>
+            Browse facilities <span aria-hidden="true">-&gt;</span>
+          </button>
+        </div>
+        <div className="public-process-list">
+          <div className="public-process-item">
+            <span>01</span>
+            <div>
+              <h3>Choose what you need</h3>
+              <p>Start with a facility category or search for a location by name, city, or address.</p>
+            </div>
+          </div>
+          <div className="public-process-item">
+            <span>02</span>
+            <div>
+              <h3>Compare available options</h3>
+              <p>Review capacity, active status, contact details, and services listed for each place.</p>
+            </div>
+          </div>
+          <div className="public-process-item">
+            <span>03</span>
+            <div>
+              <h3>Take the next step</h3>
+              <p>Use the available contact information to reach the facility directly.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="public-confidence-section">
+        <div>
+          <p className="public-eyebrow">Built for clarity</p>
+          <h2>See the information that helps you decide.</h2>
+        </div>
+        <div className="public-confidence-points">
+          <div><strong>Capacity</strong><span>Understand available spaces at a glance.</span></div>
+          <div><strong>Contact</strong><span>Reach facilities using the details they provide.</span></div>
+          <div><strong>Services</strong><span>See what kinds of support each location offers.</span></div>
+        </div>
+      </section>
+
+      <section className="public-home-cta">
+        <p className="public-eyebrow">Your next step starts here</p>
+        <h2>Let’s find a place that can help.</h2>
+        <p>Browse the current ShelterX facility directory.</p>
+        <button type="button" className="public-primary-button" onClick={onFindHelp}>
+          Find Help <span aria-hidden="true">-&gt;</span>
+        </button>
+      </section>
     </main>
   </div>
 );
