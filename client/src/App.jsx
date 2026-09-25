@@ -17,6 +17,7 @@ import EmergencyContactForm from './components/EmergencyContactForm';
 import EmergencyContactList from './components/EmergencyContactList';
 import PublicHome from './components/PublicHome';
 import PublicFacilityBrowser from './components/PublicFacilityBrowser';
+import PublicFacilityDetails from './components/PublicFacilityDetails';
 import { createFacility, updateFacility, deleteFacility, getFacilities } from './services/facilityService';
 import { createUser, updateUser, deleteUser } from './services/userService';
 import { createService, updateService, deleteService, getServices } from './services/serviceService';
@@ -54,6 +55,7 @@ const ID_KEYS = {
 
 function App() {
   const [view, setView] = useState('public-home');
+  const [selectedFacilityId, setSelectedFacilityId] = useState(null);
   const [activeTab, setActiveTab] = useState('facilities');
 
   const [facilities, setFacilities] = useState([]);
@@ -183,6 +185,11 @@ function App() {
     setError(null);
   };
 
+  const handleViewDetails = (facilityId) => {
+    setSelectedFacilityId(facilityId);
+    setView('public-facility-details');
+  };
+
   const handleFormSubmit = async (formData) => {
     setFormLoading(true);
     setFormError(null);
@@ -285,7 +292,24 @@ function App() {
   }
 
   if (view === 'public-facilities') {
-    return <PublicFacilityBrowser onHome={() => setView('public-home')} onAdmin={handleAdminHome} />;
+    return (
+      <PublicFacilityBrowser
+        onHome={() => setView('public-home')}
+        onAdmin={handleAdminHome}
+        onViewDetails={handleViewDetails}
+      />
+    );
+  }
+
+  if (view === 'public-facility-details') {
+    return (
+      <PublicFacilityDetails
+        facilityId={selectedFacilityId}
+        onBack={() => setView('public-facilities')}
+        onHome={() => setView('public-home')}
+        onAdmin={handleAdminHome}
+      />
+    );
   }
 
   if (showLanding) {

@@ -13,7 +13,7 @@ const facilityTypes = [
   { value: 'other', label: 'Other' },
 ];
 
-const PublicFacilityBrowser = ({ onHome, onAdmin }) => {
+const PublicFacilityBrowser = ({ onHome, onAdmin, onViewDetails }) => {
   const [facilities, setFacilities] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [facilityType, setFacilityType] = useState('');
@@ -218,7 +218,7 @@ const PublicFacilityBrowser = ({ onHome, onAdmin }) => {
                   {facility.address && <p><span>Address</span>{facility.address}</p>}
                   {facility.phone && <p><span>Phone</span>{facility.phone}</p>}
                 </div>
-                <button type="button" className="public-details-button" disabled title="Facility details will be available in a later update">
+                <button type="button" className="public-details-button" onClick={() => onViewDetails(facility.facility_id)}>
                   View Details
                 </button>
               </article>

@@ -1,0 +1,255 @@
+.public-details-page {
+  background: #f7f5ef;
+}
+
+.public-details-main {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 2.4rem 1.5rem 5rem;
+}
+
+.details-back-link {
+  margin-bottom: 1.6rem;
+  padding: 0;
+  border: 0;
+  color: #45647b;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.details-back-link:hover,
+.details-back-link:focus-visible {
+  color: #e2673f;
+}
+
+.details-card {
+  overflow: hidden;
+  border: 1px solid #d9dfdc;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 20px 38px rgba(23, 50, 77, 0.08);
+}
+
+.details-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 2.2rem;
+  background: #dfe9e5;
+}
+
+.details-hero h1 {
+  margin: 0;
+  color: #17324d;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.3rem, 5vw, 4.2rem);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.details-type {
+  margin: 0.8rem 0 0;
+  color: #d35f3b;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.details-status {
+  flex: 0 0 auto;
+  padding: 0.55rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.details-status-active {
+  color: #356c5c;
+  background: #d8ebe2;
+}
+
+.details-status-inactive {
+  color: #895438;
+  background: #f4dfd1;
+}
+
+.details-content {
+  padding: 2.2rem;
+}
+
+.details-availability {
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  background: #edf3ef;
+}
+
+.details-availability h2,
+.details-section h2,
+.details-services h2 {
+  margin: 0;
+  color: #17324d;
+  font-size: 1.35rem;
+}
+
+.details-capacity-track {
+  height: 0.55rem;
+  margin-top: 1.1rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #d4dfda;
+}
+
+.details-capacity-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #e2673f;
+}
+
+.details-capacity-numbers {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.8rem;
+  color: #607687;
+  font-size: 0.82rem;
+}
+
+.details-capacity-numbers strong {
+  margin-left: 0.25rem;
+  color: #17324d;
+}
+
+.details-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2.3rem;
+}
+
+.details-section {
+  min-width: 0;
+}
+
+.details-list {
+  margin: 1.2rem 0 0;
+}
+
+.details-list div {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e7ece9;
+}
+
+.details-list dt {
+  color: #607687;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.details-list dd {
+  margin: 0;
+  color: #45647b;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.details-list a {
+  color: #d35f3b;
+  font-weight: 700;
+}
+
+.details-description {
+  margin: 1.2rem 0 0;
+  color: #45647b;
+  line-height: 1.75;
+}
+
+.details-services {
+  margin-top: 2.3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e7ece9;
+}
+
+.details-services-note {
+  margin: 1rem 0 0;
+  color: #607687;
+  line-height: 1.5;
+}
+
+.details-service-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.details-service-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  border: 1px solid #d9dfdc;
+  border-radius: 0.55rem;
+  color: #45647b;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.details-service-list li span {
+  color: #e2673f;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+@media (max-width: 700px) {
+  .public-details-main {
+    padding: 1.8rem 1rem 4rem;
+  }
+
+  .details-hero,
+  .details-content {
+    padding: 1.35rem;
+  }
+
+  .details-hero {
+    display: block;
+  }
+
+  .details-status {
+    display: inline-block;
+    margin-top: 1.2rem;
+  }
+
+  .details-columns {
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+  }
+
+  .details-service-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 430px) {
+  .details-capacity-numbers {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .details-list div {
+    grid-template-columns: 5.3rem 1fr;
+    gap: 0.65rem;
+  }
+}

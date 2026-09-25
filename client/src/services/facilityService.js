@@ -17,6 +17,25 @@ export const getFacilities = async () => {
 };
 
 /**
+ * Get one facility by ID
+ */
+export const getFacilityById = async (id) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/facilities/${id}`);
+    if (response.status === 404) {
+      return null;
+    }
+    if (!response.ok) {
+      throw new Error('Failed to fetch facility');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Error fetching facility ${id}:`, error);
+    throw error;
+  }
+};
+
+/**
  * Create a new facility
  */
 export const createFacility = async (data) => {
