@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './FacilityServiceForm.css';
 
-const FacilityServiceForm = ({ onSubmit, initialData, isLoading, error }) => {
+const FacilityServiceForm = ({ onSubmit, initialData, isLoading, error, facilities = [], services = [] }) => {
   const [formData, setFormData] = useState({
     facility_id: '',
     service_id: '',
@@ -26,13 +26,13 @@ const FacilityServiceForm = ({ onSubmit, initialData, isLoading, error }) => {
     const errors = [];
 
     if (formData.facility_id === '' || formData.facility_id === null) {
-      errors.push('Facility ID is required');
+      errors.push('Facility is required');
     } else if (Number(formData.facility_id) < 1) {
       errors.push('Facility ID must be a positive number');
     }
 
     if (formData.service_id === '' || formData.service_id === null) {
-      errors.push('Service ID is required');
+      errors.push('Service is required');
     } else if (Number(formData.service_id) < 1) {
       errors.push('Service ID must be a positive number');
     }
@@ -95,31 +95,39 @@ const FacilityServiceForm = ({ onSubmit, initialData, isLoading, error }) => {
       )}
 
       <div className="form-group">
-        <label htmlFor="facility_id">Facility ID *</label>
-        <input
-          type="number"
+        <label htmlFor="facility_id">Facility *</label>
+        <select
           id="facility_id"
           name="facility_id"
           value={formData.facility_id}
           onChange={handleChange}
           disabled={isLoading}
-          min="1"
-          placeholder="Enter facility ID"
-        />
+        >
+          <option value="">Select a facility</option>
+          {facilities.map((facility) => (
+            <option key={facility.facility_id} value={facility.facility_id}>
+              {facility.facility_name} ({facility.city})
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="form-group">
-        <label htmlFor="service_id">Service ID *</label>
-        <input
-          type="number"
+        <label htmlFor="service_id">Service *</label>
+        <select
           id="service_id"
           name="service_id"
           value={formData.service_id}
           onChange={handleChange}
           disabled={isLoading}
-          min="1"
-          placeholder="Enter service ID"
-        />
+        >
+          <option value="">Select a service</option>
+          {services.map((service) => (
+            <option key={service.service_id} value={service.service_id}>
+              {service.service_name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="form-group form-group-checkbox">

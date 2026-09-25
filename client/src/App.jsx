@@ -15,7 +15,7 @@ import VolunteerForm from './components/VolunteerForm';
 import VolunteerList from './components/VolunteerList';
 import EmergencyContactForm from './components/EmergencyContactForm';
 import EmergencyContactList from './components/EmergencyContactList';
-import { createFacility, updateFacility, deleteFacility } from './services/facilityService';
+import { createFacility, updateFacility, deleteFacility, getFacilities } from './services/facilityService';
 import { createUser, updateUser, deleteUser } from './services/userService';
 import { createService, updateService, deleteService, getServices } from './services/serviceService';
 import { createFacilityService, updateFacilityService, deleteFacilityService, getFacilityServices } from './services/facilityServiceService';
@@ -74,7 +74,16 @@ function App() {
     facilities: async () => { const d = await getFacilitiesWithReviews(); setFacilities(d || []); },
     users: async () => { const d = await getUsersWithReviews(); setUsers(d || []); },
     services: async () => { const d = await getServices(); setServices(d || []); },
-    facilityServices: async () => { const d = await getFacilityServices(); setFacilityServices(d || []); },
+    facilityServices: async () => {
+      const [facilityServiceData, facilityData, serviceData] = await Promise.all([
+        getFacilityServices(),
+        getFacilities(),
+        getServices(),
+      ]);
+      setFacilityServices(facilityServiceData || []);
+      setFacilities(facilityData || []);
+      setServices(serviceData || []);
+    },
     reviews: async () => { const d = await getReviews(); setReviews(d || []); },
     donations: async () => { const d = await getFacilitiesAndDonations(); setDonations(d || []); },
     volunteers: async () => { const d = await getVolunteers(); setVolunteers(d || []); },
@@ -232,7 +241,7 @@ function App() {
       case 'facilities': return <FacilityForm {...props} />;
       case 'users': return <UserForm {...props} />;
       case 'services': return <ServiceForm {...props} />;
-      case 'facilityServices': return <FacilityServiceForm {...props} />;
+      case 'facilityServices': return <FacilityServiceForm {...props} facilities={facilities} services={services} />;
       case 'reviews': return <ReviewForm {...props} facilities={facilities} users={users} />;
       case 'donations': return <DonationForm {...props} />;
       case 'volunteers': return <VolunteerForm {...props} />;
