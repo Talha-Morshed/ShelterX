@@ -27,15 +27,18 @@ const createUser = async (userData) => {
 
 const updateUser = async (userId, userData) => {
   const { full_name, email, password, phone, role } = userData;
+  const fields = ['full_name = ?', 'email = ?', 'phone = ?', 'role = ?'];
+  const values = [full_name, email, phone || null, role || 'user'];
+
+  if (password !== undefined && password !== null && String(password).trim()) {
+    fields.splice(2, 0, 'password = ?');
+    values.splice(2, 0, password);
+  }
+
+  values.push(userId);
   const [result] = await db.execute(
-    `UPDATE users SET
-      full_name = ?,
-      email = ?,
-      password = ?,
-      phone = ?,
-      role = ?
-    WHERE user_id = ?`,
-    [full_name, email, password, phone || null, role || 'user', userId]
+    `UPDATE users SET ${fields.join(', ')} WHERE user_id = ?`,
+    values
   );
   return result.affectedRows;
 };
@@ -50,7 +53,7 @@ const deleteUser = async (userId) => {
 
 const getUsersWithReviews = async () => {
   const [rows] = await db.execute(
-    `SELECT u.user_id, u.full_name, u.email,
+    `SELECT u.user_id, u.full_name, u.email, u.phone, u.role,
             r.review_id, r.rating, r.comment
      FROM reviews r
      RIGHT JOIN users u ON r.user_id = u.user_id

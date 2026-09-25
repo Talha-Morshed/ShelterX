@@ -7,12 +7,16 @@ const FacilityForm = ({ onSubmit, initialData, isLoading, error }) => {
     facility_type: '',
     address: '',
     city: '',
+    state: '',
+    zip_code: '',
     phone: '',
+    email: '',
     capacity: '',
     available_spaces: '',
     description: '',
     latitude: '',
     longitude: '',
+    is_active: true,
   });
 
   const [validationErrors, setValidationErrors] = useState([]);
@@ -25,12 +29,16 @@ const FacilityForm = ({ onSubmit, initialData, isLoading, error }) => {
         facility_type: initialData.facility_type ?? '',
         address: initialData.address ?? '',
         city: initialData.city ?? '',
+        state: initialData.state ?? '',
+        zip_code: initialData.zip_code ?? '',
         phone: initialData.phone ?? '',
+        email: initialData.email ?? '',
         capacity: initialData.capacity ?? '',
         available_spaces: initialData.available_spaces ?? '',
         description: initialData.description ?? '',
         latitude: initialData.latitude ?? '',
         longitude: initialData.longitude ?? '',
+        is_active: initialData.is_active ?? true,
       });
     } else {
       setFormData({
@@ -38,12 +46,16 @@ const FacilityForm = ({ onSubmit, initialData, isLoading, error }) => {
         facility_type: '',
         address: '',
         city: '',
+        state: '',
+        zip_code: '',
         phone: '',
+        email: '',
         capacity: '',
         available_spaces: '',
         description: '',
         latitude: '',
         longitude: '',
+        is_active: true,
       });
     }
   }, [initialData]);
@@ -87,6 +99,10 @@ const FacilityForm = ({ onSubmit, initialData, isLoading, error }) => {
       errors.push('Phone format is invalid');
     }
 
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.push('Email format is invalid');
+    }
+
     if (formData.latitude && (Number(formData.latitude) < -90 || Number(formData.latitude) > 90)) {
       errors.push('Latitude must be between -90 and 90');
     }
@@ -100,10 +116,10 @@ const FacilityForm = ({ onSubmit, initialData, isLoading, error }) => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
     // Clear validation errors when user starts typing
     if (validationErrors.length > 0) {
@@ -127,12 +143,16 @@ const FacilityForm = ({ onSubmit, initialData, isLoading, error }) => {
       facility_type: '',
       address: '',
       city: '',
+      state: '',
+      zip_code: '',
       phone: '',
+      email: '',
       capacity: '',
       available_spaces: '',
       description: '',
       latitude: '',
       longitude: '',
+      is_active: true,
     });
     setValidationErrors([]);
   };
@@ -178,8 +198,9 @@ const FacilityForm = ({ onSubmit, initialData, isLoading, error }) => {
           <option value="">Select a type</option>
           <option value="shelter">Shelter</option>
           <option value="food_bank">Food Bank</option>
-          <option value="medical">Medical/Clinic</option>
-          <option value="emergency_center">Emergency Center</option>
+          <option value="clinic">Clinic</option>
+          <option value="community_center">Community Center</option>
+          <option value="housing">Housing</option>
           <option value="other">Other</option>
         </select>
       </div>
@@ -210,6 +231,34 @@ const FacilityForm = ({ onSubmit, initialData, isLoading, error }) => {
         />
       </div>
 
+      <div className="form-row">
+        <div className="form-group">
+          <label htmlFor="state">State</label>
+          <input
+            type="text"
+            id="state"
+            name="state"
+            value={formData.state}
+            onChange={handleChange}
+            disabled={isLoading}
+            placeholder="Enter state"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="zip_code">ZIP Code</label>
+          <input
+            type="text"
+            id="zip_code"
+            name="zip_code"
+            value={formData.zip_code}
+            onChange={handleChange}
+            disabled={isLoading}
+            placeholder="Enter ZIP code"
+          />
+        </div>
+      </div>
+
       <div className="form-group">
         <label htmlFor="phone">Phone</label>
         <input
@@ -220,6 +269,19 @@ const FacilityForm = ({ onSubmit, initialData, isLoading, error }) => {
           onChange={handleChange}
           disabled={isLoading}
           placeholder="Enter phone number"
+        />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          disabled={isLoading}
+          placeholder="Enter email address"
         />
       </div>
 
@@ -292,6 +354,20 @@ const FacilityForm = ({ onSubmit, initialData, isLoading, error }) => {
             placeholder="-180 to 180"
           />
         </div>
+      </div>
+
+      <div className="form-group form-group-checkbox">
+        <label htmlFor="is_active">
+          <input
+            type="checkbox"
+            id="is_active"
+            name="is_active"
+            checked={formData.is_active}
+            onChange={handleChange}
+            disabled={isLoading}
+          />
+          Active facility
+        </label>
       </div>
 
       <div className="form-actions">

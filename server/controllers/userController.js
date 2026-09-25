@@ -1,12 +1,12 @@
 const userModel = require('../models/userModel');
 
-const validateUserInput = (data) => {
+const validateUserInput = (data, { requirePassword = true } = {}) => {
   const { full_name, email, password, phone, role } = data;
   const errors = [];
 
   if (!full_name || !String(full_name).trim()) errors.push('full_name is required');
   if (!email || !String(email).trim()) errors.push('email is required');
-  if (!password || !String(password).trim()) errors.push('password is required');
+  if (requirePassword && (!password || !String(password).trim())) errors.push('password is required');
   if (role && !['user', 'admin'].includes(role)) errors.push('role must be user or admin');
 
   return errors;
@@ -49,7 +49,7 @@ const updateUser = async (req, res) => {
     const existing = await userModel.getUserById(req.params.id);
     if (!existing) return res.status(404).json({ message: 'User not found' });
 
-    const errors = validateUserInput(req.body);
+    const errors = validateUserInput(req.body, { requirePassword: false });
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
     await userModel.updateUser(req.params.id, req.body);

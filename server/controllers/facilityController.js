@@ -1,5 +1,7 @@
 const facilityModel = require('../models/facilityModel');
 
+const FACILITY_TYPES = ['shelter', 'food_bank', 'clinic', 'community_center', 'housing', 'other'];
+
 const validateFacilityInput = (data) => {
   const {
     facility_name,
@@ -21,6 +23,8 @@ const validateFacilityInput = (data) => {
   }
   if (!facility_type || !String(facility_type).trim()) {
     errors.push('facility_type is required');
+  } else if (!FACILITY_TYPES.includes(facility_type)) {
+    errors.push(`facility_type must be one of: ${FACILITY_TYPES.join(', ')}`);
   }
   if (!address || !String(address).trim()) {
     errors.push('address is required');
@@ -96,12 +100,16 @@ const createFacility = async (req, res) => {
       facility_type: req.body.facility_type,
       address: req.body.address,
       city: req.body.city,
+      state: req.body.state || null,
+      zip_code: req.body.zip_code || null,
       phone: req.body.phone || null,
+      email: req.body.email || null,
       capacity: Number(req.body.capacity),
       available_spaces: Number(req.body.available_spaces),
       description: req.body.description || null,
       latitude: req.body.latitude === '' || req.body.latitude === undefined || req.body.latitude === null ? null : Number(req.body.latitude),
       longitude: req.body.longitude === '' || req.body.longitude === undefined || req.body.longitude === null ? null : Number(req.body.longitude),
+      is_active: req.body.is_active === undefined ? true : Boolean(req.body.is_active),
     };
 
     const facilityId = await facilityModel.createFacility(facility);
@@ -135,12 +143,16 @@ const updateFacility = async (req, res) => {
       facility_type: req.body.facility_type,
       address: req.body.address,
       city: req.body.city,
+      state: req.body.state || null,
+      zip_code: req.body.zip_code || null,
       phone: req.body.phone || null,
+      email: req.body.email || null,
       capacity: Number(req.body.capacity),
       available_spaces: Number(req.body.available_spaces),
       description: req.body.description || null,
       latitude: req.body.latitude === '' || req.body.latitude === undefined || req.body.latitude === null ? null : Number(req.body.latitude),
       longitude: req.body.longitude === '' || req.body.longitude === undefined || req.body.longitude === null ? null : Number(req.body.longitude),
+      is_active: req.body.is_active === undefined ? existingFacility.is_active : Boolean(req.body.is_active),
     };
 
     await facilityModel.updateFacility(id, facility);

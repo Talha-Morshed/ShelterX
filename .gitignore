@@ -1,11 +1,14 @@
 node_modules/
 client/node_modules/
 server/node_modules/
+client/dist/
+dist/
 .env
 server/.env
 .DS_Store
 npm-debug.log*
 coverage/
+.vite/
 
 # MySQL local setup
 mysql-server/

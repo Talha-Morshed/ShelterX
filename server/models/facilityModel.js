@@ -21,12 +21,16 @@ const createFacility = async (facilityData) => {
     facility_type,
     address,
     city,
+    state,
+    zip_code,
     phone,
+    email,
     capacity,
     available_spaces,
     description,
     latitude,
     longitude,
+    is_active,
   } = facilityData;
 
   const [result] = await db.execute(
@@ -35,24 +39,32 @@ const createFacility = async (facilityData) => {
       facility_type,
       address,
       city,
+      state,
+      zip_code,
       phone,
-      capacity,
-      available_spaces,
-      description,
-      latitude,
-      longitude
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [
-      facility_name,
-      facility_type,
-      address,
-      city,
-      phone,
+      email,
       capacity,
       available_spaces,
       description,
       latitude,
       longitude,
+      is_active
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      facility_name,
+      facility_type,
+      address,
+      city,
+      state,
+      zip_code,
+      phone,
+      email,
+      capacity,
+      available_spaces,
+      description,
+      latitude,
+      longitude,
+      is_active,
     ]
   );
 
@@ -65,12 +77,16 @@ const updateFacility = async (facilityId, facilityData) => {
     facility_type,
     address,
     city,
+    state,
+    zip_code,
     phone,
+    email,
     capacity,
     available_spaces,
     description,
     latitude,
     longitude,
+    is_active,
   } = facilityData;
 
   const [result] = await db.execute(
@@ -79,24 +95,32 @@ const updateFacility = async (facilityId, facilityData) => {
       facility_type = ?,
       address = ?,
       city = ?,
+      state = ?,
+      zip_code = ?,
       phone = ?,
+      email = ?,
       capacity = ?,
       available_spaces = ?,
       description = ?,
       latitude = ?,
-      longitude = ?
+      longitude = ?,
+      is_active = ?
     WHERE facility_id = ?`,
     [
       facility_name,
       facility_type,
       address,
       city,
+      state,
+      zip_code,
       phone,
+      email,
       capacity,
       available_spaces,
       description,
       latitude,
       longitude,
+      is_active,
       facilityId,
     ]
   );
@@ -114,12 +138,18 @@ const deleteFacility = async (facilityId) => {
 
 const getFacilitiesWithReviews = async () => {
   const [rows] = await db.execute(
-    `SELECT f.facility_id, f.facility_name, f.facility_type, f.city,
+    `SELECT f.facility_id, f.facility_name, f.facility_type, f.address, f.city,
+            f.state, f.zip_code, f.phone, f.email, f.capacity,
+            f.available_spaces, f.description, f.latitude, f.longitude,
+            f.is_active, f.created_at, f.updated_at,
             COUNT(r.review_id) AS total_reviews,
             ROUND(AVG(r.rating), 1) AS avg_rating
      FROM facilities f
      LEFT JOIN reviews r ON f.facility_id = r.facility_id
-     GROUP BY f.facility_id, f.facility_name, f.facility_type, f.city
+     GROUP BY f.facility_id, f.facility_name, f.facility_type, f.address, f.city,
+              f.state, f.zip_code, f.phone, f.email, f.capacity,
+              f.available_spaces, f.description, f.latitude, f.longitude,
+              f.is_active, f.created_at, f.updated_at
      ORDER BY f.facility_id`
   );
   return rows;

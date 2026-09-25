@@ -65,13 +65,13 @@ const deleteDonation = async (donationId) => {
 
 const getFacilitiesAndDonations = async () => {
   const [rows] = await db.execute(
-    `SELECT f.facility_id, f.facility_name, f.city,
-            d.donation_id, d.amount, d.donation_type, d.notes
+        `SELECT f.facility_id, f.facility_name, f.city,
+          d.donation_id, d.user_id, d.amount, d.donation_type, d.notes
      FROM facilities f
      LEFT JOIN donations d ON f.facility_id = d.facility_id
      UNION
      SELECT f.facility_id, f.facility_name, f.city,
-            d.donation_id, d.amount, d.donation_type, d.notes
+          d.donation_id, d.user_id, d.amount, d.donation_type, d.notes
      FROM facilities f
      RIGHT JOIN donations d ON f.facility_id = d.facility_id
      ORDER BY facility_id`
