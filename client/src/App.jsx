@@ -15,6 +15,8 @@ import VolunteerForm from './components/VolunteerForm';
 import VolunteerList from './components/VolunteerList';
 import EmergencyContactForm from './components/EmergencyContactForm';
 import EmergencyContactList from './components/EmergencyContactList';
+import PublicHome from './components/PublicHome';
+import PublicFacilityBrowser from './components/PublicFacilityBrowser';
 import { createFacility, updateFacility, deleteFacility, getFacilities } from './services/facilityService';
 import { createUser, updateUser, deleteUser } from './services/userService';
 import { createService, updateService, deleteService, getServices } from './services/serviceService';
@@ -51,7 +53,7 @@ const ID_KEYS = {
 };
 
 function App() {
-  const [showLanding, setShowLanding] = useState(true);
+  const [view, setView] = useState('public-home');
   const [activeTab, setActiveTab] = useState('facilities');
 
   const [facilities, setFacilities] = useState([]);
@@ -69,6 +71,8 @@ function App() {
   const [editingId, setEditingId] = useState(null);
   const [formError, setFormError] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
+
+  const showLanding = view === 'admin-landing';
 
   const fetchMap = {
     facilities: async () => { const d = await getFacilitiesWithReviews(); setFacilities(d || []); },
@@ -152,10 +156,10 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!showLanding) {
+    if (view === 'admin-dashboard') {
       fetchData(activeTab);
     }
-  }, [activeTab, fetchData, showLanding]);
+  }, [activeTab, fetchData, view]);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -165,8 +169,15 @@ function App() {
   };
 
   const handleStartDashboard = () => {
-    setShowLanding(false);
+    setView('admin-dashboard');
     setActiveTab('facilities');
+    setEditingId(null);
+    setFormError(null);
+    setError(null);
+  };
+
+  const handleAdminHome = () => {
+    setView('admin-landing');
     setEditingId(null);
     setFormError(null);
     setError(null);
@@ -268,6 +279,14 @@ function App() {
       default: return null;
     }
   };
+
+  if (view === 'public-home') {
+    return <PublicHome onFindHelp={() => setView('public-facilities')} onAdmin={handleAdminHome} />;
+  }
+
+  if (view === 'public-facilities') {
+    return <PublicFacilityBrowser onHome={() => setView('public-home')} onAdmin={handleAdminHome} />;
+  }
 
   if (showLanding) {
     return (
