@@ -1,5 +1,6 @@
 const userModel = require('../models/userModel');
 
+// Adnan: works of the code - validate all user-facing registration and login requests
 const validateUserInput = (data, { requirePassword = true } = {}) => {
   const { full_name, email, password, phone, role } = data;
   const errors = [];
@@ -10,6 +11,53 @@ const validateUserInput = (data, { requirePassword = true } = {}) => {
   if (role && !['user', 'admin'].includes(role)) errors.push('role must be user or admin');
 
   return errors;
+};
+
+const registerUser = async (req, res) => {
+  try {
+    const payload = {
+      ...req.body,
+      role: 'user',
+    };
+
+    const errors = validateUserInput(payload);
+    if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
+
+    const existingUser = await userModel.findUserByEmail(String(payload.email).trim().toLowerCase());
+    if (existingUser) {
+      return res.status(409).json({ message: 'An account with this email already exists.' });
+    }
+
+    const userId = await userModel.createUser(payload);
+    const user = await userModel.getUserById(userId);
+    res.status(201).json({ message: 'User registered successfully', user });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to register user', error: error.message });
+  }
+};
+
+const loginUser = async (req, res) => {
+  try {
+    const email = String(req.body.email || '').trim().toLowerCase();
+    const password = String(req.body.password || '').trim();
+
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required.' });
+    }
+
+    const user = await userModel.findUserByEmail(email);
+    if (!user || user.password !== password) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+
+    const safeUser = await userModel.getUserById(user.user_id);
+    return res.status(200).json({
+      message: 'Login successful',
+      user: safeUser,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to login user', error: error.message });
+  }
 };
 
 const getAllUsers = async (req, res) => {
@@ -112,4 +160,4 @@ const getUsersAboveAvgDonationSubquery = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, createUser, updateUser, deleteUser, getAllUsersWithReviews, getActiveUsersHaving, getUsersNeverDonatedSubquery, getUsersAboveAvgDonationSubquery };
+module.exports = { registerUser, loginUser, getAllUsers, getUserById, createUser, updateUser, deleteUser, getAllUsersWithReviews, getActiveUsersHaving, getUsersNeverDonatedSubquery, getUsersAboveAvgDonationSubquery };

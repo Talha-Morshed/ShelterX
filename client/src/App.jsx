@@ -19,6 +19,7 @@ import PublicHome from './components/PublicHome';
 import PublicFacilityBrowser from './components/PublicFacilityBrowser';
 import PublicFacilityDetails from './components/PublicFacilityDetails';
 import AdminPinGate from './components/AdminPinGate';
+import AuthPage from './components/AuthPage';
 import { createFacility, updateFacility, deleteFacility, getFacilities } from './services/facilityService';
 import { createUser, updateUser, deleteUser } from './services/userService';
 import { createService, updateService, deleteService, getServices } from './services/serviceService';
@@ -58,6 +59,7 @@ function App() {
   const [view, setView] = useState('public-home');
   const [selectedFacilityId, setSelectedFacilityId] = useState(null);
   const [activeTab, setActiveTab] = useState('facilities');
+  const [loggedInUser, setLoggedInUser] = useState(null);
 
   const [facilities, setFacilities] = useState([]);
   const [users, setUsers] = useState([]);
@@ -190,6 +192,11 @@ function App() {
     setView('admin-landing');
   };
 
+  const handleLoginSuccess = (user) => {
+    setLoggedInUser(user);
+    setView('public-facilities');
+  };
+
   const handleViewDetails = (facilityId) => {
     setSelectedFacilityId(facilityId);
     setView('public-facility-details');
@@ -293,7 +300,23 @@ function App() {
   };
 
   if (view === 'public-home') {
-    return <PublicHome onFindHelp={() => setView('public-facilities')} onAdmin={handleAdminHome} />;
+    return (
+      <PublicHome
+        onFindHelp={() => setView('public-facilities')}
+        onAdmin={handleAdminHome}
+        onOpenAuth={() => setView('auth')}
+      />
+    );
+  }
+
+  if (view === 'auth') {
+    return (
+      <AuthPage
+        onLoginSuccess={handleLoginSuccess}
+        onGoHome={() => setView('public-home')}
+        onOpenAdmin={handleAdminHome}
+      />
+    );
   }
 
   if (view === 'admin-pin') {

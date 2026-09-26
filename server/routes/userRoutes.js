@@ -1,5 +1,7 @@
 const express = require('express');
 const {
+  registerUser,
+  loginUser,
   getAllUsers,
   getUserById,
   createUser,
@@ -19,6 +21,8 @@ router.get('/stats/active-having', getActiveUsersHaving);
 router.get('/stats/never-donated-subquery', getUsersNeverDonatedSubquery);
 router.get('/stats/above-avg-donation-subquery', getUsersAboveAvgDonationSubquery);
 
+router.post('/register', registerUser);
+router.post('/login', loginUser);
 router.get('/', getAllUsers);
 router.get('/with-reviews', getAllUsersWithReviews);
 router.get('/:id', getUserById);

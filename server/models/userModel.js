@@ -1,5 +1,14 @@
 const db = require('../config/db');
 
+// Adnan: works of the code - user lookups for login and registration
+const findUserByEmail = async (email) => {
+  const [rows] = await db.execute(
+    'SELECT user_id, full_name, email, password, phone, role, created_at, updated_at FROM users WHERE email = ? LIMIT 1',
+    [email]
+  );
+  return rows[0] || null;
+};
+
 const getAllUsers = async () => {
   const [rows] = await db.execute(
     'SELECT user_id, full_name, email, phone, role, created_at, updated_at FROM users ORDER BY user_id DESC'
@@ -107,6 +116,7 @@ const getUsersAboveAvgDonationSubquery = async () => {
 };
 
 module.exports = {
+  findUserByEmail,
   getAllUsers,
   getUserById,
   createUser,
