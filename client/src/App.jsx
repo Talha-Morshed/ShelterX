@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import FacilityForm from './components/FacilityForm';
 import FacilityList from './components/FacilityList';
 import UserForm from './components/UserForm';
@@ -21,6 +21,7 @@ import PublicFacilityDetails from './components/PublicFacilityDetails';
 import AdminPinGate from './components/AdminPinGate';
 import AuthPage from './components/AuthPage';
 import UserDashboard from './components/UserDashboard';
+import AnalyticsDashboard from './components/AnalyticsDashboard';
 import { createFacility, updateFacility, deleteFacility, getFacilities } from './services/facilityService';
 import { createUser, updateUser, deleteUser } from './services/userService';
 import { createService, updateService, deleteService, getServices } from './services/serviceService';
@@ -43,6 +44,7 @@ const TABS = [
   { key: 'donations', label: 'Donations' },
   { key: 'volunteers', label: 'Volunteers' },
   { key: 'emergencyContacts', label: 'Emergency Contacts' },
+  { key: 'analytics', label: 'Analytics' },
 ];
 
 const ID_KEYS = {
@@ -54,6 +56,7 @@ const ID_KEYS = {
   donations: 'donation_id',
   volunteers: 'volunteer_id',
   emergencyContacts: 'contact_id',
+  analytics: 'id',
 };
 
 function App() {
@@ -64,7 +67,7 @@ function App() {
     try {
       const storedUser = localStorage.getItem('shelterx-user');
       return storedUser ? JSON.parse(storedUser) : null;
-    } catch (error) {
+    } catch {
       return null;
     }
   });
@@ -87,7 +90,7 @@ function App() {
 
   const showLanding = view === 'admin-landing';
 
-  const fetchMap = {
+  const fetchMap = useMemo(() => ({
     facilities: async () => { const d = await getFacilitiesWithReviews(); setFacilities(d || []); },
     users: async () => { const d = await getUsersWithReviews(); setUsers(d || []); },
     services: async () => { const d = await getServices(); setServices(d || []); },
@@ -105,9 +108,9 @@ function App() {
     donations: async () => { const d = await getFacilitiesAndDonations(); setDonations(d || []); },
     volunteers: async () => { const d = await getVolunteers(); setVolunteers(d || []); },
     emergencyContacts: async () => { const d = await getEmergencyContacts(); setEmergencyContacts(d || []); },
-  };
+  }), []);
 
-  const createMap = {
+  const createMap = useMemo(() => ({
     facilities: createFacility,
     users: createUser,
     services: createService,
@@ -116,9 +119,9 @@ function App() {
     donations: createDonation,
     volunteers: createVolunteer,
     emergencyContacts: createEmergencyContact,
-  };
+  }), []);
 
-  const updateMap = {
+  const updateMap = useMemo(() => ({
     facilities: updateFacility,
     users: updateUser,
     services: updateService,
@@ -127,9 +130,9 @@ function App() {
     donations: updateDonation,
     volunteers: updateVolunteer,
     emergencyContacts: updateEmergencyContact,
-  };
+  }), []);
 
-  const deleteMap = {
+  const deleteMap = useMemo(() => ({
     facilities: deleteFacility,
     users: deleteUser,
     services: deleteService,
@@ -138,13 +141,13 @@ function App() {
     donations: deleteDonation,
     volunteers: deleteVolunteer,
     emergencyContacts: deleteEmergencyContact,
-  };
+  }), []);
 
-  const dataMap = {
+  const dataMap = useMemo(() => ({
     facilities, users, services, facilityServices, reviews, donations, volunteers, emergencyContacts,
-  };
+  }), [facilities, users, services, facilityServices, reviews, donations, volunteers, emergencyContacts]);
 
-  const labelMap = {
+  const labelMap = useMemo(() => ({
     facilities: 'Facility',
     users: 'User',
     services: 'Service',
@@ -153,9 +156,13 @@ function App() {
     donations: 'Donation',
     volunteers: 'Volunteer',
     emergencyContacts: 'Emergency Contact',
-  };
+    analytics: 'Analytics',
+  }), []);
 
   const fetchData = useCallback(async (tab) => {
+    if (tab === 'analytics') {
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -166,7 +173,7 @@ function App() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [fetchMap, labelMap]);
 
   useEffect(() => {
     if (view === 'admin-dashboard') {
@@ -298,6 +305,7 @@ function App() {
       case 'donations': return <DonationForm {...props} />;
       case 'volunteers': return <VolunteerForm {...props} />;
       case 'emergencyContacts': return <EmergencyContactForm {...props} />;
+      case 'analytics': return null;
       default: return null;
     }
   };
@@ -317,6 +325,7 @@ function App() {
       case 'donations': return <DonationList donations={donations} {...commonProps} />;
       case 'volunteers': return <VolunteerList volunteers={volunteers} {...commonProps} />;
       case 'emergencyContacts': return <EmergencyContactList emergencyContacts={emergencyContacts} {...commonProps} />;
+      case 'analytics': return <AnalyticsDashboard />;
       default: return null;
     }
   };

@@ -1,6 +1,6 @@
 import './FacilityList.css';
 
-const FacilityList = ({ facilities, onEdit, onDelete, onView, isLoading }) => {
+const FacilityList = ({ facilities, onEdit, onDelete, _onView, isLoading }) => {
   if (isLoading) {
     return <div className="loading">Loading facilities...</div>;
   }
