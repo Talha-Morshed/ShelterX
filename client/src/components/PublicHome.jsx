@@ -1,6 +1,6 @@
 import './PublicHome.css';
 
-const PublicHome = ({ onFindHelp, onAdmin, onOpenAuth }) => (
+const PublicHome = ({ onFindHelp, onAdmin, onOpenAuth, onOpenDashboard, user, onLogout }) => (
   <div className="public-shell public-home">
     <header className="public-header">
       <button type="button" className="public-brand" onClick={onFindHelp}>
@@ -11,9 +11,20 @@ const PublicHome = ({ onFindHelp, onAdmin, onOpenAuth }) => (
         <button type="button" className="public-nav-link" onClick={onFindHelp}>
           Find Help
         </button>
-        <button type="button" className="public-nav-link" onClick={onOpenAuth}>
-          Login / Register
-        </button>
+        {user ? (
+          <>
+            <button type="button" className="public-nav-link" onClick={onOpenDashboard}>
+              My Dashboard
+            </button>
+            <button type="button" className="public-nav-link" onClick={onLogout}>
+              Logout
+            </button>
+          </>
+        ) : (
+          <button type="button" className="public-nav-link" onClick={onOpenAuth}>
+            Login / Register
+          </button>
+        )}
         <button type="button" className="public-nav-link public-admin-link" onClick={onAdmin}>
           Admin Dashboard
         </button>

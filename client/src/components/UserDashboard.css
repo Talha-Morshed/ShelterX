@@ -1,0 +1,121 @@
+.user-dashboard-shell {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f4fbff 0%, #eef4ff 100%);
+  color: #0f172a;
+}
+
+.user-dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.user-dashboard-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.user-dashboard-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.user-welcome-card {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 22px;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+  padding: 28px;
+}
+
+.user-welcome-card h1 {
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.user-welcome-card p:last-child {
+  margin: 0;
+  max-width: 800px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.user-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.user-stat-card {
+  background: white;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  padding: 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 150px;
+}
+
+.user-stat-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0f766e;
+  font-weight: 700;
+}
+
+.user-stat-card strong {
+  font-size: 1.5rem;
+}
+
+.user-stat-card small {
+  color: #475569;
+}
+
+.user-actions-panel {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.user-primary-button,
+.user-secondary-button {
+  border: none;
+  cursor: pointer;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.user-primary-button {
+  background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+  color: white;
+}
+
+.user-secondary-button {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+@media (max-width: 760px) {
+  .user-dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .user-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}

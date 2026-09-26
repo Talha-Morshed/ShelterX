@@ -20,6 +20,7 @@ import PublicFacilityBrowser from './components/PublicFacilityBrowser';
 import PublicFacilityDetails from './components/PublicFacilityDetails';
 import AdminPinGate from './components/AdminPinGate';
 import AuthPage from './components/AuthPage';
+import UserDashboard from './components/UserDashboard';
 import { createFacility, updateFacility, deleteFacility, getFacilities } from './services/facilityService';
 import { createUser, updateUser, deleteUser } from './services/userService';
 import { createService, updateService, deleteService, getServices } from './services/serviceService';
@@ -59,7 +60,14 @@ function App() {
   const [view, setView] = useState('public-home');
   const [selectedFacilityId, setSelectedFacilityId] = useState(null);
   const [activeTab, setActiveTab] = useState('facilities');
-  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem('shelterx-user');
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch (error) {
+      return null;
+    }
+  });
 
   const [facilities, setFacilities] = useState([]);
   const [users, setUsers] = useState([]);
@@ -166,6 +174,14 @@ function App() {
     }
   }, [activeTab, fetchData, view]);
 
+  useEffect(() => {
+    if (loggedInUser) {
+      localStorage.setItem('shelterx-user', JSON.stringify(loggedInUser));
+    } else {
+      localStorage.removeItem('shelterx-user');
+    }
+  }, [loggedInUser]);
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setEditingId(null);
@@ -194,7 +210,12 @@ function App() {
 
   const handleLoginSuccess = (user) => {
     setLoggedInUser(user);
-    setView('public-facilities');
+    setView('user-dashboard');
+  };
+
+  const handleLogout = () => {
+    setLoggedInUser(null);
+    setView('public-home');
   };
 
   const handleViewDetails = (facilityId) => {
@@ -305,6 +326,9 @@ function App() {
         onFindHelp={() => setView('public-facilities')}
         onAdmin={handleAdminHome}
         onOpenAuth={() => setView('auth')}
+        onOpenDashboard={() => setView('user-dashboard')}
+        user={loggedInUser}
+        onLogout={handleLogout}
       />
     );
   }
@@ -315,6 +339,21 @@ function App() {
         onLoginSuccess={handleLoginSuccess}
         onGoHome={() => setView('public-home')}
         onOpenAdmin={handleAdminHome}
+      />
+    );
+  }
+
+  if (view === 'user-dashboard') {
+    if (!loggedInUser) {
+      return <AuthPage onLoginSuccess={handleLoginSuccess} onGoHome={() => setView('public-home')} onOpenAdmin={handleAdminHome} />;
+    }
+
+    return (
+      <UserDashboard
+        user={loggedInUser}
+        onLogout={handleLogout}
+        onHome={() => setView('public-home')}
+        onFindHelp={() => setView('public-facilities')}
       />
     );
   }

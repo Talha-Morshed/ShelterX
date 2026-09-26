@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const userModel = require('../models/userModel');
 
 // Adnan: works of the code - validate all user-facing registration and login requests
@@ -13,22 +14,49 @@ const validateUserInput = (data, { requirePassword = true } = {}) => {
   return errors;
 };
 
+const hashPassword = (password) => {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
+  return `${salt}:${hash}`;
+};
+
+const verifyPassword = (password, storedPassword) => {
+  if (!storedPassword) return false;
+  if (storedPassword === password) return true;
+  if (!storedPassword.includes(':')) return false;
+
+  const [salt, hash] = storedPassword.split(':');
+  const computedHash = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
+
+  try {
+    return crypto.timingSafeEqual(Buffer.from(hash, 'hex'), Buffer.from(computedHash, 'hex'));
+  } catch (error) {
+    return false;
+  }
+};
+
 const registerUser = async (req, res) => {
   try {
     const payload = {
       ...req.body,
+      email: String(req.body.email || '').trim().toLowerCase(),
+      full_name: String(req.body.full_name || '').trim(),
       role: 'user',
     };
 
     const errors = validateUserInput(payload);
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
-    const existingUser = await userModel.findUserByEmail(String(payload.email).trim().toLowerCase());
+    const existingUser = await userModel.findUserByEmail(payload.email);
     if (existingUser) {
       return res.status(409).json({ message: 'An account with this email already exists.' });
     }
 
-    const userId = await userModel.createUser(payload);
+    const hashedPassword = hashPassword(String(req.body.password || '').trim());
+    const userId = await userModel.createUser({
+      ...payload,
+      password: hashedPassword,
+    });
     const user = await userModel.getUserById(userId);
     res.status(201).json({ message: 'User registered successfully', user });
   } catch (error) {
@@ -46,7 +74,7 @@ const loginUser = async (req, res) => {
     }
 
     const user = await userModel.findUserByEmail(email);
-    if (!user || user.password !== password) {
+    if (!user || !verifyPassword(password, user.password)) {
       return res.status(401).json({ message: 'Invalid email or password.' });
     }
 
@@ -100,7 +128,12 @@ const updateUser = async (req, res) => {
     const errors = validateUserInput(req.body, { requirePassword: false });
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
-    await userModel.updateUser(req.params.id, req.body);
+    const updatedPayload = { ...req.body };
+    if (updatedPayload.password && String(updatedPayload.password).trim()) {
+      updatedPayload.password = hashPassword(String(updatedPayload.password).trim());
+    }
+
+    await userModel.updateUser(req.params.id, updatedPayload);
     const user = await userModel.getUserById(req.params.id);
     res.status(200).json({ message: 'User updated successfully', user });
   } catch (error) {
