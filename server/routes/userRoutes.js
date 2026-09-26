@@ -1,7 +1,9 @@
 const express = require('express');
+const { authenticate, authorizeRole } = require('../middleware/auth');
 const {
   registerUser,
   loginUser,
+  getCurrentUser,
   getAllUsers,
   getUserById,
   createUser,
@@ -15,19 +17,20 @@ const {
 
 const router = express.Router();
 
-// A- GROUP BY + HAVING route for users
-router.get('/stats/active-having', getActiveUsersHaving);
-// A- Subquery routes for users
-router.get('/stats/never-donated-subquery', getUsersNeverDonatedSubquery);
-router.get('/stats/above-avg-donation-subquery', getUsersAboveAvgDonationSubquery);
-
 router.post('/register', registerUser);
 router.post('/login', loginUser);
-router.get('/', getAllUsers);
-router.get('/with-reviews', getAllUsersWithReviews);
-router.get('/:id', getUserById);
-router.post('/', createUser);
-router.put('/:id', updateUser);
-router.delete('/:id', deleteUser);
+router.get('/me', authenticate, getCurrentUser);
+router.get('/admin-check', authenticate, authorizeRole('admin'), (req, res) => {
+  res.status(200).json({ ok: true, role: req.user.role, message: 'Admin access granted' });
+});
+router.get('/', authenticate, authorizeRole('admin'), getAllUsers);
+router.get('/with-reviews', authenticate, authorizeRole('admin'), getAllUsersWithReviews);
+router.get('/stats/active-having', authenticate, authorizeRole('admin'), getActiveUsersHaving);
+router.get('/stats/never-donated-subquery', authenticate, authorizeRole('admin'), getUsersNeverDonatedSubquery);
+router.get('/stats/above-avg-donation-subquery', authenticate, authorizeRole('admin'), getUsersAboveAvgDonationSubquery);
+router.get('/:id', authenticate, getUserById);
+router.post('/', authenticate, authorizeRole('admin'), createUser);
+router.put('/:id', authenticate, updateUser);
+router.delete('/:id', authenticate, authorizeRole('admin'), deleteUser);
 
 module.exports = router;

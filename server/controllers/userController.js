@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const { generateToken } = require('../middleware/auth');
 const userModel = require('../models/userModel');
 
 // Adnan: works of the code - validate all user-facing registration and login requests
@@ -58,7 +59,14 @@ const registerUser = async (req, res) => {
       password: hashedPassword,
     });
     const user = await userModel.getUserById(userId);
-    res.status(201).json({ message: 'User registered successfully', user });
+    const token = generateToken({
+      user_id: user.user_id,
+      email: user.email,
+      full_name: user.full_name,
+      role: user.role || 'user',
+    });
+
+    res.status(201).json({ message: 'User registered successfully', token, user });
   } catch (error) {
     res.status(500).json({ message: 'Failed to register user', error: error.message });
   }
@@ -79,8 +87,16 @@ const loginUser = async (req, res) => {
     }
 
     const safeUser = await userModel.getUserById(user.user_id);
+    const token = generateToken({
+      user_id: safeUser.user_id,
+      email: safeUser.email,
+      full_name: safeUser.full_name,
+      role: safeUser.role || 'user',
+    });
+
     return res.status(200).json({
       message: 'Login successful',
+      token,
       user: safeUser,
     });
   } catch (error) {
@@ -153,6 +169,17 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const getCurrentUser = async (req, res) => {
+  try {
+    const user = await userModel.getUserById(req.user.user_id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.status(200).json({ user });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch current user', error: error.message });
+  }
+};
+
 const getAllUsersWithReviews = async (req, res) => {
   try {
     const users = await userModel.getUsersWithReviews();
@@ -193,4 +220,4 @@ const getUsersAboveAvgDonationSubquery = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getAllUsers, getUserById, createUser, updateUser, deleteUser, getAllUsersWithReviews, getActiveUsersHaving, getUsersNeverDonatedSubquery, getUsersAboveAvgDonationSubquery };
+module.exports = { registerUser, loginUser, getCurrentUser, getAllUsers, getUserById, createUser, updateUser, deleteUser, getAllUsersWithReviews, getActiveUsersHaving, getUsersNeverDonatedSubquery, getUsersAboveAvgDonationSubquery };

@@ -215,6 +215,7 @@ function App() {
 
   const handleLogout = () => {
     setLoggedInUser(null);
+    localStorage.removeItem('shelterx-token');
     setView('public-home');
   };
 

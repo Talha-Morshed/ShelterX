@@ -42,6 +42,10 @@ const AuthPage = ({ onLoginSuccess, onGoHome, onOpenAdmin }) => {
         throw new Error(data.message || 'Authentication failed');
       }
 
+      if (data.token) {
+        localStorage.setItem('shelterx-token', data.token);
+      }
+
       const user = data.user || { full_name: form.full_name || 'User' };
       onLoginSuccess(user, mode);
     } catch (submitError) {
