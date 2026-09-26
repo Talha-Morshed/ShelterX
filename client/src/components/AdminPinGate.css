@@ -1,0 +1,141 @@
+.admin-pin-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  color: #17324d;
+  background: #dfe9e5;
+}
+
+.admin-pin-card {
+  width: min(100%, 420px);
+  padding: 2.2rem;
+  border: 1px solid rgba(23, 50, 77, 0.12);
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 24px 50px rgba(23, 50, 77, 0.14);
+  text-align: center;
+}
+
+.admin-pin-mark {
+  width: 2.7rem;
+  height: 2.7rem;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 1.2rem;
+  border-radius: 0.75rem;
+  color: #fff;
+  background: #e2673f;
+  font-weight: 800;
+}
+
+.admin-pin-eyebrow {
+  margin: 0 0 0.65rem;
+  color: #d35f3b;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.admin-pin-card h1 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 2.2rem;
+  font-weight: 500;
+}
+
+.admin-pin-description {
+  margin: 0.8rem 0 1.7rem;
+  color: #607687;
+  font-size: 0.92rem;
+}
+
+.admin-pin-card form {
+  display: grid;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.admin-pin-card label {
+  color: #17324d;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.admin-pin-card input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #cad5d5;
+  border-radius: 0.55rem;
+  color: #17324d;
+  background: #fdfdfb;
+  font: inherit;
+  font-size: 1.35rem;
+  letter-spacing: 0.45em;
+  text-align: center;
+}
+
+.admin-pin-card input:focus {
+  outline: 2px solid rgba(226, 103, 63, 0.28);
+  outline-offset: 1px;
+  border-color: #e2673f;
+}
+
+.admin-pin-submit,
+.admin-pin-cancel {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.55rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.admin-pin-submit {
+  margin-top: 0.35rem;
+  border: 1px solid #e2673f;
+  color: #fff;
+  background: #e2673f;
+}
+
+.admin-pin-submit:hover:not(:disabled),
+.admin-pin-submit:focus-visible:not(:disabled) {
+  border-color: #c95331;
+  background: #c95331;
+}
+
+.admin-pin-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.admin-pin-cancel {
+  border: 1px solid #cad5d5;
+  color: #45647b;
+  background: transparent;
+}
+
+.admin-pin-cancel:hover,
+.admin-pin-cancel:focus-visible {
+  border-color: #e2673f;
+  color: #d35f3b;
+}
+
+.admin-pin-error {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .admin-pin-page {
+    padding: 1rem;
+  }
+
+  .admin-pin-card {
+    padding: 1.6rem;
+  }
+}

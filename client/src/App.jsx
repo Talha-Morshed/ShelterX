@@ -18,6 +18,7 @@ import EmergencyContactList from './components/EmergencyContactList';
 import PublicHome from './components/PublicHome';
 import PublicFacilityBrowser from './components/PublicFacilityBrowser';
 import PublicFacilityDetails from './components/PublicFacilityDetails';
+import AdminPinGate from './components/AdminPinGate';
 import { createFacility, updateFacility, deleteFacility, getFacilities } from './services/facilityService';
 import { createUser, updateUser, deleteUser } from './services/userService';
 import { createService, updateService, deleteService, getServices } from './services/serviceService';
@@ -179,10 +180,14 @@ function App() {
   };
 
   const handleAdminHome = () => {
-    setView('admin-landing');
+    setView('admin-pin');
     setEditingId(null);
     setFormError(null);
     setError(null);
+  };
+
+  const handleAdminPinSuccess = () => {
+    setView('admin-landing');
   };
 
   const handleViewDetails = (facilityId) => {
@@ -289,6 +294,10 @@ function App() {
 
   if (view === 'public-home') {
     return <PublicHome onFindHelp={() => setView('public-facilities')} onAdmin={handleAdminHome} />;
+  }
+
+  if (view === 'admin-pin') {
+    return <AdminPinGate onSuccess={handleAdminPinSuccess} onCancel={() => setView('public-home')} />;
   }
 
   if (view === 'public-facilities') {
