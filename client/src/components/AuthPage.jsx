@@ -69,14 +69,24 @@ const AuthPage = ({ onLoginSuccess, onGoHome, onOpenAdmin }) => {
       </header>
 
       <main className="auth-main">
-        <section className="auth-card" aria-live="polite">
-          <p className="auth-eyebrow">{mode === 'login' ? 'Welcome back' : 'Create your account'}</p>
-          <h1>{mode === 'login' ? 'User login' : 'User registration'}</h1>
+        <div className="auth-layout">
+          <section className="auth-intro">
+            <p className="auth-eyebrow">Support is closer than you think</p>
+            <h1>Find your next step with ShelterX.</h1>
+            <p className="auth-intro-copy">
+              Sign in to continue to your account, or create one to connect with local support.
+            </p>
+          </section>
 
-          <div className="auth-toggle" role="tablist" aria-label="Authentication mode switcher">
+          <section className="auth-card" aria-live="polite">
+            <p className="auth-eyebrow">{mode === 'login' ? 'Welcome back' : 'Get started'}</p>
+            <h2>{mode === 'login' ? 'Sign in to ShelterX' : 'Create your account'}</h2>
+
+          <div className="auth-toggle" role="group" aria-label="Authentication mode">
             <button
               type="button"
               className={mode === 'login' ? 'auth-toggle-button active' : 'auth-toggle-button'}
+              aria-pressed={mode === 'login'}
               onClick={() => setMode('login')}
             >
               Login
@@ -84,13 +94,14 @@ const AuthPage = ({ onLoginSuccess, onGoHome, onOpenAdmin }) => {
             <button
               type="button"
               className={mode === 'register' ? 'auth-toggle-button active' : 'auth-toggle-button'}
+              aria-pressed={mode === 'register'}
               onClick={() => setMode('register')}
             >
               Register
             </button>
           </div>
 
-          <form onSubmit={submitAuth} className="auth-form">
+          <form onSubmit={submitAuth} className="auth-form" aria-busy={loading}>
             {mode === 'register' && (
               <label className="auth-field">
                 <span>Full name</span>
@@ -99,6 +110,7 @@ const AuthPage = ({ onLoginSuccess, onGoHome, onOpenAdmin }) => {
                   name="full_name"
                   value={form.full_name}
                   onChange={handleChange}
+                  autoComplete="name"
                   placeholder="Adnan Rahman"
                   required
                 />
@@ -112,6 +124,7 @@ const AuthPage = ({ onLoginSuccess, onGoHome, onOpenAdmin }) => {
                 name="email"
                 value={form.email}
                 onChange={handleChange}
+                autoComplete="email"
                 placeholder="you@example.com"
                 required
               />
@@ -124,18 +137,21 @@ const AuthPage = ({ onLoginSuccess, onGoHome, onOpenAdmin }) => {
                 name="password"
                 value={form.password}
                 onChange={handleChange}
+                autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                 placeholder="Enter your password"
                 required
               />
             </label>
 
-            {error && <p className="auth-error">{error}</p>}
+            {error && <p className="auth-error" role="alert">{error}</p>}
 
             <button type="submit" className="auth-submit" disabled={loading}>
-              {loading ? 'Please wait...' : mode === 'login' ? 'Login' : 'Create account'}
+              <span>{loading ? 'Please wait...' : mode === 'login' ? 'Sign in' : 'Create account'}</span>
+              {!loading && <span aria-hidden="true">-&gt;</span>}
             </button>
           </form>
-        </section>
+          </section>
+        </div>
       </main>
     </div>
   );
