@@ -31,9 +31,6 @@ import {
   getVolunteerStatusStatsHaving,
   getVolunteersWhoAreDonorsSubquery,
   getFacilitiesAboveAvgVolunteersSubquery,
-  getActiveUsersHaving,
-  getUsersNeverDonatedSubquery,
-  getUsersAboveAvgDonationSubquery,
   getFacilityDashboard,
 } from '../services/aggregateService';
 import './AnalyticsDashboard.css';
@@ -56,7 +53,6 @@ const AnalyticsDashboard = () => {
     { key: 'review-aggregates', label: 'Review Analytics', icon: '⭐' },
     { key: 'donation-aggregates', label: 'Donation Analytics', icon: '💰' },
     { key: 'volunteer-aggregates', label: 'Volunteer Analytics', icon: '🤝' },
-    { key: 'user-aggregates', label: 'User Analytics', icon: '👥' },
     { key: 'dashboard', label: 'Facility Dashboard', icon: '📈' },
   ], []);
 
@@ -101,11 +97,6 @@ const AnalyticsDashboard = () => {
       { key: 'status-having', label: 'Status Stats (HAVING)', fn: getVolunteerStatusStatsHaving, desc: 'GROUP BY + HAVING: Volunteer status distribution', sqlType: 'GROUP BY + HAVING' },
       { key: 'volunteer-donors', label: 'Volunteer Donors', fn: getVolunteersWhoAreDonorsSubquery, desc: 'IN + IN Subquery: Users who volunteer AND donate', sqlType: 'IN + IN Subquery' },
       { key: 'above-avg-volunteers', label: 'Above Avg Volunteers', fn: getFacilitiesAboveAvgVolunteersSubquery, desc: 'Subquery: Facilities > avg volunteers', sqlType: 'Scalar Subquery' },
-    ],
-    'user-aggregates': [
-      { key: 'active-users', label: 'Active Users (HAVING)', fn: getActiveUsersHaving, desc: 'GROUP BY + HAVING: Users with multi-table activity', sqlType: 'GROUP BY + HAVING' },
-      { key: 'never-donated', label: 'Never Donated', fn: getUsersNeverDonatedSubquery, desc: 'NOT IN Subquery: Users with zero donations', sqlType: 'NOT IN Subquery' },
-      { key: 'above-avg-donation', label: 'Above Avg Donation', fn: getUsersAboveAvgDonationSubquery, desc: 'Subquery: Users > avg total donated', sqlType: 'Scalar Subquery' },
     ],
     'dashboard': [
       { key: 'facility-dashboard', label: 'Full Dashboard', fn: getFacilityDashboard, desc: 'Multi-table JOIN + Aggregates: Complete facility overview', sqlType: 'JOIN + Aggregates' },
