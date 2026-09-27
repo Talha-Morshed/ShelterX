@@ -3,6 +3,7 @@ const { authenticate, authorizeRole } = require('../middleware/auth');
 const {
   registerUser,
   loginUser,
+  createAdminSession,
   getCurrentUser,
   getAllUsers,
   getUserById,
@@ -19,6 +20,7 @@ const router = express.Router();
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
+router.post('/admin-session', createAdminSession);
 router.get('/me', authenticate, getCurrentUser);
 router.get('/admin-check', authenticate, authorizeRole('admin'), (req, res) => {
   res.status(200).json({ ok: true, role: req.user.role, message: 'Admin access granted' });

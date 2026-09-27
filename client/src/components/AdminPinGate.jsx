@@ -1,22 +1,35 @@
 import { useState } from 'react';
 import './AdminPinGate.css';
 
-const ADMIN_PIN = '1234';
-
 const AdminPinGate = ({ onSuccess, onCancel }) => {
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
+    setError('');
 
-    if (pin === ADMIN_PIN) {
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_URL || '/api';
+      const response = await fetch(`${apiBaseUrl}/users/admin-session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin }),
+      });
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.message || 'Unable to verify admin PIN.');
+
+      localStorage.setItem('shelterx-token', data.token);
       onSuccess();
-      return;
+    } catch (submitError) {
+      setError(submitError.message || 'Unable to reach the server.');
+      setPin('');
+    } finally {
+      setLoading(false);
     }
-
-    setError('Incorrect PIN. Please try again.');
-    setPin('');
   };
 
   const handleChange = (event) => {
@@ -49,8 +62,8 @@ const AdminPinGate = ({ onSuccess, onCancel }) => {
             autoFocus
           />
           {error && <p className="admin-pin-error" id="admin-pin-error" role="alert">{error}</p>}
-          <button type="submit" className="admin-pin-submit" disabled={pin.length !== 4}>
-            Continue to dashboard
+          <button type="submit" className="admin-pin-submit" disabled={pin.length !== 4 || loading}>
+            {loading ? 'Verifying...' : 'Continue to dashboard'}
           </button>
           <button type="button" className="admin-pin-cancel" onClick={onCancel}>
             Back to public site

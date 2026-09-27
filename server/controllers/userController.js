@@ -21,6 +21,25 @@ const hashPassword = (password) => {
   return `${salt}:${hash}`;
 };
 
+// Adnan - Validate the admin PIN server-side and issue a short-lived admin API token.
+const createAdminSession = async (req, res) => {
+  const submittedPin = Buffer.from(String(req.body.pin || ''));
+  const configuredPin = Buffer.from(process.env.ADMIN_PIN || '1234');
+
+  if (submittedPin.length !== configuredPin.length || !crypto.timingSafeEqual(submittedPin, configuredPin)) {
+    return res.status(401).json({ message: 'Incorrect admin PIN.' });
+  }
+
+  const user = {
+    user_id: 0,
+    email: 'admin@shelterx.local',
+    full_name: 'ShelterX Admin',
+    role: 'admin',
+  };
+
+  return res.status(200).json({ token: generateToken(user), user });
+};
+
 const verifyPassword = (password, storedPassword) => {
   if (!storedPassword) return false;
   if (storedPassword === password) return true;
@@ -220,4 +239,4 @@ const getUsersAboveAvgDonationSubquery = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getCurrentUser, getAllUsers, getUserById, createUser, updateUser, deleteUser, getAllUsersWithReviews, getActiveUsersHaving, getUsersNeverDonatedSubquery, getUsersAboveAvgDonationSubquery };
+module.exports = { createAdminSession, registerUser, loginUser, getCurrentUser, getAllUsers, getUserById, createUser, updateUser, deleteUser, getAllUsersWithReviews, getActiveUsersHaving, getUsersNeverDonatedSubquery, getUsersAboveAvgDonationSubquery };

@@ -7,7 +7,8 @@
     "server": "cd server && npm start",
     "server:dev": "cd server && npm run dev",
     "client": "cd client && npm run dev",
-    "start": "echo \"Run 'npm run server' and 'npm run client' in separate terminals\"",
+    "start": "node scripts/dev.js",
+    "dev": "node scripts/dev.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -1,11 +1,14 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+import { getAuthHeaders } from './authHeaders';
 
 /**
  * Get all users
  */
 export const getUsers = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/users`);
+    const response = await fetch(`${API_BASE_URL}/users`, {
+      headers: getAuthHeaders(),
+    });
     if (!response.ok) {
       throw new Error('Failed to fetch users');
     }
@@ -24,6 +27,7 @@ export const createUser = async (data) => {
     const response = await fetch(`${API_BASE_URL}/users`, {
       method: 'POST',
       headers: {
+        ...getAuthHeaders(),
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
@@ -50,6 +54,7 @@ export const updateUser = async (id, data) => {
     const response = await fetch(`${API_BASE_URL}/users/${id}`, {
       method: 'PUT',
       headers: {
+        ...getAuthHeaders(),
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
@@ -76,6 +81,7 @@ export const deleteUser = async (id) => {
     const response = await fetch(`${API_BASE_URL}/users/${id}`, {
       method: 'DELETE',
       headers: {
+        ...getAuthHeaders(),
         'Content-Type': 'application/json',
       },
     });

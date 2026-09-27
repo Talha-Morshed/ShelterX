@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import './ReviewForm.css';
 
 const ReviewForm = ({ onSubmit, initialData, isLoading, error, facilities = [], users = [] }) => {
+  // Adnan - Collapse joined review rows to one user option per account.
+  const uniqueUsers = [...new Map(users.map((user) => [user.user_id, user])).values()];
   const [formData, setFormData] = useState({
     facility_id: '',
     user_id: '',
@@ -127,7 +129,7 @@ const ReviewForm = ({ onSubmit, initialData, isLoading, error, facilities = [], 
           disabled={isLoading}
         >
           <option value="">Select a user</option>
-          {users.map((user) => (
+          {uniqueUsers.map((user) => (
             <option key={user.user_id} value={user.user_id}>
               #{user.user_id} - {user.full_name}
             </option>

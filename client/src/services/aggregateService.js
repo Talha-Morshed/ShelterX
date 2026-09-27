@@ -1,4 +1,5 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+import { getAuthHeaders } from './authHeaders';
 
 /**
  * adnan - Aggregate Service: Centralized API calls for GROUP BY, HAVING, and Subquery endpoints
@@ -344,7 +345,7 @@ export const getFacilitiesAboveAvgVolunteersSubquery = async () => {
  * Endpoint: GET /api/users/stats/active-having
  */
 export const getActiveUsersHaving = async () => {
-  const response = await fetch(`${API_BASE_URL}/users/stats/active-having`);
+  const response = await fetch(`${API_BASE_URL}/users/stats/active-having`, { headers: getAuthHeaders() });
   if (!response.ok) throw new Error('Failed to fetch active users');
   return await response.json();
 };
@@ -354,7 +355,7 @@ export const getActiveUsersHaving = async () => {
  * Endpoint: GET /api/users/stats/never-donated-subquery
  */
 export const getUsersNeverDonatedSubquery = async () => {
-  const response = await fetch(`${API_BASE_URL}/users/stats/never-donated-subquery`);
+  const response = await fetch(`${API_BASE_URL}/users/stats/never-donated-subquery`, { headers: getAuthHeaders() });
   if (!response.ok) throw new Error('Failed to fetch users never donated');
   return await response.json();
 };
@@ -364,7 +365,7 @@ export const getUsersNeverDonatedSubquery = async () => {
  * Endpoint: GET /api/users/stats/above-avg-donation-subquery
  */
 export const getUsersAboveAvgDonationSubquery = async () => {
-  const response = await fetch(`${API_BASE_URL}/users/stats/above-avg-donation-subquery`);
+  const response = await fetch(`${API_BASE_URL}/users/stats/above-avg-donation-subquery`, { headers: getAuthHeaders() });
   if (!response.ok) throw new Error('Failed to fetch users above avg donation');
   return await response.json();
 };

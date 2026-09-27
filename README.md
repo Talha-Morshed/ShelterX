@@ -58,19 +58,15 @@ The Admin Analytics Dashboard exposes these objects through the **Views & Proced
 - `GET /api/analytics/procedures/facility-capacity-status?minCapacity=100`
 - `GET /api/analytics/procedures/facility-capacity-bands`
 
-4. Start backend and frontend in separate terminals:
+4. Start backend and frontend together from the project root (MySQL must already be running):
 
 ```bash
-# terminal 1
-cd server
-npm run dev
-
-# terminal 2
-cd client
 npm run dev
 ```
 
 Open the frontend at: http://localhost:5173
+
+The admin PIN is verified by the backend and can be configured with `ADMIN_PIN` in `server/.env` (defaults to `1234` for local development). Successful verification issues the admin API session token used by protected dashboard requests.
 
 ## If you can't use Docker
 I added a JSON fallback (`server/data/shelters.json`) so the app runs without MySQL. To use it, just start the server and client as above — data will persist to `server/data/shelters.json`.
