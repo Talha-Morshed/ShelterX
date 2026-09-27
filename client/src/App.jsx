@@ -11,6 +11,7 @@ import ReviewForm from './components/ReviewForm';
 import ReviewList from './components/ReviewList';
 import DonationForm from './components/DonationForm';
 import DonationList from './components/DonationList';
+import DonationDeletionHistory from './components/DonationDeletionHistory';
 import VolunteerForm from './components/VolunteerForm';
 import VolunteerList from './components/VolunteerList';
 import EmergencyContactForm from './components/EmergencyContactForm';
@@ -27,7 +28,7 @@ import { createUser, updateUser, deleteUser } from './services/userService';
 import { createService, updateService, deleteService, getServices } from './services/serviceService';
 import { createFacilityService, updateFacilityService, deleteFacilityService, getFacilityServices } from './services/facilityServiceService';
 import { createReview, updateReview, deleteReview, getReviews } from './services/reviewService';
-import { createDonation, updateDonation, deleteDonation } from './services/donationService';
+import { createDonation, updateDonation, deleteDonation, getDonationDeletionHistory } from './services/donationService';
 import { createVolunteer, updateVolunteer, deleteVolunteer, getVolunteers } from './services/volunteerService';
 import { createEmergencyContact, updateEmergencyContact, deleteEmergencyContact, getEmergencyContacts } from './services/emergencyContactService';
 import { getFacilitiesWithReviews } from './services/facilityReviewService';
@@ -42,6 +43,7 @@ const TABS = [
   { key: 'facilityServices', label: 'Facility Services' },
   { key: 'reviews', label: 'Reviews' },
   { key: 'donations', label: 'Donations' },
+  { key: 'donationHistory', label: 'Deleted Donations' },
   { key: 'volunteers', label: 'Volunteers' },
   { key: 'emergencyContacts', label: 'Emergency Contacts' },
   { key: 'analytics', label: 'Analytics' },
@@ -78,6 +80,7 @@ function App() {
   const [facilityServices, setFacilityServices] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [donations, setDonations] = useState([]);
+  const [donationDeletionHistory, setDonationDeletionHistory] = useState([]);
   const [volunteers, setVolunteers] = useState([]);
   const [emergencyContacts, setEmergencyContacts] = useState([]);
 
@@ -104,6 +107,10 @@ function App() {
     },
     reviews: async () => { const d = await getReviews(); setReviews(d || []); },
     donations: async () => { const d = await getFacilitiesAndDonations(); setDonations(d || []); },
+    donationHistory: async () => {
+      const history = await getDonationDeletionHistory();
+      setDonationDeletionHistory(history || []);
+    },
     volunteers: async () => { const d = await getVolunteers(); setVolunteers(d || []); },
     emergencyContacts: async () => { const d = await getEmergencyContacts(); setEmergencyContacts(d || []); },
   }), []);
@@ -152,6 +159,7 @@ function App() {
     facilityServices: 'Facility Service',
     reviews: 'Review',
     donations: 'Donation',
+    donationHistory: 'Deleted Donation',
     volunteers: 'Volunteer',
     emergencyContacts: 'Emergency Contact',
     analytics: 'Analytics',
@@ -297,6 +305,7 @@ function App() {
       case 'facilityServices': return <FacilityServiceForm {...props} facilities={facilities} services={services} />;
       case 'reviews': return <ReviewForm {...props} facilities={facilities} users={users} />;
       case 'donations': return <DonationForm {...props} />;
+      case 'donationHistory': return null;
       case 'volunteers': return <VolunteerForm {...props} />;
       case 'emergencyContacts': return <EmergencyContactForm {...props} />;
       case 'analytics': return null;
@@ -317,6 +326,7 @@ function App() {
       case 'facilityServices': return <FacilityServiceList facilityServices={facilityServices} {...commonProps} />;
       case 'reviews': return <ReviewList reviews={reviews} {...commonProps} />;
       case 'donations': return <DonationList donations={donations} {...commonProps} />;
+      case 'donationHistory': return <DonationDeletionHistory history={donationDeletionHistory} isLoading={loading} />;
       case 'volunteers': return <VolunteerList volunteers={volunteers} {...commonProps} />;
       case 'emergencyContacts': return <EmergencyContactList emergencyContacts={emergencyContacts} {...commonProps} />;
       case 'analytics': return <AnalyticsDashboard />;
@@ -438,10 +448,12 @@ function App() {
           </div>
         )}
 
-        <div className="app-grid">
-          <aside className="sidebar">
-            {renderForm()}
-          </aside>
+        <div className={activeTab === 'donationHistory' ? 'app-grid app-grid-audit' : 'app-grid'}>
+          {activeTab !== 'donationHistory' && (
+            <aside className="sidebar">
+              {renderForm()}
+            </aside>
+          )}
 
           <section className="main-content">
             {renderList()}

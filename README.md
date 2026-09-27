@@ -68,6 +68,16 @@ Open the frontend at: http://localhost:5173
 
 The admin PIN is verified by the backend and can be configured with `ADMIN_PIN` in `server/.env` (defaults to `1234` for local development). Successful verification issues the admin API session token used by protected dashboard requests.
 
+## Donation deletion history
+
+Run the backend migration from the project root to install the donation deletion-history table and `AFTER DELETE` trigger:
+
+```bash
+npm --prefix server run migrate
+```
+
+The Admin Dashboard's **Deleted Donations** tab displays archived donation ID, facility, donor, amount, type, and timestamps. Its API endpoint, `GET /api/donations/deleted-history`, requires the admin bearer token. The trigger archives direct donation-row deletes; deletes caused by a parent foreign-key cascade and `TRUNCATE` are not captured.
+
 ## If you can't use Docker
 I added a JSON fallback (`server/data/shelters.json`) so the app runs without MySQL. To use it, just start the server and client as above — data will persist to `server/data/shelters.json`.
 

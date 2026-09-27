@@ -1,3 +1,5 @@
+import { getAuthHeaders } from './authHeaders';
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 /**
@@ -14,6 +16,19 @@ export const getDonations = async () => {
     console.error('Error fetching donations:', error);
     throw error;
   }
+};
+
+export const getDonationDeletionHistory = async () => {
+  const response = await fetch(`${API_BASE_URL}/donations/deleted-history`, {
+    headers: getAuthHeaders(),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Failed to fetch deleted donations');
+  }
+
+  return response.json();
 };
 
 /**

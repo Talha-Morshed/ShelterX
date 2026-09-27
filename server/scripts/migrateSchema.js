@@ -116,6 +116,52 @@ const run = async () => {
       out('skip    table facility_capacity_history already exists');
     }
 
+    if (!(await hasObject('BASE TABLE', 'donation_deletion_history'))) {
+      await connection.query(`
+        CREATE TABLE donation_deletion_history (
+          history_id INT AUTO_INCREMENT PRIMARY KEY,
+          donation_id INT NOT NULL,
+          facility_id INT NOT NULL,
+          user_id INT NOT NULL,
+          amount DECIMAL(10,2) NOT NULL,
+          donation_type VARCHAR(20) NOT NULL,
+          donation_created_at DATETIME NOT NULL,
+          deleted_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          INDEX idx_donation_deletion_history_donation_id (donation_id),
+          INDEX idx_donation_deletion_history_deleted_at (deleted_at)
+        )
+      `);
+      out('create  table donation_deletion_history');
+    } else {
+      out('skip    table donation_deletion_history already exists');
+    }
+
+    const [donationDeleteTriggers] = await connection.query(
+      `SELECT COUNT(*) n FROM information_schema.TRIGGERS
+       WHERE TRIGGER_SCHEMA = ? AND TRIGGER_NAME = 'trg_donations_delete_audit_ad'`,
+      [process.env.DB_NAME]
+    );
+
+    if (donationDeleteTriggers[0].n > 0) {
+      out('skip    trigger trg_donations_delete_audit_ad already exists');
+    } else {
+      await connection.query(`
+        CREATE TRIGGER trg_donations_delete_audit_ad
+        AFTER DELETE ON donations
+        FOR EACH ROW
+        BEGIN
+          INSERT INTO donation_deletion_history (
+            donation_id, facility_id, user_id, amount,
+            donation_type, donation_created_at
+          ) VALUES (
+            OLD.donation_id, OLD.facility_id, OLD.user_id, OLD.amount,
+            OLD.donation_type, OLD.created_at
+          );
+        END
+      `);
+      out('create  trigger trg_donations_delete_audit_ad');
+    }
+
     const [triggers] = await connection.query(
       `SELECT COUNT(*) n FROM information_schema.TRIGGERS
        WHERE TRIGGER_SCHEMA = ? AND TRIGGER_NAME = 'trg_facilities_capacity_audit_au'`,

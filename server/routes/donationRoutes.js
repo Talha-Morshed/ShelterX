@@ -1,6 +1,7 @@
 const express = require('express');
 const {
   getAllDonations,
+  getDonationDeletionHistory,
   getByFacility,
   getById,
   create,
@@ -15,6 +16,7 @@ const {
   getDonationsAboveAverage,
   getDonorsToFoodBankSubquery,
 } = require('../controllers/donationController');
+const { authenticate, authorizeRole } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -30,6 +32,7 @@ router.get('/stats/foodbank-donors-subquery', getDonorsToFoodBankSubquery);
 
 router.get('/', getAllDonations);
 router.get('/facilities-and-donations', getFacilitiesAndDonations);
+router.get('/deleted-history', authenticate, authorizeRole('admin'), getDonationDeletionHistory);
 router.get('/facility/:facilityId', getByFacility);
 router.get('/:id', getById);
 router.post('/', create);

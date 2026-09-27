@@ -2924,6 +2924,10 @@ main {
   margin-top: 0;
 }
 
+.app .app-grid.app-grid-audit {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .sidebar {
   top: 4.5rem;
   max-height: calc(100vh - 5rem);

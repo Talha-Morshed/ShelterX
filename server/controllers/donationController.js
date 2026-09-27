@@ -19,6 +19,15 @@ const getAllDonations = async (req, res) => {
   }
 };
 
+const getDonationDeletionHistory = async (req, res) => {
+  try {
+    const history = await donationModel.getDonationDeletionHistory();
+    res.status(200).json(history);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch donation deletion history', error: error.message });
+  }
+};
+
 const getByFacility = async (req, res) => {
   try {
     const donations = await donationModel.getDonationsByFacility(req.params.facilityId);
@@ -174,4 +183,4 @@ const getDonorsToFoodBankSubquery = async (req, res) => {
   }
 };
 
-module.exports = { getAllDonations, getByFacility, getById, create, update, remove, getFacilitiesAndDonations, getFacilityDonationTotals, getDonationStatsHaving, getTopDonorsByTotalDonated, getDistinctDonorsPerFacility, getTopDonorsHaving, getDonationsAboveAverage, getDonorsToFoodBankSubquery };
+module.exports = { getAllDonations, getDonationDeletionHistory, getByFacility, getById, create, update, remove, getFacilitiesAndDonations, getFacilityDonationTotals, getTopDonorsByTotalDonated, getDistinctDonorsPerFacility, getTopDonorsHaving, getDonationsAboveAverage, getDonorsToFoodBankSubquery, getDonationStatsHaving };

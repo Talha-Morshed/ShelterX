@@ -30,6 +30,19 @@ const getDonationById = async (donationId) => {
   return rows[0] || null;
 };
 
+const getDonationDeletionHistory = async () => {
+  const [rows] = await db.execute(
+    `SELECT h.history_id, h.donation_id, h.facility_id, h.user_id,
+            h.amount, h.donation_type, h.donation_created_at, h.deleted_at,
+            f.facility_name, u.full_name AS donor_name
+     FROM donation_deletion_history h
+     LEFT JOIN facilities f ON h.facility_id = f.facility_id
+     LEFT JOIN users u ON h.user_id = u.user_id
+     ORDER BY h.deleted_at DESC, h.history_id DESC`
+  );
+  return rows;
+};
+
 const createDonation = async (donationData) => {
   const { facility_id, user_id, amount, donation_type, notes } = donationData;
   const [result] = await db.execute(
@@ -183,6 +196,7 @@ module.exports = {
   getAllDonations,
   getDonationsByFacility,
   getDonationById,
+  getDonationDeletionHistory,
   createDonation,
   updateDonation,
   deleteDonation,
