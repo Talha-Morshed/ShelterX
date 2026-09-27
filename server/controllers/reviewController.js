@@ -1,3 +1,4 @@
+const db = require('../config/db');
 const reviewModel = require('../models/reviewModel');
 
 const validateReviewInput = (data) => {
@@ -42,8 +43,11 @@ const create = async (req, res) => {
     const errors = validateReviewInput(req.body);
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
-    const reviewId = await reviewModel.createReview(req.body);
-    const review = await reviewModel.getReviewById(reviewId);
+    const review = await db.withTransaction(async () => {
+      const reviewId = await reviewModel.createReview(req.body);
+      return reviewModel.getReviewById(reviewId);
+    });
+
     res.status(201).json({ message: 'Review created successfully', review });
   } catch (error) {
     if (error.code === 'ER_NO_REFERENCED_ROW_2') {
@@ -55,26 +59,40 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const existing = await reviewModel.getReviewById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Review not found' });
-
     const errors = validateReviewInput(req.body);
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
-    await reviewModel.updateReview(req.params.id, req.body);
-    const review = await reviewModel.getReviewById(req.params.id);
+    const review = await db.withTransaction(async () => {
+      const existing = await reviewModel.getReviewById(req.params.id);
+      if (!existing) return null;
+
+      await reviewModel.updateReview(req.params.id, req.body);
+      return reviewModel.getReviewById(req.params.id);
+    });
+
+    if (!review) return res.status(404).json({ message: 'Review not found' });
+
     res.status(200).json({ message: 'Review updated successfully', review });
   } catch (error) {
+    if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+      return res.status(400).json({ message: 'A facility_id or user_id does not exist. Choose a valid option from the dropdown.', error: error.message });
+    }
     res.status(500).json({ message: 'Failed to update review', error: error.message });
   }
 };
 
 const remove = async (req, res) => {
   try {
-    const existing = await reviewModel.getReviewById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Review not found' });
+    const deleted = await db.withTransaction(async () => {
+      const existing = await reviewModel.getReviewById(req.params.id);
+      if (!existing) return false;
 
-    await reviewModel.deleteReview(req.params.id);
+      await reviewModel.deleteReview(req.params.id);
+      return true;
+    });
+
+    if (!deleted) return res.status(404).json({ message: 'Review not found' });
+
     res.status(200).json({ message: 'Review deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete review', error: error.message });

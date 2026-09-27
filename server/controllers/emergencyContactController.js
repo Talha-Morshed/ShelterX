@@ -1,3 +1,4 @@
+const db = require('../config/db');
 const contactModel = require('../models/emergencyContactModel');
 
 const validateContactInput = (data) => {
@@ -42,8 +43,11 @@ const create = async (req, res) => {
     const errors = validateContactInput(req.body);
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
-    const contactId = await contactModel.createContact(req.body);
-    const contact = await contactModel.getContactById(contactId);
+    const contact = await db.withTransaction(async () => {
+      const contactId = await contactModel.createContact(req.body);
+      return contactModel.getContactById(contactId);
+    });
+
     res.status(201).json({ message: 'Emergency contact created successfully', contact });
   } catch (error) {
     res.status(500).json({ message: 'Failed to create contact', error: error.message });
@@ -52,14 +56,19 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const existing = await contactModel.getContactById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Contact not found' });
-
     const errors = validateContactInput(req.body);
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
-    await contactModel.updateContact(req.params.id, req.body);
-    const contact = await contactModel.getContactById(req.params.id);
+    const contact = await db.withTransaction(async () => {
+      const existing = await contactModel.getContactById(req.params.id);
+      if (!existing) return null;
+
+      await contactModel.updateContact(req.params.id, req.body);
+      return contactModel.getContactById(req.params.id);
+    });
+
+    if (!contact) return res.status(404).json({ message: 'Contact not found' });
+
     res.status(200).json({ message: 'Emergency contact updated successfully', contact });
   } catch (error) {
     res.status(500).json({ message: 'Failed to update contact', error: error.message });
@@ -68,10 +77,16 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    const existing = await contactModel.getContactById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Contact not found' });
+    const deleted = await db.withTransaction(async () => {
+      const existing = await contactModel.getContactById(req.params.id);
+      if (!existing) return false;
 
-    await contactModel.deleteContact(req.params.id);
+      await contactModel.deleteContact(req.params.id);
+      return true;
+    });
+
+    if (!deleted) return res.status(404).json({ message: 'Contact not found' });
+
     res.status(200).json({ message: 'Emergency contact deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete contact', error: error.message });

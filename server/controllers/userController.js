@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const { generateToken } = require('../middleware/auth');
+const db = require('../config/db');
 const userModel = require('../models/userModel');
 
 // Adnan: works of the code - validate all user-facing registration and login requests
@@ -67,17 +68,24 @@ const registerUser = async (req, res) => {
     const errors = validateUserInput(payload);
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
-    const existingUser = await userModel.findUserByEmail(payload.email);
-    if (existingUser) {
+    const hashedPassword = hashPassword(String(req.body.password || '').trim());
+    const user = await db.withTransaction(async () => {
+      const existingUser = await userModel.findUserByEmail(payload.email);
+      if (existingUser) {
+        return null;
+      }
+
+      const userId = await userModel.createUser({
+        ...payload,
+        password: hashedPassword,
+      });
+      return userModel.getUserById(userId);
+    });
+
+    if (!user) {
       return res.status(409).json({ message: 'An account with this email already exists.' });
     }
 
-    const hashedPassword = hashPassword(String(req.body.password || '').trim());
-    const userId = await userModel.createUser({
-      ...payload,
-      password: hashedPassword,
-    });
-    const user = await userModel.getUserById(userId);
     const token = generateToken({
       user_id: user.user_id,
       email: user.email,
@@ -87,6 +95,9 @@ const registerUser = async (req, res) => {
 
     res.status(201).json({ message: 'User registered successfully', token, user });
   } catch (error) {
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ message: 'An account with this email already exists.' });
+    }
     res.status(500).json({ message: 'Failed to register user', error: error.message });
   }
 };
@@ -147,19 +158,22 @@ const createUser = async (req, res) => {
     const errors = validateUserInput(req.body);
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
-    const userId = await userModel.createUser(req.body);
-    const user = await userModel.getUserById(userId);
+    const user = await db.withTransaction(async () => {
+      const userId = await userModel.createUser(req.body);
+      return userModel.getUserById(userId);
+    });
+
     res.status(201).json({ message: 'User created successfully', user });
   } catch (error) {
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ message: 'An account with this email already exists.' });
+    }
     res.status(500).json({ message: 'Failed to create user', error: error.message });
   }
 };
 
 const updateUser = async (req, res) => {
   try {
-    const existing = await userModel.getUserById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'User not found' });
-
     const errors = validateUserInput(req.body, { requirePassword: false });
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
@@ -168,20 +182,37 @@ const updateUser = async (req, res) => {
       updatedPayload.password = hashPassword(String(updatedPayload.password).trim());
     }
 
-    await userModel.updateUser(req.params.id, updatedPayload);
-    const user = await userModel.getUserById(req.params.id);
+    const user = await db.withTransaction(async () => {
+      const existing = await userModel.getUserById(req.params.id);
+      if (!existing) return null;
+
+      await userModel.updateUser(req.params.id, updatedPayload);
+      return userModel.getUserById(req.params.id);
+    });
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
     res.status(200).json({ message: 'User updated successfully', user });
   } catch (error) {
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ message: 'An account with this email already exists.' });
+    }
     res.status(500).json({ message: 'Failed to update user', error: error.message });
   }
 };
 
 const deleteUser = async (req, res) => {
   try {
-    const existing = await userModel.getUserById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'User not found' });
+    const deleted = await db.withTransaction(async () => {
+      const existing = await userModel.getUserById(req.params.id);
+      if (!existing) return false;
 
-    await userModel.deleteUser(req.params.id);
+      await userModel.deleteUser(req.params.id);
+      return true;
+    });
+
+    if (!deleted) return res.status(404).json({ message: 'User not found' });
+
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete user', error: error.message });

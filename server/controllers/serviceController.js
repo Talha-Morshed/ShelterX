@@ -1,3 +1,4 @@
+const db = require('../config/db');
 const serviceModel = require('../models/serviceModel');
 
 const validateServiceInput = (data) => {
@@ -31,8 +32,11 @@ const createService = async (req, res) => {
     const errors = validateServiceInput(req.body);
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
-    const serviceId = await serviceModel.createService(req.body);
-    const service = await serviceModel.getServiceById(serviceId);
+    const service = await db.withTransaction(async () => {
+      const serviceId = await serviceModel.createService(req.body);
+      return serviceModel.getServiceById(serviceId);
+    });
+
     res.status(201).json({ message: 'Service created successfully', service });
   } catch (error) {
     res.status(500).json({ message: 'Failed to create service', error: error.message });
@@ -41,14 +45,19 @@ const createService = async (req, res) => {
 
 const updateService = async (req, res) => {
   try {
-    const existing = await serviceModel.getServiceById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Service not found' });
-
     const errors = validateServiceInput(req.body);
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
-    await serviceModel.updateService(req.params.id, req.body);
-    const service = await serviceModel.getServiceById(req.params.id);
+    const service = await db.withTransaction(async () => {
+      const existing = await serviceModel.getServiceById(req.params.id);
+      if (!existing) return null;
+
+      await serviceModel.updateService(req.params.id, req.body);
+      return serviceModel.getServiceById(req.params.id);
+    });
+
+    if (!service) return res.status(404).json({ message: 'Service not found' });
+
     res.status(200).json({ message: 'Service updated successfully', service });
   } catch (error) {
     res.status(500).json({ message: 'Failed to update service', error: error.message });
@@ -57,10 +66,16 @@ const updateService = async (req, res) => {
 
 const deleteService = async (req, res) => {
   try {
-    const existing = await serviceModel.getServiceById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Service not found' });
+    const deleted = await db.withTransaction(async () => {
+      const existing = await serviceModel.getServiceById(req.params.id);
+      if (!existing) return false;
 
-    await serviceModel.deleteService(req.params.id);
+      await serviceModel.deleteService(req.params.id);
+      return true;
+    });
+
+    if (!deleted) return res.status(404).json({ message: 'Service not found' });
+
     res.status(200).json({ message: 'Service deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete service', error: error.message });

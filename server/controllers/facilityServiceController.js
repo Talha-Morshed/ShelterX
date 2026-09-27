@@ -1,3 +1,4 @@
+const db = require('../config/db');
 const facilityServiceModel = require('../models/facilityServiceModel');
 
 const validateInput = (data) => {
@@ -41,36 +42,62 @@ const create = async (req, res) => {
     const errors = validateInput(req.body);
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
-    const id = await facilityServiceModel.createFacilityService(req.body);
-    const record = await facilityServiceModel.getFacilityServiceById(id);
+    const record = await db.withTransaction(async () => {
+      const id = await facilityServiceModel.createFacilityService(req.body);
+      return facilityServiceModel.getFacilityServiceById(id);
+    });
+
     res.status(201).json({ message: 'Facility service created successfully', record });
   } catch (error) {
+    if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+      return res.status(400).json({ message: 'A facility_id or service_id does not exist. Choose a valid option from the dropdown.', error: error.message });
+    }
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ message: 'This facility already offers that service.' });
+    }
     res.status(500).json({ message: 'Failed to create facility service', error: error.message });
   }
 };
 
 const update = async (req, res) => {
   try {
-    const existing = await facilityServiceModel.getFacilityServiceById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Record not found' });
-
     const errors = validateInput(req.body);
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
-    await facilityServiceModel.updateFacilityService(req.params.id, req.body);
-    const record = await facilityServiceModel.getFacilityServiceById(req.params.id);
+    const record = await db.withTransaction(async () => {
+      const existing = await facilityServiceModel.getFacilityServiceById(req.params.id);
+      if (!existing) return null;
+
+      await facilityServiceModel.updateFacilityService(req.params.id, req.body);
+      return facilityServiceModel.getFacilityServiceById(req.params.id);
+    });
+
+    if (!record) return res.status(404).json({ message: 'Record not found' });
+
     res.status(200).json({ message: 'Facility service updated successfully', record });
   } catch (error) {
+    if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+      return res.status(400).json({ message: 'A facility_id or service_id does not exist. Choose a valid option from the dropdown.', error: error.message });
+    }
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ message: 'This facility already offers that service.' });
+    }
     res.status(500).json({ message: 'Failed to update facility service', error: error.message });
   }
 };
 
 const remove = async (req, res) => {
   try {
-    const existing = await facilityServiceModel.getFacilityServiceById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Record not found' });
+    const deleted = await db.withTransaction(async () => {
+      const existing = await facilityServiceModel.getFacilityServiceById(req.params.id);
+      if (!existing) return false;
 
-    await facilityServiceModel.deleteFacilityService(req.params.id);
+      await facilityServiceModel.deleteFacilityService(req.params.id);
+      return true;
+    });
+
+    if (!deleted) return res.status(404).json({ message: 'Record not found' });
+
     res.status(200).json({ message: 'Facility service deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete facility service', error: error.message });

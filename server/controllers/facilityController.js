@@ -1,3 +1,4 @@
+const db = require('../config/db');
 const facilityModel = require('../models/facilityModel');
 
 const FACILITY_TYPES = ['shelter', 'food_bank', 'clinic', 'community_center', 'housing', 'other'];
@@ -132,8 +133,10 @@ const createFacility = async (req, res) => {
       is_active: req.body.is_active === undefined ? true : Boolean(req.body.is_active),
     };
 
-    const facilityId = await facilityModel.createFacility(facility);
-    const createdFacility = await facilityModel.getFacilityById(facilityId);
+    const createdFacility = await db.withTransaction(async () => {
+      const facilityId = await facilityModel.createFacility(facility);
+      return facilityModel.getFacilityById(facilityId);
+    });
 
     return res.status(201).json({
       message: 'Facility created successfully',
@@ -147,36 +150,42 @@ const createFacility = async (req, res) => {
 const updateFacility = async (req, res) => {
   try {
     const { id } = req.params;
-    const existingFacility = await facilityModel.getFacilityById(id);
-
-    if (!existingFacility) {
-      return res.status(404).json({ message: 'Facility not found' });
-    }
 
     const errors = validateFacilityInput(req.body);
     if (errors.length > 0) {
       return res.status(400).json({ message: 'Validation failed', errors });
     }
 
-    const facility = {
-      facility_name: req.body.facility_name,
-      facility_type: req.body.facility_type,
-      address: req.body.address,
-      city: req.body.city,
-      state: req.body.state || null,
-      zip_code: req.body.zip_code || null,
-      phone: req.body.phone || null,
-      email: req.body.email || null,
-      capacity: Number(req.body.capacity),
-      available_spaces: Number(req.body.available_spaces),
-      description: req.body.description || null,
-      latitude: req.body.latitude === '' || req.body.latitude === undefined || req.body.latitude === null ? null : Number(req.body.latitude),
-      longitude: req.body.longitude === '' || req.body.longitude === undefined || req.body.longitude === null ? null : Number(req.body.longitude),
-      is_active: req.body.is_active === undefined ? existingFacility.is_active : Boolean(req.body.is_active),
-    };
+    const updatedFacility = await db.withTransaction(async () => {
+      const existingFacility = await facilityModel.getFacilityById(id);
+      if (!existingFacility) {
+        return null;
+      }
 
-    await facilityModel.updateFacility(id, facility);
-    const updatedFacility = await facilityModel.getFacilityById(id);
+      const facility = {
+        facility_name: req.body.facility_name,
+        facility_type: req.body.facility_type,
+        address: req.body.address,
+        city: req.body.city,
+        state: req.body.state || null,
+        zip_code: req.body.zip_code || null,
+        phone: req.body.phone || null,
+        email: req.body.email || null,
+        capacity: Number(req.body.capacity),
+        available_spaces: Number(req.body.available_spaces),
+        description: req.body.description || null,
+        latitude: req.body.latitude === '' || req.body.latitude === undefined || req.body.latitude === null ? null : Number(req.body.latitude),
+        longitude: req.body.longitude === '' || req.body.longitude === undefined || req.body.longitude === null ? null : Number(req.body.longitude),
+        is_active: req.body.is_active === undefined ? existingFacility.is_active : Boolean(req.body.is_active),
+      };
+
+      await facilityModel.updateFacility(id, facility);
+      return facilityModel.getFacilityById(id);
+    });
+
+    if (!updatedFacility) {
+      return res.status(404).json({ message: 'Facility not found' });
+    }
 
     return res.status(200).json({
       message: 'Facility updated successfully',
@@ -190,13 +199,21 @@ const updateFacility = async (req, res) => {
 const deleteFacility = async (req, res) => {
   try {
     const { id } = req.params;
-    const facility = await facilityModel.getFacilityById(id);
 
-    if (!facility) {
+    const deleted = await db.withTransaction(async () => {
+      const facility = await facilityModel.getFacilityById(id);
+      if (!facility) {
+        return false;
+      }
+
+      await facilityModel.deleteFacility(id);
+      return true;
+    });
+
+    if (!deleted) {
       return res.status(404).json({ message: 'Facility not found' });
     }
 
-    await facilityModel.deleteFacility(id);
     return res.status(200).json({ message: 'Facility deleted successfully' });
   } catch (error) {
     return res.status(500).json({ message: 'Failed to delete facility', error: error.message });

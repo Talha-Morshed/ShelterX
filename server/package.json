@@ -6,7 +6,11 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "seed": "node scripts/runSeed.js",
-    "install:analytics": "node scripts/installAnalyticsObjects.js"
+    "seed:demo": "node scripts/seedDemoData.js",
+    "migrate": "node scripts/migrateSchema.js",
+    "install:analytics": "node scripts/installAnalyticsObjects.js",
+    "verify:transactions": "node scripts/verifyTransactions.js",
+    "demo:transaction": "node scripts/demoTransaction.js"
   },
   "dependencies": {
     "cors": "^2.8.6",

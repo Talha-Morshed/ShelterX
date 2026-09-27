@@ -1,3 +1,4 @@
+const db = require('../config/db');
 const donationModel = require('../models/donationModel');
 
 const validateDonationInput = (data) => {
@@ -42,8 +43,11 @@ const create = async (req, res) => {
     const errors = validateDonationInput(req.body);
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
-    const donationId = await donationModel.createDonation(req.body);
-    const donation = await donationModel.getDonationById(donationId);
+    const donation = await db.withTransaction(async () => {
+      const donationId = await donationModel.createDonation(req.body);
+      return donationModel.getDonationById(donationId);
+    });
+
     res.status(201).json({ message: 'Donation created successfully', donation });
   } catch (error) {
     res.status(500).json({ message: 'Failed to create donation', error: error.message });
@@ -52,14 +56,19 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const existing = await donationModel.getDonationById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Donation not found' });
-
     const errors = validateDonationInput(req.body);
     if (errors.length > 0) return res.status(400).json({ message: 'Validation failed', errors });
 
-    await donationModel.updateDonation(req.params.id, req.body);
-    const donation = await donationModel.getDonationById(req.params.id);
+    const donation = await db.withTransaction(async () => {
+      const existing = await donationModel.getDonationById(req.params.id);
+      if (!existing) return null;
+
+      await donationModel.updateDonation(req.params.id, req.body);
+      return donationModel.getDonationById(req.params.id);
+    });
+
+    if (!donation) return res.status(404).json({ message: 'Donation not found' });
+
     res.status(200).json({ message: 'Donation updated successfully', donation });
   } catch (error) {
     res.status(500).json({ message: 'Failed to update donation', error: error.message });
@@ -68,10 +77,16 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    const existing = await donationModel.getDonationById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Donation not found' });
+    const deleted = await db.withTransaction(async () => {
+      const existing = await donationModel.getDonationById(req.params.id);
+      if (!existing) return false;
 
-    await donationModel.deleteDonation(req.params.id);
+      await donationModel.deleteDonation(req.params.id);
+      return true;
+    });
+
+    if (!deleted) return res.status(404).json({ message: 'Donation not found' });
+
     res.status(200).json({ message: 'Donation deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete donation', error: error.message });
