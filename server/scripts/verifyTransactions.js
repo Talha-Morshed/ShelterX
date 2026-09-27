@@ -4,6 +4,7 @@ const mysql = require('mysql2/promise');
 
 const out = (m) => process.stdout.write(`${m}\n`);
 let failures = 0;
+const transactionDonationIds = [];
 const check = (name, cond, extra) => {
   out(`${cond ? 'PASS' : 'FAIL'}  ${name}${cond || !extra ? '' : `  -> ${extra}`}`);
   if (!cond) failures++;
@@ -35,6 +36,23 @@ const run = async () => {
     'UPDATE facilities SET capacity = ?, available_spaces = ? WHERE facility_id = ?',
     [capacity, capacity, id]
   );
+  const donationCountOf = async (id) =>
+    (await outside('SELECT COUNT(*) n FROM donations WHERE donation_id = ?', [id]))[0][0].n;
+  const donationHistoryCountOf = async (id) =>
+    (await outside('SELECT COUNT(*) n FROM donation_deletion_history WHERE donation_id = ?', [id]))[0][0].n;
+  const createTransactionDonation = async (notes) => {
+    const [[facility]] = await outside('SELECT facility_id FROM facilities ORDER BY facility_id LIMIT 1');
+    const [[user]] = await outside('SELECT user_id FROM users ORDER BY user_id LIMIT 1');
+    if (!facility || !user) throw new Error('A facility and user are required for donation transaction checks');
+
+    const [result] = await db.execute(
+      `INSERT INTO donations (facility_id, user_id, amount, donation_type, notes)
+       VALUES (?, ?, 0.13, 'other', ?)`,
+      [facility.facility_id, user.user_id, notes]
+    );
+    transactionDonationIds.push(result.insertId);
+    return result.insertId;
+  };
 
   try {
     out('--- 1. commit -------------------------------------------------');
@@ -56,7 +74,49 @@ const run = async () => {
     }
     check('first write rolled back, no orphan row', (await countOf('TXCHK_ROLLBACK')) === 0);
 
-    out('--- 3. rollback on constraint violation -----------------------');
+    out('--- 3. donation delete and trigger archive commit -------------');
+    const committedDonationId = await createTransactionDonation(`TXCHK_DONATION_COMMIT_${Date.now()}`);
+    await db.withTransaction(async () => {
+      await db.execute('DELETE FROM donations WHERE donation_id = ?', [committedDonationId]);
+      check(
+        'delete and trigger archive visible on transaction connection',
+        (await db.execute('SELECT COUNT(*) n FROM donations WHERE donation_id = ?', [committedDonationId]))[0][0].n === 0
+          && (await db.execute('SELECT COUNT(*) n FROM donation_deletion_history WHERE donation_id = ?', [committedDonationId]))[0][0].n === 1
+      );
+      check(
+        'observer cannot see delete or archive before commit',
+        (await donationCountOf(committedDonationId)) === 1
+          && (await donationHistoryCountOf(committedDonationId)) === 0
+      );
+    });
+    check(
+      'commit keeps donation deleted and exactly one archive row',
+      (await donationCountOf(committedDonationId)) === 0
+        && (await donationHistoryCountOf(committedDonationId)) === 1
+    );
+
+    out('--- 4. donation delete and trigger archive rollback -----------');
+    const rolledBackDonationId = await createTransactionDonation(`TXCHK_DONATION_ROLLBACK_${Date.now()}`);
+    try {
+      await db.withTransaction(async () => {
+        await db.execute('DELETE FROM donations WHERE donation_id = ?', [rolledBackDonationId]);
+        check(
+          'delete and trigger archive visible before forced rollback',
+          (await db.execute('SELECT COUNT(*) n FROM donations WHERE donation_id = ?', [rolledBackDonationId]))[0][0].n === 0
+            && (await db.execute('SELECT COUNT(*) n FROM donation_deletion_history WHERE donation_id = ?', [rolledBackDonationId]))[0][0].n === 1
+        );
+        throw new Error('simulated failure after donation delete');
+      });
+    } catch (error) {
+      out(`      (caught: ${error.message})`);
+    }
+    check(
+      'rollback restores donation and removes its archive row',
+      (await donationCountOf(rolledBackDonationId)) === 1
+        && (await donationHistoryCountOf(rolledBackDonationId)) === 0
+    );
+
+    out('--- 5. rollback on constraint violation -----------------------');
     try {
       await db.withTransaction(async () => {
         await seed('TXCHK_CONSTRAINT', 5);
@@ -67,7 +127,7 @@ const run = async () => {
     }
     check('earlier write rolled back when the FK failed', (await countOf('TXCHK_CONSTRAINT')) === 0);
 
-    out('--- 4. nested transaction uses a savepoint --------------------');
+    out('--- 6. nested transaction uses a savepoint --------------------');
     await db.withTransaction(async () => {
       await seed('TXCHK_OUTER', 5);
       try {
@@ -82,7 +142,7 @@ const run = async () => {
     check('outer row committed', (await countOf('TXCHK_OUTER')) === 1);
     check('inner row rolled back to the savepoint only', (await countOf('TXCHK_INNER')) === 0);
 
-    out('--- 5. read-modify-write is atomic ---------------------------');
+    out('--- 7. read-modify-write is atomic ---------------------------');
     await seed('TXCHK_RMW', 10);
     const rmwId = await idOf('TXCHK_RMW');
     try {
@@ -97,7 +157,7 @@ const run = async () => {
     }
     check('capacity rolled back to 10', (await capacityIn(rmwId)) === 10);
 
-    out('--- 6. concurrent transactions --------------------------------');
+    out('--- 8. concurrent transactions --------------------------------');
     await seed('TXCHK_CONC', 1);
     const concId = await idOf('TXCHK_CONC');
     const worker = () => db.withTransaction(async () => {
@@ -114,13 +174,22 @@ const run = async () => {
     const [made] = await outside('SELECT COUNT(*) n FROM emergency_contacts WHERE facility_id = ?', [concId]);
     check('3 concurrent 2-statement transactions all landed (6 rows)', made[0].n === 6, `rows=${made[0].n}`);
 
-    out('--- 7. no connection leak -------------------------------------');
+    out('--- 9. no connection leak -------------------------------------');
     for (let i = 0; i < 30; i += 1) {
       await db.withTransaction(async () => facilityModel.getFacilityById(999999));
     }
     check('30 sequential transactions, context clean', db.isInTransaction() === false);
   } finally {
     out('--- cleanup --------------------------------------------------');
+    for (const donationId of transactionDonationIds) {
+      await outside('DELETE FROM donations WHERE donation_id = ?', [donationId]).catch(() => {});
+      await outside('DELETE FROM donation_deletion_history WHERE donation_id = ?', [donationId]).catch(() => {});
+    }
+    await outside(
+      `DELETE h FROM facility_capacity_history h
+       JOIN facilities f ON f.facility_id = h.facility_id
+       WHERE f.facility_name LIKE 'TXCHK\\_%'`
+    ).catch(() => {});
     await outside("DELETE FROM facilities WHERE facility_name LIKE 'TXCHK\\_%'").catch(() => {});
     await outside("DELETE FROM emergency_contacts WHERE contact_name LIKE 'TXCHK\\_%'").catch(() => {});
     const [left] = await outside(

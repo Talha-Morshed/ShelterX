@@ -78,6 +78,16 @@ npm --prefix server run migrate
 
 The Admin Dashboard's **Deleted Donations** tab displays archived donation ID, facility, donor, amount, type, and timestamps. Its API endpoint, `GET /api/donations/deleted-history`, requires the admin bearer token. The trigger archives direct donation-row deletes; deletes caused by a parent foreign-key cascade and `TRUNCATE` are not captured.
 
+## Transaction verification
+
+Run the backend transaction verifier from the project root:
+
+```bash
+npm --prefix server run verify:transactions
+```
+
+It checks commit visibility, rollback on errors and foreign-key violations, isolation between connections, and the donation delete trigger's archive insert. The script uses temporary `TXCHK_` records and removes them during cleanup.
+
 ## If you can't use Docker
 I added a JSON fallback (`server/data/shelters.json`) so the app runs without MySQL. To use it, just start the server and client as above — data will persist to `server/data/shelters.json`.
 
