@@ -1,3 +1,5 @@
+import { getAuthHeaders } from './authHeaders';
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 /**
@@ -33,6 +35,18 @@ export const getFacilityById = async (id) => {
     console.error(`Error fetching facility ${id}:`, error);
     throw error;
   }
+};
+
+export const getFacilityCapacityHistory = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/facilities/${id}/capacity-history`, {
+    headers: getAuthHeaders(),
+  });
+
+  if (!response.ok) {
+    throw new Error('Unable to load capacity history.');
+  }
+
+  return await response.json();
 };
 
 /**

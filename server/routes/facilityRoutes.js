@@ -2,6 +2,7 @@ const express = require('express');
 const {
   getAllFacilities,
   getFacilityById,
+  getFacilityCapacityHistory,
   createFacility,
   updateFacility,
   deleteFacility,
@@ -22,6 +23,7 @@ const {
   getFacilitiesAboveAvgAvailableSpaces,
   getFacilitiesAboveAvgServiceCountSubquery,
 } = require('../controllers/facilityController');
+const { authenticate, authorizeRole } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -45,6 +47,7 @@ router.get('/stats/above-avg-service-count-subquery', getFacilitiesAboveAvgServi
 
 router.get('/', getAllFacilities);
 router.get('/with-reviews', getAllFacilitiesWithReviews);
+router.get('/:id/capacity-history', authenticate, authorizeRole('admin'), getFacilityCapacityHistory);
 router.get('/:id', getFacilityById);
 router.post('/', createFacility);
 router.put('/:id', updateFacility);

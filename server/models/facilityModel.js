@@ -15,6 +15,18 @@ const getFacilityById = async (facilityId) => {
   return rows[0] || null;
 };
 
+const getFacilityCapacityHistory = async (facilityId) => {
+  const [rows] = await db.execute(
+    `SELECT history_id, facility_id, facility_name, old_capacity, new_capacity,
+            old_available_spaces, new_available_spaces, changed_at
+     FROM facility_capacity_history
+     WHERE facility_id = ?
+     ORDER BY changed_at DESC, history_id DESC`,
+    [facilityId]
+  );
+  return rows;
+};
+
 const createFacility = async (facilityData) => {
   const {
     facility_name,
@@ -364,6 +376,7 @@ const getFacilitiesAboveAvgServiceCountSubquery = async () => {
 module.exports = {
   getAllFacilities,
   getFacilityById,
+  getFacilityCapacityHistory,
   createFacility,
   updateFacility,
   deleteFacility,

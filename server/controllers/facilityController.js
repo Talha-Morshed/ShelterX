@@ -88,6 +88,26 @@ const getFacilityById = async (req, res) => {
   }
 };
 
+const getFacilityCapacityHistory = async (req, res) => {
+  const facilityId = Number(req.params.id);
+  if (!Number.isSafeInteger(facilityId) || facilityId < 1) {
+    return res.status(400).json({ message: 'Invalid facility ID' });
+  }
+
+  try {
+    const facility = await facilityModel.getFacilityById(facilityId);
+    if (!facility) {
+      return res.status(404).json({ message: 'Facility not found' });
+    }
+
+    const history = await facilityModel.getFacilityCapacityHistory(facilityId);
+    return res.status(200).json(history);
+  } catch (error) {
+    console.error('Failed to fetch facility capacity history:', error);
+    return res.status(500).json({ message: 'Unable to load capacity history' });
+  }
+};
+
 const createFacility = async (req, res) => {
   try {
     const errors = validateFacilityInput(req.body);
@@ -348,6 +368,7 @@ const getFacilitiesAboveAvgServiceCountSubquery = async (req, res) => {
 module.exports = {
   getAllFacilities,
   getFacilityById,
+  getFacilityCapacityHistory,
   createFacility,
   updateFacility,
   deleteFacility,

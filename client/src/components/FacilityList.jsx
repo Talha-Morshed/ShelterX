@@ -1,6 +1,64 @@
+import { useEffect, useRef, useState } from 'react';
+import { getFacilityCapacityHistory } from '../services/facilityService';
 import './FacilityList.css';
 
 const FacilityList = ({ facilities, onEdit, onDelete, _onView, isLoading }) => {
+  const [historyFacility, setHistoryFacility] = useState(null);
+  const [historyRecords, setHistoryRecords] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState('');
+  const historyDialogRef = useRef(null);
+
+  useEffect(() => {
+    const dialog = historyDialogRef.current;
+    if (historyFacility && dialog && !dialog.open) {
+      dialog.showModal();
+    } else if (!historyFacility && dialog?.open) {
+      dialog.close();
+    }
+  }, [historyFacility]);
+
+  const handleViewHistory = async (facility) => {
+    setHistoryFacility(facility);
+    setHistoryRecords([]);
+    setHistoryError('');
+    setHistoryLoading(true);
+
+    try {
+      const records = await getFacilityCapacityHistory(facility.facility_id);
+      setHistoryRecords(records);
+    } catch {
+      setHistoryError('Unable to load capacity history.');
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  const closeHistory = () => {
+    setHistoryFacility(null);
+    setHistoryRecords([]);
+    setHistoryError('');
+  };
+
+  const formatDateTime = (value) => {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime())
+      ? value
+      : new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(date);
+  };
+
+  const renderValueChange = (oldValue, newValue) => {
+    const unchanged = Number(oldValue) === Number(newValue);
+    return (
+      <span className="capacity-history-change">
+        <span>{oldValue}</span>
+        <span aria-hidden="true"> &rarr; </span>
+        <span>{newValue}</span>
+        {unchanged && <small>Unchanged</small>}
+      </span>
+    );
+  };
+
   if (isLoading) {
     return <div className="loading">Loading facilities...</div>;
   }
@@ -85,10 +143,76 @@ const FacilityList = ({ facilities, onEdit, onDelete, _onView, isLoading }) => {
               >
                 Delete
               </button>
+              <button className="btn btn-secondary" onClick={() => handleViewHistory(facility)}>
+                View History
+              </button>
             </div>
           </div>
         ))}
       </div>
+      <dialog
+        className="capacity-history-dialog"
+        ref={historyDialogRef}
+        aria-labelledby="capacity-history-title"
+        onClose={closeHistory}
+      >
+        {historyFacility && (
+          <div className="capacity-history-content">
+            <header className="capacity-history-header">
+              <div>
+                <p className="capacity-history-eyebrow">Facility audit</p>
+                <h2 id="capacity-history-title">{historyFacility.facility_name}</h2>
+              </div>
+              <button type="button" className="btn btn-secondary" onClick={closeHistory}>
+                Close
+              </button>
+            </header>
+
+            <section className="capacity-history-current" aria-label="Current facility capacity">
+              <div>
+                <span>Capacity</span>
+                <strong>{historyFacility.capacity}</strong>
+              </div>
+              <div>
+                <span>Available Spaces</span>
+                <strong>{historyFacility.available_spaces}</strong>
+              </div>
+            </section>
+
+            <section className="capacity-history-results" aria-live="polite">
+              {historyLoading && <p className="capacity-history-message">Loading capacity history...</p>}
+              {!historyLoading && historyError && (
+                <p className="capacity-history-message capacity-history-error" role="alert">{historyError}</p>
+              )}
+              {!historyLoading && !historyError && historyRecords.length === 0 && (
+                <p className="capacity-history-message">No capacity changes recorded yet.</p>
+              )}
+              {!historyLoading && !historyError && historyRecords.length > 0 && (
+                <div className="capacity-history-table-wrap">
+                  <table className="capacity-history-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Date &amp; Time</th>
+                        <th scope="col">Capacity</th>
+                        <th scope="col">Available Spaces</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {historyRecords.map((record) => (
+                        <tr key={record.history_id}>
+                          <td>{formatDateTime(record.changed_at)}</td>
+                          <td>{renderValueChange(record.old_capacity, record.new_capacity)}</td>
+                          <td>{renderValueChange(record.old_available_spaces, record.new_available_spaces)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
+          </div>
+        )}
+      </dialog>
     </div>
   );
 };
