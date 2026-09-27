@@ -44,7 +44,7 @@ npm run install:analytics
 ```
 
 The analytics database objects are defined in `server/queries/view_procedure.sql`. The installer creates:
-- `vw_facility_overview`, `vw_service_availability`, and `vw_public_facility_directory` views
+- `vw_facility_overview`, `vw_service_availability`, `vw_donation_type_statistics`, `vw_facility_service_summary`, and `vw_public_facility_directory` views
 - `sp_facilities_by_min_capacity`, `sp_facility_activity_report`, `sp_facility_capacity_status`, and `sp_facility_capacity_bands` stored procedures
 
 The public directory view demonstrates a reusable virtual table that exposes current active facility rows while omitting internal coordinates and audit columns. The capacity status procedure demonstrates `IF`, `ELSEIF`, and `ELSE`; the capacity bands procedure demonstrates a `WHILE` loop using a temporary report table without changing permanent data.
@@ -52,6 +52,8 @@ The public directory view demonstrates a reusable virtual table that exposes cur
 The Admin Analytics Dashboard exposes these objects through the **Views & Procedures** category. The backend endpoints are:
 - `GET /api/analytics/views/facility-overview`
 - `GET /api/analytics/views/service-availability`
+- `GET /api/analytics/views/donation-type-statistics`
+- `GET /api/analytics/views/facility-service-summary`
 - `GET /api/analytics/views/public-facility-directory`
 - `GET /api/analytics/procedures/facilities-by-min-capacity?minCapacity=50`
 - `GET /api/analytics/procedures/facility-activity`

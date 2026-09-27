@@ -34,6 +34,8 @@ import {
   getFacilityDashboard,
   getFacilityOverviewView,
   getServiceAvailabilityView,
+  getDonationTypeStatisticsView,
+  getFacilityServiceSummaryView,
   getFacilitiesByMinCapacityProcedure,
   getFacilityActivityProcedure,
   getPublicFacilityDirectoryView,
@@ -109,6 +111,9 @@ const AnalyticsDashboard = () => {
     'database-objects': [
       { key: 'facility-overview-view', label: 'Facility Overview View', fn: getFacilityOverviewView, desc: 'VIEW: Reusable facility activity summary', sqlType: 'SQL VIEW' },
       { key: 'service-availability-view', label: 'Service Availability View', fn: getServiceAvailabilityView, desc: 'VIEW: Facility service availability listing', sqlType: 'SQL VIEW' },
+      // Talha - Display database views that demonstrate statistical and string aggregates.
+      { key: 'donation-type-statistics-view', label: 'Donation Type Statistics', fn: getDonationTypeStatisticsView, desc: 'VIEW: COUNT, SUM, AVG, MIN, MAX, STDDEV_POP, and VAR_POP by donation type', sqlType: 'SQL VIEW + AGGREGATES' },
+      { key: 'facility-service-summary-view', label: 'Facility Service Summary', fn: getFacilityServiceSummaryView, desc: 'VIEW: COUNT DISTINCT and GROUP_CONCAT of available services', sqlType: 'SQL VIEW + AGGREGATES' },
       { key: 'public-directory-view', label: 'Public Directory View', fn: getPublicFacilityDirectoryView, desc: 'VIEW: Reusable public rows without internal columns', sqlType: 'SQL VIEW' },
       { key: 'min-capacity-procedure', label: 'Minimum Capacity Procedure', fn: () => getFacilitiesByMinCapacityProcedure(50), desc: 'PROCEDURE: Facilities with capacity ≥50', sqlType: 'STORED PROCEDURE' },
       { key: 'facility-activity-procedure', label: 'Facility Activity Procedure', fn: getFacilityActivityProcedure, desc: 'PROCEDURE: Facility activity with optional city filter', sqlType: 'STORED PROCEDURE' },

@@ -399,6 +399,20 @@ export const getServiceAvailabilityView = async () => {
   return await response.json();
 };
 
+// Talha - Fetch donation counts and statistical aggregates grouped by donation type.
+export const getDonationTypeStatisticsView = async () => {
+  const response = await fetch(`${API_BASE_URL}/analytics/views/donation-type-statistics`);
+  if (!response.ok) throw new Error('Failed to fetch donation type statistics view');
+  return await response.json();
+};
+
+// Talha - Fetch service counts and concatenated available service names per facility.
+export const getFacilityServiceSummaryView = async () => {
+  const response = await fetch(`${API_BASE_URL}/analytics/views/facility-service-summary`);
+  if (!response.ok) throw new Error('Failed to fetch facility service summary view');
+  return await response.json();
+};
+
 // Adnan - Execute the minimum-capacity stored procedure for the Analytics Dashboard.
 export const getFacilitiesByMinCapacityProcedure = async (minCapacity = 50) => {
   const response = await fetch(`${API_BASE_URL}/analytics/procedures/facilities-by-min-capacity?minCapacity=${minCapacity}`);

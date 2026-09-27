@@ -12,6 +12,18 @@ const getServiceAvailabilityView = async () => {
   return rows;
 };
 
+// Talha - Read donation aggregates and population dispersion from the donation type view.
+const getDonationTypeStatisticsView = async () => {
+  const [rows] = await db.execute('SELECT * FROM vw_donation_type_statistics ORDER BY donation_type ASC');
+  return rows;
+};
+
+// Talha - Read facility service counts and available service names from the aggregate view.
+const getFacilityServiceSummaryView = async () => {
+  const [rows] = await db.execute('SELECT * FROM vw_facility_service_summary ORDER BY city ASC, facility_name ASC');
+  return rows;
+};
+
 // Adnan - Read the public directory view that hides internal facility columns.
 const getPublicFacilityDirectoryView = async () => {
   const [rows] = await db.execute('SELECT * FROM vw_public_facility_directory ORDER BY city ASC, facility_name ASC');
@@ -45,6 +57,8 @@ const getFacilityCapacityBandsProcedure = async () => {
 module.exports = {
   getFacilityOverviewView,
   getServiceAvailabilityView,
+  getDonationTypeStatisticsView,
+  getFacilityServiceSummaryView,
   getPublicFacilityDirectoryView,
   getFacilitiesByMinCapacityProcedure,
   getFacilityActivityProcedure,

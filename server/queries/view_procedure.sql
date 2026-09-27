@@ -33,6 +33,43 @@ FROM facility_services fs
 JOIN facilities f ON f.facility_id = fs.facility_id
 JOIN services s ON s.service_id = fs.service_id;
 
+-- Talha - Aggregate donation amounts by type, including population dispersion statistics.
+DROP VIEW IF EXISTS vw_donation_type_statistics;
+CREATE VIEW vw_donation_type_statistics AS
+SELECT
+  donation_type,
+  COUNT(*) AS donation_count,
+  COUNT(DISTINCT user_id) AS distinct_donors,
+  ROUND(SUM(amount), 2) AS total_amount,
+  ROUND(AVG(amount), 2) AS average_amount,
+  MIN(amount) AS minimum_amount,
+  MAX(amount) AS maximum_amount,
+  ROUND(STDDEV_POP(amount), 2) AS population_stddev,
+  ROUND(VAR_POP(amount), 2) AS population_variance
+FROM donations
+GROUP BY donation_type;
+
+-- Talha - Summarize total and available services for every facility.
+DROP VIEW IF EXISTS vw_facility_service_summary;
+CREATE VIEW vw_facility_service_summary AS
+SELECT
+  f.facility_id,
+  f.facility_name,
+  f.facility_type,
+  f.city,
+  COUNT(DISTINCT s.service_id) AS service_count,
+  COUNT(DISTINCT CASE WHEN fs.is_available = TRUE THEN s.service_id END) AS available_service_count,
+  COUNT(DISTINCT CASE WHEN fs.is_available = FALSE THEN s.service_id END) AS unavailable_service_count,
+  GROUP_CONCAT(
+    DISTINCT CASE WHEN fs.is_available = TRUE THEN s.service_name END
+    ORDER BY s.service_name
+    SEPARATOR ', '
+  ) AS available_service_names
+FROM facilities f
+LEFT JOIN facility_services fs ON fs.facility_id = f.facility_id
+LEFT JOIN services s ON s.service_id = fs.service_id
+GROUP BY f.facility_id, f.facility_name, f.facility_type, f.city;
+
 -- Adnan - Recreate a public directory view that omits internal location and audit columns.
 DROP VIEW IF EXISTS vw_public_facility_directory;
 CREATE VIEW vw_public_facility_directory AS

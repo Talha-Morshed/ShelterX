@@ -20,6 +20,26 @@ const getServiceAvailabilityView = async (req, res) => {
   }
 };
 
+// Talha - Return donation type aggregates, including standard deviation and variance.
+const getDonationTypeStatisticsView = async (req, res) => {
+  try {
+    const data = await analyticsModel.getDonationTypeStatisticsView();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch donation type statistics view', error: error.message });
+  }
+};
+
+// Talha - Return total/available service counts and names for each facility.
+const getFacilityServiceSummaryView = async (req, res) => {
+  try {
+    const data = await analyticsModel.getFacilityServiceSummaryView();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch facility service summary view', error: error.message });
+  }
+};
+
 // Adnan - Return public facility rows from the sanitized SQL view.
 const getPublicFacilityDirectoryView = async (req, res) => {
   try {
@@ -76,6 +96,8 @@ const getFacilityCapacityBandsProcedure = async (req, res) => {
 module.exports = {
   getFacilityOverviewView,
   getServiceAvailabilityView,
+  getDonationTypeStatisticsView,
+  getFacilityServiceSummaryView,
   getPublicFacilityDirectoryView,
   getFacilitiesByMinCapacityProcedure,
   getFacilityActivityProcedure,
