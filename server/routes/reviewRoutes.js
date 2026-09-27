@@ -4,6 +4,7 @@ const {
   getByFacility,
   getById,
   create,
+  createForCurrentUser,
   update,
   remove,
   getHighRatedFacilitiesHaving,
@@ -11,6 +12,7 @@ const {
   getReviewsAboveAvgRating,
   getUnreviewedFacilitiesSubquery,
 } = require('../controllers/reviewController');
+const { authenticate, authorizeRole } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -23,6 +25,7 @@ router.get('/stats/unreviewed-subquery', getUnreviewedFacilitiesSubquery);
 
 router.get('/', getAllReviews);
 router.get('/facility/:facilityId', getByFacility);
+router.post('/facility/:facilityId', authenticate, authorizeRole('user'), createForCurrentUser);
 router.get('/:id', getById);
 router.post('/', create);
 router.put('/:id', update);

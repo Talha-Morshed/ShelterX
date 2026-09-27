@@ -50,7 +50,7 @@ const UserDashboard = ({ user, onLogout, onHome, onFindHelp }) => {
         </section>
 
         <section className="user-actions-panel">
-          <button type="button" className="user-primary-button" onClick={onFindHelp}>Browse facilities</button>
+          <button type="button" className="user-primary-button" onClick={onFindHelp}>Find facilities &amp; review</button>
           <button type="button" className="user-secondary-button" onClick={onHome}>Return home</button>
         </section>
       </main>

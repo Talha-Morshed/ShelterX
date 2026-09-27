@@ -1,3 +1,5 @@
+import { getAuthHeaders } from './authHeaders';
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 /**
@@ -14,6 +16,30 @@ export const getReviews = async () => {
     console.error('Error fetching reviews:', error);
     throw error;
   }
+};
+
+export const getReviewsByFacility = async (facilityId) => {
+  const response = await fetch(`${API_BASE_URL}/reviews/facility/${facilityId}`);
+  if (!response.ok) throw new Error('Failed to load facility reviews');
+  return response.json();
+};
+
+export const createFacilityReview = async (facilityId, data) => {
+  const response = await fetch(`${API_BASE_URL}/reviews/facility/${facilityId}`, {
+    method: 'POST',
+    headers: {
+      ...getAuthHeaders(),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Failed to submit review');
+  }
+
+  return response.json();
 };
 
 /**

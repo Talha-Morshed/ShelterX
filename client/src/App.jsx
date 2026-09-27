@@ -390,9 +390,11 @@ function App() {
     return (
       <PublicFacilityDetails
         facilityId={selectedFacilityId}
+        user={loggedInUser}
         onBack={() => setView('public-facilities')}
         onHome={() => setView('public-home')}
         onAdmin={handleAdminHome}
+        onOpenAuth={() => setView('auth')}
       />
     );
   }

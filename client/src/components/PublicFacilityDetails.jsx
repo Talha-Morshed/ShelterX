@@ -1,17 +1,25 @@
 import { useEffect, useState } from 'react';
 import { getFacilityById } from '../services/facilityService';
 import { getFacilityServicesByFacility } from '../services/facilityServiceService';
+import { createFacilityReview, getReviewsByFacility } from '../services/reviewService';
 import './PublicFacilityDetails.css';
 
 const formatFacilityType = (type) => (type || 'Support facility').replaceAll('_', ' ');
 const formatValue = (value) => value || 'Not provided';
 
-const PublicFacilityDetails = ({ facilityId, onBack, onHome, onAdmin }) => {
+const PublicFacilityDetails = ({ facilityId, user, onBack, onHome, onAdmin, onOpenAuth }) => {
   const [facility, setFacility] = useState(null);
   const [services, setServices] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [servicesError, setServicesError] = useState(false);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [reviewsError, setReviewsError] = useState('');
+  const [reviewRating, setReviewRating] = useState('');
+  const [reviewComment, setReviewComment] = useState('');
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewMessage, setReviewMessage] = useState('');
 
   useEffect(() => {
     let isMounted = true;
@@ -55,6 +63,51 @@ const PublicFacilityDetails = ({ facilityId, onBack, onHome, onAdmin }) => {
       isMounted = false;
     };
   }, [facilityId]);
+
+  useEffect(() => {
+    let isMounted = true;
+    setReviews([]);
+    setReviewsError('');
+    setReviewsLoading(true);
+
+    getReviewsByFacility(facilityId)
+      .then((data) => {
+        if (isMounted) setReviews(data || []);
+      })
+      .catch((reviewError) => {
+        if (isMounted) setReviewsError(reviewError.message || 'Unable to load facility reviews.');
+      })
+      .finally(() => {
+        if (isMounted) setReviewsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [facilityId]);
+
+  const handleReviewSubmit = async (event) => {
+    event.preventDefault();
+    setReviewSubmitting(true);
+    setReviewsError('');
+    setReviewMessage('');
+
+    try {
+      await createFacilityReview(facilityId, {
+        rating: Number(reviewRating),
+        comment: reviewComment,
+      });
+      const updatedReviews = await getReviewsByFacility(facilityId);
+      setReviews(updatedReviews || []);
+      setReviewRating('');
+      setReviewComment('');
+      setReviewMessage('Your review has been saved.');
+    } catch (submitError) {
+      setReviewsError(submitError.message || 'Unable to submit your review.');
+    } finally {
+      setReviewSubmitting(false);
+    }
+  };
 
   const renderStatus = (isActive) => (
     <span className={`details-status ${isActive ? 'details-status-active' : 'details-status-inactive'}`}>
@@ -182,6 +235,82 @@ const PublicFacilityDetails = ({ facilityId, onBack, onHome, onAdmin }) => {
                       </li>
                     ))}
                   </ul>
+                )}
+              </section>
+
+              <section className="details-reviews" aria-labelledby="reviews-heading">
+                <div className="details-reviews-heading">
+                  <div>
+                    <p className="public-eyebrow">Community feedback</p>
+                    <h2 id="reviews-heading">Reviews</h2>
+                  </div>
+                  <span>{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</span>
+                </div>
+
+                {reviewsLoading && <p className="details-services-note" role="status">Loading reviews...</p>}
+                {reviewsError && <p className="details-review-error" role="alert">{reviewsError}</p>}
+                {!reviewsLoading && !reviewsError && reviews.length === 0 && (
+                  <p className="details-services-note">No reviews yet.</p>
+                )}
+                {!reviewsLoading && reviews.length > 0 && (
+                  <div className="details-review-list">
+                    {reviews.map((review) => (
+                      <article className="details-review" key={review.review_id}>
+                        <div className="details-review-heading">
+                          <strong>{review.full_name || 'ShelterX user'}</strong>
+                          <span>{review.rating} / 5</span>
+                        </div>
+                        {review.created_at && (
+                          <time className="details-review-date" dateTime={review.created_at}>
+                            {new Date(review.created_at).toLocaleDateString()}
+                          </time>
+                        )}
+                        {review.comment && <p>{review.comment}</p>}
+                      </article>
+                    ))}
+                  </div>
+                )}
+
+                {reviewMessage && <p className="details-review-success" role="status">{reviewMessage}</p>}
+                {user ? (
+                  <form className="details-review-form" onSubmit={handleReviewSubmit}>
+                    <h3>Write a review</h3>
+                    <label htmlFor="facility-review-rating">Rating</label>
+                    <select
+                      id="facility-review-rating"
+                      name="rating"
+                      value={reviewRating}
+                      onChange={(event) => setReviewRating(event.target.value)}
+                      required
+                      disabled={reviewSubmitting}
+                    >
+                      <option value="">Choose a rating</option>
+                      <option value="5">5 - Excellent</option>
+                      <option value="4">4 - Very good</option>
+                      <option value="3">3 - Good</option>
+                      <option value="2">2 - Fair</option>
+                      <option value="1">1 - Poor</option>
+                    </select>
+                    <label htmlFor="facility-review-comment">Comment</label>
+                    <textarea
+                      id="facility-review-comment"
+                      name="comment"
+                      value={reviewComment}
+                      onChange={(event) => setReviewComment(event.target.value)}
+                      maxLength={2000}
+                      rows={4}
+                      placeholder="Share your experience with this facility"
+                      disabled={reviewSubmitting}
+                    />
+                    <button type="submit" disabled={reviewSubmitting || !reviewRating}>
+                      {reviewSubmitting ? 'Submitting...' : 'Submit review'}
+                    </button>
+                  </form>
+                ) : (
+                  <div className="details-review-sign-in">
+                    <p>Sign in to share your experience.</p>
+                    <button type="button" onClick={onOpenAuth}>Sign in or register</button>
+                  </div>
                 )}
               </section>
             </div>

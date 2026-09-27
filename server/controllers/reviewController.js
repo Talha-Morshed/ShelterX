@@ -57,6 +57,36 @@ const create = async (req, res) => {
   }
 };
 
+const createForCurrentUser = async (req, res) => {
+  const facilityId = Number(req.params.facilityId);
+  const rating = Number(req.body.rating);
+  if (!Number.isInteger(facilityId) || facilityId < 1) {
+    return res.status(400).json({ message: 'A valid facility ID is required.' });
+  }
+  if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+    return res.status(400).json({ message: 'Rating must be a whole number from 1 to 5.' });
+  }
+
+  try {
+    const review = await db.withTransaction(async () => {
+      const reviewId = await reviewModel.createReview({
+        facility_id: facilityId,
+        user_id: req.user.user_id,
+        rating,
+        comment: typeof req.body.comment === 'string' ? req.body.comment.trim() || null : null,
+      });
+      return reviewModel.getReviewById(reviewId);
+    });
+
+    res.status(201).json({ message: 'Review submitted successfully.', review });
+  } catch (error) {
+    if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+      return res.status(404).json({ message: 'The selected facility no longer exists.' });
+    }
+    res.status(500).json({ message: 'Failed to submit review', error: error.message });
+  }
+};
+
 const update = async (req, res) => {
   try {
     const errors = validateReviewInput(req.body);
@@ -142,4 +172,4 @@ const getUnreviewedFacilitiesSubquery = async (req, res) => {
   }
 };
 
-module.exports = { getAllReviews, getByFacility, getById, create, update, remove, getHighRatedFacilitiesHaving, getActiveReviewersHaving, getReviewsAboveAvgRating, getUnreviewedFacilitiesSubquery };
+module.exports = { getAllReviews, getByFacility, getById, create, createForCurrentUser, update, remove, getHighRatedFacilitiesHaving, getActiveReviewersHaving, getReviewsAboveAvgRating, getUnreviewedFacilitiesSubquery };
