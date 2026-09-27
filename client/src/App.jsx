@@ -392,8 +392,12 @@ function App() {
       <header className="app-header">
         <div className="container">
           <div className="header-content">
-            <h1>ShelterX Finder</h1>
-            <p>Manage facilities, services, donations, volunteers, and more</p>
+            <span className="admin-brand-mark" aria-hidden="true">S</span>
+            <div className="admin-brand-copy">
+              <p className="admin-brand-name">ShelterX</p>
+              <h1>Admin Dashboard</h1>
+              <p className="admin-brand-description">Facilities, services, and community support operations</p>
+            </div>
           </div>
           {editingId && (
             <button className="btn btn-secondary-header" onClick={handleCancelEdit}>
