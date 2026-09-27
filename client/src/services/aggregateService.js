@@ -383,3 +383,52 @@ export const getFacilityDashboard = async () => {
   const data = await response.json();
   return data.BONUS_facility_dashboard || [];
 };
+
+// Adnan - Fetch the facility overview SQL view for the Analytics Dashboard.
+export const getFacilityOverviewView = async () => {
+  const response = await fetch(`${API_BASE_URL}/analytics/views/facility-overview`);
+  if (!response.ok) throw new Error('Failed to fetch facility overview view');
+  return await response.json();
+};
+
+// Adnan - Fetch the service availability SQL view for the Analytics Dashboard.
+export const getServiceAvailabilityView = async () => {
+  const response = await fetch(`${API_BASE_URL}/analytics/views/service-availability`);
+  if (!response.ok) throw new Error('Failed to fetch service availability view');
+  return await response.json();
+};
+
+// Adnan - Execute the minimum-capacity stored procedure for the Analytics Dashboard.
+export const getFacilitiesByMinCapacityProcedure = async (minCapacity = 50) => {
+  const response = await fetch(`${API_BASE_URL}/analytics/procedures/facilities-by-min-capacity?minCapacity=${minCapacity}`);
+  if (!response.ok) throw new Error('Failed to execute minimum capacity procedure');
+  return await response.json();
+};
+
+// Adnan - Execute the facility activity stored procedure for the Analytics Dashboard.
+export const getFacilityActivityProcedure = async () => {
+  const response = await fetch(`${API_BASE_URL}/analytics/procedures/facility-activity`);
+  if (!response.ok) throw new Error('Failed to execute facility activity procedure');
+  return await response.json();
+};
+
+// Adnan - Fetch the sanitized public facility directory SQL view.
+export const getPublicFacilityDirectoryView = async () => {
+  const response = await fetch(`${API_BASE_URL}/analytics/views/public-facility-directory`);
+  if (!response.ok) throw new Error('Failed to fetch public facility directory view');
+  return await response.json();
+};
+
+// Adnan - Execute the conditional capacity stored procedure with a dashboard threshold.
+export const getFacilityCapacityStatusProcedure = async (minCapacity = 100) => {
+  const response = await fetch(`${API_BASE_URL}/analytics/procedures/facility-capacity-status?minCapacity=${minCapacity}`);
+  if (!response.ok) throw new Error('Failed to execute capacity status procedure');
+  return await response.json();
+};
+
+// Adnan - Execute the loop-based capacity-band stored procedure.
+export const getFacilityCapacityBandsProcedure = async () => {
+  const response = await fetch(`${API_BASE_URL}/analytics/procedures/facility-capacity-bands`);
+  if (!response.ok) throw new Error('Failed to execute capacity bands procedure');
+  return await response.json();
+};

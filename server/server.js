@@ -10,6 +10,7 @@ const reviewRoutes = require('./routes/reviewRoutes');
 const donationRoutes = require('./routes/donationRoutes');
 const volunteerRoutes = require('./routes/volunteerRoutes');
 const emergencyContactRoutes = require('./routes/emergencyContactRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes');
 
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
@@ -31,6 +32,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/volunteers', volunteerRoutes);
 app.use('/api/emergency-contacts', emergencyContactRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });

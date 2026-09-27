@@ -32,6 +32,13 @@ import {
   getVolunteersWhoAreDonorsSubquery,
   getFacilitiesAboveAvgVolunteersSubquery,
   getFacilityDashboard,
+  getFacilityOverviewView,
+  getServiceAvailabilityView,
+  getFacilitiesByMinCapacityProcedure,
+  getFacilityActivityProcedure,
+  getPublicFacilityDirectoryView,
+  getFacilityCapacityStatusProcedure,
+  getFacilityCapacityBandsProcedure,
 } from '../services/aggregateService';
 import './AnalyticsDashboard.css';
 
@@ -53,6 +60,7 @@ const AnalyticsDashboard = () => {
     { key: 'review-aggregates', label: 'Review Analytics', icon: '⭐' },
     { key: 'donation-aggregates', label: 'Donation Analytics', icon: '💰' },
     { key: 'volunteer-aggregates', label: 'Volunteer Analytics', icon: '🤝' },
+    { key: 'database-objects', label: 'Views & Procedures', icon: '🗃️' },
     { key: 'dashboard', label: 'Facility Dashboard', icon: '📈' },
   ], []);
 
@@ -97,6 +105,15 @@ const AnalyticsDashboard = () => {
       { key: 'status-having', label: 'Status Stats (HAVING)', fn: getVolunteerStatusStatsHaving, desc: 'GROUP BY + HAVING: Volunteer status distribution', sqlType: 'GROUP BY + HAVING' },
       { key: 'volunteer-donors', label: 'Volunteer Donors', fn: getVolunteersWhoAreDonorsSubquery, desc: 'IN + IN Subquery: Users who volunteer AND donate', sqlType: 'IN + IN Subquery' },
       { key: 'above-avg-volunteers', label: 'Above Avg Volunteers', fn: getFacilitiesAboveAvgVolunteersSubquery, desc: 'Subquery: Facilities > avg volunteers', sqlType: 'Scalar Subquery' },
+    ],
+    'database-objects': [
+      { key: 'facility-overview-view', label: 'Facility Overview View', fn: getFacilityOverviewView, desc: 'VIEW: Reusable facility activity summary', sqlType: 'SQL VIEW' },
+      { key: 'service-availability-view', label: 'Service Availability View', fn: getServiceAvailabilityView, desc: 'VIEW: Facility service availability listing', sqlType: 'SQL VIEW' },
+      { key: 'public-directory-view', label: 'Public Directory View', fn: getPublicFacilityDirectoryView, desc: 'VIEW: Reusable public rows without internal columns', sqlType: 'SQL VIEW' },
+      { key: 'min-capacity-procedure', label: 'Minimum Capacity Procedure', fn: () => getFacilitiesByMinCapacityProcedure(50), desc: 'PROCEDURE: Facilities with capacity ≥50', sqlType: 'STORED PROCEDURE' },
+      { key: 'facility-activity-procedure', label: 'Facility Activity Procedure', fn: getFacilityActivityProcedure, desc: 'PROCEDURE: Facility activity with optional city filter', sqlType: 'STORED PROCEDURE' },
+      { key: 'capacity-status-procedure', label: 'Conditional Capacity Procedure', fn: () => getFacilityCapacityStatusProcedure(100), desc: 'PROCEDURE: IF/ELSEIF/ELSE capacity selection', sqlType: 'STORED PROCEDURE + IF' },
+      { key: 'capacity-bands-procedure', label: 'Capacity Bands Procedure', fn: getFacilityCapacityBandsProcedure, desc: 'PROCEDURE: WHILE loop builds temporary capacity bands', sqlType: 'STORED PROCEDURE + WHILE' },
     ],
     'dashboard': [
       { key: 'facility-dashboard', label: 'Full Dashboard', fn: getFacilityDashboard, desc: 'Multi-table JOIN + Aggregates: Complete facility overview', sqlType: 'JOIN + Aggregates' },
