@@ -1,3 +1,5 @@
+import { getAuthHeaders } from './authHeaders';
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 /**
@@ -12,6 +14,56 @@ export const getVolunteers = async () => {
     return await response.json();
   } catch (error) {
     console.error('Error fetching volunteers:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get volunteer applications for currently logged-in user
+ */
+export const getMyVolunteerApplications = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/volunteers/my-applications`, {
+      headers: {
+        ...getAuthHeaders(),
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to fetch your volunteer applications');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching my volunteer applications:', error);
+    throw error;
+  }
+};
+
+/**
+ * Apply to be a volunteer at a facility (for logged-in user)
+ */
+export const applyAsVolunteer = async (data) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/volunteers/apply`, {
+      method: 'POST',
+      headers: {
+        ...getAuthHeaders(),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      const errorMessage = errorData.errors ? errorData.errors.join(', ') : errorData.message;
+      throw new Error(errorMessage || 'Failed to submit volunteer application');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error submitting volunteer application:', error);
     throw error;
   }
 };

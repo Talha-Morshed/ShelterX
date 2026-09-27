@@ -368,6 +368,7 @@ function App() {
         onLogout={handleLogout}
         onHome={() => setView('public-home')}
         onFindHelp={() => setView('public-facilities')}
+        onViewDetails={handleViewDetails}
       />
     );
   }

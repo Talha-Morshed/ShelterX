@@ -362,6 +362,191 @@
   color: #276749;
 }
 
+.details-volunteer-section {
+  margin-top: 2.3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e7ece9;
+}
+
+.details-volunteer-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.details-volunteer-heading h2 {
+  margin: 0;
+  color: #17324d;
+  font-size: 1.35rem;
+}
+
+.details-volunteer-heading > span {
+  color: #356c5c;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.details-volunteer-form {
+  display: grid;
+  gap: 0.65rem;
+  max-width: 600px;
+  margin-top: 1.5rem;
+  padding-top: 1.3rem;
+  border-top: 1px solid #e7ece9;
+}
+
+.details-volunteer-form h3 {
+  margin: 0 0 0.25rem;
+  color: #17324d;
+  font-size: 1.05rem;
+}
+
+.details-volunteer-form label {
+  color: #45647b;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.details-volunteer-form input {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid #cbd7d1;
+  border-radius: 0.45rem;
+  color: #17324d;
+  background: #fff;
+  font: inherit;
+}
+
+.details-volunteer-form input:focus-visible {
+  outline: 2px solid #e2673f;
+  outline-offset: 2px;
+}
+
+.details-volunteer-form button,
+.details-volunteer-sign-in button {
+  justify-self: start;
+  min-height: 2.6rem;
+  padding: 0.65rem 1.2rem;
+  border: 0;
+  border-radius: 0.45rem;
+  color: #fff;
+  background: #0ea5e9;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.details-volunteer-form button:hover,
+.details-volunteer-sign-in button:hover {
+  opacity: 0.92;
+}
+
+.details-volunteer-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.details-volunteer-sign-in {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.2rem;
+  padding: 1rem;
+  border-radius: 0.55rem;
+  background: #edf3ef;
+}
+
+.details-volunteer-sign-in p {
+  margin: 0;
+  color: #45647b;
+}
+
+.details-volunteer-error,
+.details-volunteer-success {
+  margin: 1rem 0 0;
+  font-size: 0.9rem;
+}
+
+.details-volunteer-error {
+  color: #a83225;
+}
+
+.details-volunteer-success {
+  color: #276749;
+  font-weight: 600;
+}
+
+.details-volunteer-current {
+  margin-top: 1.2rem;
+  padding: 1rem 1.2rem;
+  border-radius: 0.65rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.details-volunteer-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.details-volunteer-badge span {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 0.9rem;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.status-approved {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.status-rejected {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.details-volunteer-current p {
+  margin: 0.35rem 0;
+  color: #334155;
+  font-size: 0.9rem;
+}
+
+.details-volunteer-current small {
+  display: block;
+  margin-top: 0.6rem;
+  color: #64748b;
+  font-size: 0.82rem;
+}
+
+.details-volunteer-current small.approved-note {
+  color: #15803d;
+  font-weight: 700;
+}
+
+
 @media (max-width: 700px) {
   .public-details-main {
     padding: 1.8rem 1rem 4rem;

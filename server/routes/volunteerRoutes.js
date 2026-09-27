@@ -3,6 +3,8 @@ const {
   getAllVolunteers,
   getByFacility,
   getById,
+  getMyApplications,
+  apply,
   create,
   update,
   remove,
@@ -12,6 +14,7 @@ const {
   getVolunteersWhoAreDonorsSubquery,
   getFacilitiesAboveAvgVolunteersSubquery,
 } = require('../controllers/volunteerController');
+const { authenticate, authorizeRole } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -22,6 +25,10 @@ router.get('/stats/status-having', getVolunteerStatusStatsHaving);
 // A- Subquery routes for volunteers
 router.get('/stats/volunteer-donors-subquery', getVolunteersWhoAreDonorsSubquery);
 router.get('/stats/above-avg-volunteers-subquery', getFacilitiesAboveAvgVolunteersSubquery);
+
+// User volunteer application endpoints
+router.get('/my-applications', authenticate, getMyApplications);
+router.post('/apply', authenticate, apply);
 
 router.get('/', getAllVolunteers);
 router.get('/facility/:facilityId', getByFacility);

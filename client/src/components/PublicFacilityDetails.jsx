@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getFacilityById } from '../services/facilityService';
 import { getFacilityServicesByFacility } from '../services/facilityServiceService';
 import { createFacilityReview, getReviewsByFacility } from '../services/reviewService';
+import { applyAsVolunteer, getMyVolunteerApplications } from '../services/volunteerService';
 import './PublicFacilityDetails.css';
 
 const formatFacilityType = (type) => (type || 'Support facility').replaceAll('_', ' ');
@@ -20,6 +21,14 @@ const PublicFacilityDetails = ({ facilityId, user, onBack, onHome, onAdmin, onOp
   const [reviewComment, setReviewComment] = useState('');
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewMessage, setReviewMessage] = useState('');
+
+  // Volunteer application state
+  const [volunteerRole, setVolunteerRole] = useState('');
+  const [volunteerAvailability, setVolunteerAvailability] = useState('');
+  const [volunteerSubmitting, setVolunteerSubmitting] = useState(false);
+  const [volunteerError, setVolunteerError] = useState('');
+  const [volunteerSuccess, setVolunteerSuccess] = useState('');
+  const [userVolunteerStatus, setUserVolunteerStatus] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -85,6 +94,64 @@ const PublicFacilityDetails = ({ facilityId, user, onBack, onHome, onAdmin, onOp
       isMounted = false;
     };
   }, [facilityId]);
+
+  // Check if current logged-in user has already applied to this facility
+  useEffect(() => {
+    let isMounted = true;
+    setUserVolunteerStatus(null);
+    setVolunteerError('');
+    setVolunteerSuccess('');
+
+    if (user) {
+      getMyVolunteerApplications()
+        .then((apps) => {
+          if (!isMounted) return;
+          const match = (apps || []).find((a) => Number(a.facility_id) === Number(facilityId));
+          if (match) {
+            setUserVolunteerStatus(match);
+          }
+        })
+        .catch(() => {
+          // ignore background check failure
+        });
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [facilityId, user]);
+
+  const handleVolunteerApply = async (event) => {
+    event.preventDefault();
+    if (!volunteerRole.trim()) {
+      setVolunteerError('Please specify a role you wish to volunteer for.');
+      return;
+    }
+    if (!volunteerAvailability.trim()) {
+      setVolunteerError('Please specify your availability.');
+      return;
+    }
+
+    setVolunteerSubmitting(true);
+    setVolunteerError('');
+    setVolunteerSuccess('');
+
+    try {
+      const res = await applyAsVolunteer({
+        facility_id: Number(facilityId),
+        role: volunteerRole.trim(),
+        availability: volunteerAvailability.trim(),
+      });
+      setVolunteerSuccess(res.message || 'Volunteer application submitted successfully!');
+      setUserVolunteerStatus(res.volunteer || { status: 'pending', role: volunteerRole, availability: volunteerAvailability });
+      setVolunteerRole('');
+      setVolunteerAvailability('');
+    } catch (err) {
+      setVolunteerError(err.message || 'Failed to submit application. Please try again.');
+    } finally {
+      setVolunteerSubmitting(false);
+    }
+  };
 
   const handleReviewSubmit = async (event) => {
     event.preventDefault();
@@ -313,6 +380,91 @@ const PublicFacilityDetails = ({ facilityId, user, onBack, onHome, onAdmin, onOp
                   </div>
                 )}
               </section>
+              {/* Volunteer Application Section */}
+              <section className="details-volunteer-section" aria-labelledby="volunteer-heading">
+                <div className="details-volunteer-heading">
+                  <h2 id="volunteer-heading">Volunteer at this facility</h2>
+                  <span>Join our community</span>
+                </div>
+                <p className="details-services-note">
+                  Help support individuals and families in need by lending your time and skills to this facility.
+                </p>
+
+                {volunteerSuccess && (
+                  <p className="details-volunteer-success" role="status">
+                    {volunteerSuccess}
+                  </p>
+                )}
+                {volunteerError && (
+                  <p className="details-volunteer-error" role="alert">
+                    {volunteerError}
+                  </p>
+                )}
+
+                {userVolunteerStatus && (
+                  <div className="details-volunteer-current">
+                    <div className="details-volunteer-badge">
+                      <span>Application status:</span>
+                      <strong className={`status-pill status-${userVolunteerStatus.status}`}>
+                        {userVolunteerStatus.status.toUpperCase()}
+                      </strong>
+                    </div>
+                    {userVolunteerStatus.role && (
+                      <p><strong>Role:</strong> {userVolunteerStatus.role}</p>
+                    )}
+                    {userVolunteerStatus.availability && (
+                      <p><strong>Availability:</strong> {userVolunteerStatus.availability}</p>
+                    )}
+                    {userVolunteerStatus.status === 'pending' && (
+                      <small>Your application has been received and is awaiting administrator review.</small>
+                    )}
+                    {userVolunteerStatus.status === 'approved' && (
+                      <small className="approved-note">You are approved as a volunteer for this facility!</small>
+                    )}
+                  </div>
+                )}
+
+                {user ? (
+                  !userVolunteerStatus || userVolunteerStatus.status === 'rejected' ? (
+                    <form className="details-volunteer-form" onSubmit={handleVolunteerApply}>
+                      <h3>{userVolunteerStatus?.status === 'rejected' ? 'Re-apply to volunteer' : 'Submit Volunteer Application'}</h3>
+                      <label htmlFor="volunteer-role">Preferred Role / Skills</label>
+                      <input
+                        type="text"
+                        id="volunteer-role"
+                        name="role"
+                        placeholder="e.g. Food Server, Front Desk, Counseling, Tutor, General Help"
+                        value={volunteerRole}
+                        onChange={(e) => setVolunteerRole(e.target.value)}
+                        required
+                        disabled={volunteerSubmitting}
+                      />
+
+                      <label htmlFor="volunteer-availability">Availability</label>
+                      <input
+                        type="text"
+                        id="volunteer-availability"
+                        name="availability"
+                        placeholder="e.g. Weekends 9AM-2PM, Mon & Wed evenings, Flexible"
+                        value={volunteerAvailability}
+                        onChange={(e) => setVolunteerAvailability(e.target.value)}
+                        required
+                        disabled={volunteerSubmitting}
+                      />
+
+                      <button type="submit" disabled={volunteerSubmitting}>
+                        {volunteerSubmitting ? 'Submitting Application...' : 'Apply to Volunteer'}
+                      </button>
+                    </form>
+                  ) : null
+                ) : (
+                  <div className="details-volunteer-sign-in">
+                    <p>Sign in or register an account to apply as a volunteer.</p>
+                    <button type="button" onClick={onOpenAuth}>Sign in to apply</button>
+                  </div>
+                )}
+              </section>
+
             </div>
           </article>
         )}

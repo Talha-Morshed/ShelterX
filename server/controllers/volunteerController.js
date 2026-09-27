@@ -37,6 +37,51 @@ const getById = async (req, res) => {
   }
 };
 
+const getMyApplications = async (req, res) => {
+  try {
+    const volunteers = await volunteerModel.getVolunteersByUser(req.user.user_id);
+    res.status(200).json(volunteers);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch your volunteer applications', error: error.message });
+  }
+};
+
+const apply = async (req, res) => {
+  try {
+    const facilityId = Number(req.body.facility_id);
+    const role = typeof req.body.role === 'string' ? req.body.role.trim() : '';
+    const availability = typeof req.body.availability === 'string' ? req.body.availability.trim() : '';
+
+    if (!facilityId || facilityId < 1) {
+      return res.status(400).json({ message: 'A valid facility ID is required.' });
+    }
+    if (!role) {
+      return res.status(400).json({ message: 'Preferred role is required.' });
+    }
+    if (!availability) {
+      return res.status(400).json({ message: 'Availability is required.' });
+    }
+
+    const volunteer = await db.withTransaction(async () => {
+      const volunteerId = await volunteerModel.createVolunteer({
+        facility_id: facilityId,
+        user_id: req.user.user_id,
+        role,
+        availability,
+        status: 'pending',
+      });
+      return volunteerModel.getVolunteerById(volunteerId);
+    });
+
+    res.status(201).json({ message: 'Volunteer application submitted successfully.', volunteer });
+  } catch (error) {
+    if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+      return res.status(400).json({ message: 'The selected facility does not exist.' });
+    }
+    res.status(500).json({ message: 'Failed to submit volunteer application', error: error.message });
+  }
+};
+
 const create = async (req, res) => {
   try {
     const errors = validateVolunteerInput(req.body);
@@ -144,4 +189,18 @@ const getFacilitiesAboveAvgVolunteersSubquery = async (req, res) => {
   }
 };
 
-module.exports = { getAllVolunteers, getByFacility, getById, create, update, remove, getFacilityVolunteerCounts, getFacilitiesWithMinVolunteersHaving, getVolunteerStatusStatsHaving, getVolunteersWhoAreDonorsSubquery, getFacilitiesAboveAvgVolunteersSubquery };
+module.exports = {
+  getAllVolunteers,
+  getByFacility,
+  getById,
+  getMyApplications,
+  apply,
+  create,
+  update,
+  remove,
+  getFacilityVolunteerCounts,
+  getFacilitiesWithMinVolunteersHaving,
+  getVolunteerStatusStatsHaving,
+  getVolunteersWhoAreDonorsSubquery,
+  getFacilitiesAboveAvgVolunteersSubquery,
+};

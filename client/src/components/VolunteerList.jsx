@@ -11,14 +11,14 @@ const VolunteerList = ({ volunteers, onEdit, onDelete, isLoading }) => {
 
   return (
     <div className="volunteer-list">
-      <h2>Volunteers</h2>
+      <h2>Volunteers &amp; Applications</h2>
       <div className="table-wrapper">
         <table>
           <thead>
             <tr>
               <th>ID</th>
-              <th>Facility ID</th>
-              <th>User ID</th>
+              <th>Applicant / User</th>
+              <th>Facility</th>
               <th>Role</th>
               <th>Availability</th>
               <th>Status</th>
@@ -29,14 +29,22 @@ const VolunteerList = ({ volunteers, onEdit, onDelete, isLoading }) => {
             {volunteers.map((volunteer) => (
               <tr key={volunteer.volunteer_id}>
                 <td>{volunteer.volunteer_id}</td>
-                <td>{volunteer.facility_id}</td>
-                <td>{volunteer.user_id}</td>
+                <td>
+                  <strong>{volunteer.full_name || `User #${volunteer.user_id}`}</strong>
+                </td>
+                <td>
+                  {volunteer.facility_name || `Facility #${volunteer.facility_id}`}
+                </td>
                 <td>{volunteer.role || '—'}</td>
                 <td>{volunteer.availability || '—'}</td>
-                <td>{volunteer.status || '—'}</td>
+                <td>
+                  <span className={`status-pill status-${volunteer.status || 'pending'}`}>
+                    {(volunteer.status || 'pending').toUpperCase()}
+                  </span>
+                </td>
                 <td className="actions-cell">
                   <button className="btn btn-edit" onClick={() => onEdit(volunteer)}>
-                    Edit
+                    Review / Edit
                   </button>
                   <button
                     className="btn btn-delete"

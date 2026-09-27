@@ -22,6 +22,18 @@ const getVolunteersByFacility = async (facilityId) => {
   return rows;
 };
 
+const getVolunteersByUser = async (userId) => {
+  const [rows] = await db.execute(
+    `SELECT v.*, f.facility_name, f.city, f.address
+     FROM volunteers v
+     JOIN facilities f ON v.facility_id = f.facility_id
+     WHERE v.user_id = ?
+     ORDER BY v.volunteer_id DESC`,
+    [userId]
+  );
+  return rows;
+};
+
 const getVolunteerById = async (volunteerId) => {
   const [rows] = await db.execute(
     'SELECT * FROM volunteers WHERE volunteer_id = ?',
@@ -134,6 +146,7 @@ const getFacilitiesAboveAvgVolunteersSubquery = async () => {
 module.exports = {
   getAllVolunteers,
   getVolunteersByFacility,
+  getVolunteersByUser,
   getVolunteerById,
   createVolunteer,
   updateVolunteer,
